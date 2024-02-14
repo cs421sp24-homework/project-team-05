@@ -4,7 +4,7 @@ This is a web application that aims to promote the circulation of second-hand tr
 
 ## Installing / Getting started
 
-#### (0) Make sure you have a up-to-date version of [Node.js](https://nodejs.org/en), [MySQL8.0](https://dev.mysql.com/downloads/) and [Python3.12](https://www.python.org/downloads/) installed before setting up.
+#### (0) Make sure you have an up-to-date version of [Node.js](https://nodejs.org/en), [MySQL8.0](https://dev.mysql.com/downloads/) and [Python3.12](https://www.python.org/downloads/) installed before setting up.
 
 #### (1) Setup the database.
 
