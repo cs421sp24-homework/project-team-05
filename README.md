@@ -1,96 +1,147 @@
-# Sechand
+# SecHand
 
-This is a web application that aims to promote the circulation of second-hand trading information among the locals. In this project, we focus on the JHU community.
+SecHand is a web application that aims to promote the circulation of second-hand trading information among the locals. It provides a platform for students to post their pre-owned items online anytime when they have a product that is idled. 
 
-## Installing / Getting started
+## Technology Stack
 
-#### (0) Make sure you have an up-to-date version of [Node.js](https://nodejs.org/en), [MySQL8.0](https://dev.mysql.com/downloads/) and [Python3.12](https://www.python.org/downloads/) installed before setting up.
+SecHand is build based on the following technology:
 
-#### (1) Setup the database.
+- Frontend:
+    - Fameworks: Vue.js
+    - Styling: Bootstrap
+- Backend:
+    - API: Django
+- Database:
+    - Primary Database: PostgreSQL
+    - ORM: Django built-in ORM
+- Deployment:
+    - Hosting: Heroku
+    - Continuous Integration/Continuous Deployment (CI/CD): Github Action
 
-##### (1.1) Make sure the mysql service is on (for Windows computers, I go to task manager --> service --> mysql80 --> right click and start, or you may [Start MySQL from the Windows Command Line](https://dev.mysql.com/doc/refman/8.0/en/windows-install-archive.html).
+*For additional informations about the technology stack we used, please refer to Issue #2*
 
-Please be aware of your local user name, local user password and local port number.
+## Getting Started
 
+### Versions
 
-##### (1.2) Create a new database called "sechand". I suggest you use a [MySQL Workbench](https://www.mysql.com/products/workbench/). You can either run the command or use the GUI to manipulate the database.
-
-```sql
-create DATABASE sechand
+SecHand is developed using the following version of technologies:
+```
+    - Node.js: 20.11.0
+    - Django: 5.0.1
+        - Python 3.12.1
+    - Vue: 3.4.19
 ```
 
-##### (1.3) Configure the connection between Django and MySQL. You can change any of these settings in /sechand_backend/sechand_backend/settings.py line 89 to 98 into your settings. My settings are as following:
+### Installation
 
-Database name: **Sechand**
+#### (0) Install Python and Node.js
 
-Local user name: **root**
+- Before starting install any dependencies, make sure you installed Python and Node.js on your computer. 
+    - Although it is recommended to install the same version we have, any higher version of Python should works.
+    - Check the following website to install [Python](https://www.python.org/downloads/), and [Node.js](https://nodejs.org/en)
+- You should also make sure that package managers like `pip` and `npm` are also installed.
 
-Local user password: **123456**
+#### (1) Setup the virtural environment.
 
-Local port: **3306**
+- If you have installed either Node/Python/Django on your computer with different versions, and do not wish to install another version of these due to your personal project dependencies. We recommened using a virtural environment to install the necessary packages.
+    - To create a vertural environment, under the root folder of SecHand, uses the following command:
+        ```cmd
+        python -m venv <virtural env name>
+        ```
+        For example, use:
+        ```cmd
+        python -m venv venv_3_12_1 
+        ```
+        to represent a virtural environment with python version 3.12.1
 
-##### (1.4) Go to the backend directory (/sechand_backend/sechand_backend/) in a console. Run the following commands to migrate the database:
+#### (2) Start the virtural environment
 
-```cmd
-python3.12 manage.py makemigrations
-```
+- After created a virtural environment for this, you can use the following command to start it:
+    ```cmd
+    .\venv_3_12_1\Scripts\activate
+    ```
+- This will start the virtural env and create a mark before your terminal prompt. 
+- To exit from the virtural environment, use:
+    ```cmd
+    deactivate
+    ```
 
-```cmd
-python3.12 manage.py migrate
-```
+#### (3) Install Django backend dependencies
 
+- To install necessary dependencies, navigate to the root folder of the project, where requirements.txt is located, and run:
+    ```cmd
+    pip install -r .\requirements.txt
+    ```
+    
+#### (4) Run the Django backend
+##### (4.1) Database model migrations
 
-#### (2) You need a few Python packages before launching teh backend server. Run the following commands to ensure that they are installed for Python3.12.
+- If any models has been changed since last migration, use the following command to migrate them to the database. 
+- Under the backend directory (\sechand_backend). Run the following commands to migrate the database:
 
-```cmd
-python3.12 -m pip install django
-```
+    ```cmd
+    python .\manage.py makemigrations
+    ```
 
-```cmd
-python3.12 -m pip install pymysql
-```
+    ```cmd
+    python .\manage.py migrate
+    ```
 
-```cmd
-python3.12 -m pip install mysqlclient
-```
+##### (4.2) Run the Django backend
+- Under the same backend directory (\sechand_backend), run the following command to start the backend server:
+    ```cmd
+    python .\manage.py runserver
+    ```
+- Now If everything works correctly, you should see Django is up and running, prompting:
+    ```
+    Watching for file changes with StatReloader
+    Performing system checks...
 
-#### (3) Go to the backend directory (/sechand_backend/sechand_backend/) in a console and run the following command to start the backend server.
+    System check identified no issues (0 silenced).
+    <Server start time>
+    <Django version>, using settings <settings file path>
+    Starting development server at <server running location>
+    Quit the server with CTRL-BREAK.
+    ```
+- The server is now running on: http://localhost:8000
 
+#### (5) Install Vue frontend dependencies
 
-```cmd
-python3.12 manage.py runserver
-```
+- After the backend has successfully up and running, next step is to start the front end of SecHand.
 
-Now the frontend server is running on port: http://localhost:8000.
+- Go to the frontend directory (\sechand). Run the following command to install dependencies used by frontend:
+    ```cmd
+    npm install
+    ```
+- A `node_modules` folder will be created and all dependencies will be installed in there.
 
-#### (4) Go to the frontend directory (/sechand) in a console. I inculde the modules in the folder so you do not need to install any dependencies. However, to make sure everything needed exists, run the command:
+#### (6) Run the Vue frontend
 
-```cmd
-npm install
-```
+- Use the following command to start the frontend:
+    ```cmd
+    npm run dev
+    ```
 
-#### (5) Run the following command to start the frontend server.
+- Now If everything works correctly, you should see Django is up and running, prompting:
+    ```
+    ...
+    Local:   <running location>
+    Network: use --host to expose
+    press h + enter to show help
+    ```
 
-```cmd
-npm run dev
-```
+- The frontend should now running on: http://localhost:5173/
 
-Now the backend server is running on port: http://localhost:5173
-
-#### (6) Open  the following link in a browser to start the web app.
-
-[Sechand](http://localhost:5173 )
+#### (7) Open  the following link in a browser: [Sechand](http://localhost:5173 )
 
 ## Developing
 
-Detailed and step-by-step documentation for setting up local development. For example, a new team member will use these instructions to start developing the project further. 
+If you are developing on SecHand and setting up the environment, please refer to the **Installation** section of this file.
 
-```shell
-commands here
-```
+### Global configuration
 
-You should include what is needed (e.g. all of the configurations) to set up the dev environment. For instance, global dependencies or any other tools (include download links), explaining what database (and version) has been used, etc. If there is any virtual environment, local server, ..., explain here. 
+*The content of this section will be completed during developing cycle*
 
-Additionally, describe and show how to run the tests, explain your code style and show how to check it.
+### Running tests
 
-If your project needs some additional steps for the developer to build the project after some code changes, state them here. Moreover, give instructions on how to build and release a new version. In case there's some step you have to take that publishes this project to a server, it must be stated here. 
+*The content of this section will be completed during developing cycle*
