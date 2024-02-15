@@ -7,7 +7,7 @@ SecHand is a web application that aims to promote the circulation of second-hand
 SecHand is build based on the following technology:
 
 - Frontend:
-    - Fameworks: Vue.js
+    - Frameworks: Vue.js
     - Styling: Bootstrap
 - Backend:
     - API: Django
