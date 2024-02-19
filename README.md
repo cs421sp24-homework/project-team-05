@@ -90,6 +90,11 @@ SecHand is developed using the following version of technologies:
     pip install -r requirements.txt
     ```
     
+- If you see the `psycopg2` error when starting the backend, then try to manually install it again, try:
+    ```cmd
+    pip install psycopg2-binary==2.9.9
+    ```
+
 #### (4) Run the Django backend
 ##### (4.1) Database model migrations
 
