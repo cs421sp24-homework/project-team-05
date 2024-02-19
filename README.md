@@ -71,7 +71,7 @@ SecHand is developed using the following version of technologies:
         ```
     - For Mac
         ```cmd
-        source /venv_3_12_1/bin/activate
+        source venv_3_12_1/bin/activate
         ```
 - This will start the virtural env and create a mark before your terminal prompt. 
 - To exit from the virtural environment, use:
@@ -80,7 +80,7 @@ SecHand is developed using the following version of technologies:
     ```
     or if the above doesn't work and you are running on Mac, try:
     ```cmd
-    source /venv_3_12_1/bin/deactivate
+    source venv_3_12_1/bin/deactivate
     ```
 
 #### (3) Install Django backend dependencies
