@@ -45,32 +45,49 @@ SecHand is developed using the following version of technologies:
 
 - If you have installed either Node/Python/Django on your computer with different versions, and do not wish to install another version of these due to your personal project dependencies. We recommened using a virtural environment to install the necessary packages.
     - To create a vertural environment, under the root folder of SecHand, uses the following command:
-        ```cmd
-        python -m venv <virtural env name>
-        ```
-        For example, use:
-        ```cmd
-        python -m venv venv_3_12_1 
-        ```
-        to represent a virtural environment with python version 3.12.1
+        - For Windows
+            ```cmd
+            python -m venv <virtural env name>
+            ```
+        - For Mac
+            ```cmd
+            python3 -m venv <virtural env name>
+            ```
+            For example, use:
+            ```cmd
+            python -m venv venv_3_12_1
+            or
+            python3 -m venv venv_3_12_1
+            ```
+            to represent a virtural environment with python version 3.12.1
+    - We'll use folder name *venv_3_12_1* in the following README file. When using command, **replace it as needed**.
 
 #### (2) Start the virtural environment
 
 - After created a virtural environment for this, you can use the following command to start it:
-    ```cmd
-    .\venv_3_12_1\Scripts\activate
-    ```
+    - For Windows
+        ```cmd
+        .\venv_3_12_1\Scripts\activate
+        ```
+    - For Mac
+        ```cmd
+        source /venv_3_12_1/bin/activate
+        ```
 - This will start the virtural env and create a mark before your terminal prompt. 
 - To exit from the virtural environment, use:
     ```cmd
     deactivate
+    ```
+    or if the above doesn't work and you are running on Mac, try:
+    ```cmd
+    source /venv_3_12_1/bin/deactivate
     ```
 
 #### (3) Install Django backend dependencies
 
 - To install necessary dependencies, navigate to the root folder of the project, where requirements.txt is located, and run:
     ```cmd
-    pip install -r .\requirements.txt
+    pip install -r requirements.txt
     ```
     
 #### (4) Run the Django backend
@@ -80,17 +97,17 @@ SecHand is developed using the following version of technologies:
 - Under the backend directory (\sechand_backend). Run the following commands to migrate the database:
 
     ```cmd
-    python .\manage.py makemigrations
+    python manage.py makemigrations
     ```
 
     ```cmd
-    python .\manage.py migrate
+    python manage.py migrate
     ```
 
 ##### (4.2) Run the Django backend
 - Under the same backend directory (\sechand_backend), run the following command to start the backend server:
     ```cmd
-    python .\manage.py runserver
+    python manage.py runserver
     ```
 - Now If everything works correctly, you should see Django is up and running, prompting:
     ```
@@ -132,11 +149,14 @@ SecHand is developed using the following version of technologies:
 
 - The frontend should now running on: http://localhost:5173/
 
-#### (7) Open  the following link in a browser: [Sechand](http://localhost:5173 )
+#### (7) Open  the following link in a browser: [http://localhost:5173/](http://localhost:5173 )
 
 ## Developing
 
-If you are developing on SecHand and setting up the environment, please refer to the **Installation** section of this file.
+- If you are developing on SecHand and setting up the environment, please refer to the **Installation** section of this file.
+
+- Note that due to properties of Django, **everytime**, if you make **any changes to the database model**, remember to migrate the model, or you won't see it in the database. Migration commands see ***Section 4.1***.
+    - If you saw some red warning message related to database model after launching the backend, you should also consider making a migration.
 
 ### Global configuration
 
