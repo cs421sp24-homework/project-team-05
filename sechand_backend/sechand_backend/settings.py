@@ -83,10 +83,10 @@ WSGI_APPLICATION = "sechand_backend.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd17c21nv7oqj2e',
-        'USER': 'dhknjgnjyirwdb',
-        'PASSWORD': '96e89ed40f861e1d826f4f00b2dc6162792c304603cfb5f39a772f45cf45171d',
-        'HOST': 'ec2-34-236-199-229.compute-1.amazonaws.com',
+        'NAME': 'dakjscaar3ocvm',
+        'USER': 'cnorcfyfbtqhoj',
+        'PASSWORD': '597997513cd1c5bc07069ecb78865dc22973ffee723d955720c6d7b29f8f10f1',
+        'HOST': 'ec2-3-217-127-153.compute-1.amazonaws.com',
         'PORT': '5432'
     }
 }
