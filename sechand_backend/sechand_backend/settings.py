@@ -81,13 +81,13 @@ WSGI_APPLICATION = "sechand_backend.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "sechand",
-        "USER": "root",
-        "PASSWORD": "123456",
-        "HOST": "127.0.0.1",
-        "PORT": "3306",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd17c21nv7oqj2e',
+        'USER': 'dhknjgnjyirwdb',
+        'PASSWORD': '96e89ed40f861e1d826f4f00b2dc6162792c304603cfb5f39a772f45cf45171d',
+        'HOST': 'ec2-34-236-199-229.compute-1.amazonaws.com',
+        'PORT': '5432'
     }
 }
 

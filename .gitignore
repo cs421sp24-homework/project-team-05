@@ -32,3 +32,4 @@ coverage
 
 */db.sqlite3
 /venv_3_12_1
+/sechand_backend/sechand_backend/__pycache__
