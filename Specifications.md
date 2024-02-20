@@ -18,14 +18,15 @@ The application should have the following functional requirements:
 * As a seller, I want to be able to post items I would like to sell, so people in need can buy them.
 * As a seller, I want to identify the buyer if we meet in person so that I know I am talking to the right person.
 * As a buyer, I want to buy items I see on the webpage that I am interested in.
-* As a buyer, I want to be able to search for items, so I can view goods I'm interested in in a quick way.
+* As a buyer, I want to be able to search for items, so I don't need to waste time on goods I'm not interested in.
 * As a buyer, I want to send a post when there are items that I want to buy but have not yet found online.
 * As a buyer, I want to filter what's for sale in my apartment by different categories, so I can get it safe and easy.
 * As a buyer, I want to collect potential items I may buy in the future and organize them in a wishlist.
-* As a buyer, I want to have real-time private chat with the seller, so I can bargain or ask for item details.
+* As a buyer, I want to be able to search for items, so I don't need to waste time on goods I'm not interested in.
+* As a seller, I want to make the communication in real time, so the trade can be more efficient.
 * As a buyer, I want to rate and write reviews for the seller each time I make a purchase so other buyers can decide the credibility of the seller based on the rating.
 ### Nice to Have
-* As a buyer, I want to see items near the my address on my homepage, so I can browse the items that are convenient for me to pick up.
+* As a buyer, I want to see items near my address on my homepage, so I can browse items convenient for pick up.
 * As a seller, I want the platform to send me a notification by text or email when buyers reach out to me, so I know someone is interested in my item.
 * As a buyer, I want to make payments on the platform so I can purchase for items safely and efficiently.
 
@@ -61,5 +62,9 @@ The application should have the following functional requirements:
 ## Similar Existing Apps
 * Ebay
 * Facebook Market Place
-* These two platforms do not target students, and they do not support apartment filtering
-* We encourage in-person delivery
+
+From potential clients perspective, these two platforms are not specifically targeting students. 
+
+Despite these apps could find potentially more items, the quality of the item is not guranteed, as long as the identity of the seller. 
+
+Because we encourage sellers and buyers meet in-person when selling items, it would be easier for buyers to check the item's condition. Plus, with "by apartment location" filtering and verified student identity, both sellers and buyers can have a secure and efficient trade.
