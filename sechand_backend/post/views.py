@@ -25,6 +25,7 @@ def GetSingleItem(request, item_id):
 @api_view(['POST'])
 def CreateItem(request):
     serializer = ItemSerializer(data=request.data)
+
     if serializer.is_valid():
         serializer.save()
         return JsonResponse(serializer.data, status=201)
