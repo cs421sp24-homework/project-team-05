@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    # "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "starter.apps.StarterConfig",
     "corsheaders",
-    "post"
+    "post",
+    "user"
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,18 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# User settings
+AUTH_USER_MODEL = 'user.CustomUser'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_HOST_USER = "sechand.donotreply@outlook.com"
+EMAIL_HOST_PASSWORD = "Sechand1234"
+
+# # Media Settings
+# MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
