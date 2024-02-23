@@ -33,3 +33,5 @@ coverage
 */db.sqlite3
 /venv_3_12_1
 **/__pycache__/
+**/migrations/__pycache__
+*.pyc
