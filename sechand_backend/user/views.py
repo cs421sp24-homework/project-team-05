@@ -3,16 +3,17 @@ from django.contrib.auth import get_user_model, authenticate, login
 from django.http import JsonResponse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_str
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import VerifyEmailCode, ResetPasswordCode
 from .utils import send_verify_email, send_reset_password
 from .serializers import CustomUserSerializer, VerifyEmailCodeSerializer, ResetPasswordCodeSerializer
 
 
-# Create your views here.
 UserModel = get_user_model()
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def custom_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -31,6 +32,7 @@ def custom_login(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -51,6 +53,7 @@ def register(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def verify_email(request, uid):
     # user = request.user
     code = request.data.get('code')
@@ -72,6 +75,7 @@ def verify_email(request, uid):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def forgot_password(request):
     email = request.data.get('email')
     try:
@@ -87,6 +91,7 @@ def forgot_password(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def verify_code(request, uid):
     code = request.data.get('code')
     try:
@@ -105,6 +110,7 @@ def verify_code(request, uid):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def reset_password(request, uid, token):
     try:
         # Update the user's password
@@ -120,3 +126,8 @@ def reset_password(request, uid, token):
     except UserModel.DoesNotExist:
         return JsonResponse({'message': 'Invalid user.'}, status=404)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def protected_view(request):
+    return JsonResponse(data={"message": "Hello, world!"})
