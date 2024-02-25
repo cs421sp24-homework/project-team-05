@@ -128,6 +128,18 @@ def reset_password(request, uid, token):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def protected_view(request):
-    return JsonResponse(data={"message": "Hello, world!"})
+def get_user_profile(request):
+    user = request.user
+    serializer = CustomUserSerializer(user)
+    return JsonResponse(serializer.data, status=200)
+
+
+@api_view(['PATCH'])
+def update_user_profile(request):
+    user = request.user
+    serializer = CustomUserSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data, status=200)
+    else:
+        return JsonResponse(serializer.errors, status=400)
