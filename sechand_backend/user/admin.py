@@ -1,3 +1,8 @@
 from django.contrib import admin
+from .models import CustomUser, VerifyEmailCode, ResetPasswordCode, Address
 
-# Register your models here.
+
+admin.site.register(CustomUser)
+admin.site.register(VerifyEmailCode)
+admin.site.register(ResetPasswordCode)
+admin.site.register(Address)
