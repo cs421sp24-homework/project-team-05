@@ -148,9 +148,9 @@ EMAIL_HOST = 'smtp-mail.outlook.com'
 EMAIL_HOST_USER = "sechand.donotreply@outlook.com"
 EMAIL_HOST_PASSWORD = "Sechand1234"
 
-# # Media Settings
-# MEDIA_ROOT = BASE_DIR / 'media'
-# MEDIA_URL = '/media/'
+# Media Settings
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # JWT authentication settings
 REST_FRAMEWORK = {

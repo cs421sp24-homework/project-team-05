@@ -37,10 +37,13 @@ def register(request):
     username = request.data.get('username')
     password = request.data.get('password')
     email = request.data.get('email')
+    displayname = request.data.get('displayname')
+    address = request.data.get('address')
+    image = request.data.get('image')
     print(username, password, email)
     # Create the user
     try:
-        user = UserModel.objects.create_user(username=username, email=email, password=password)
+        user = UserModel.objects.create_user(username=username, email=email, password=password, displayname=displayname, address=address, image=image)
         # Send verification email with the code
         try:
             send_verify_email(user)
@@ -58,20 +61,25 @@ def verify_email(request, uid):
     # user = request.user
     code = request.data.get('code')
     try:
-        # uid = force_text(urlsafe_base64_decode(uidb64))
         user = UserModel.objects.get(pk=uid)
-        verification_code = VerifyEmailCode.objects.get(user=user)
-        if verification_code.code != code:
-            return JsonResponse({'message': 'Invalid verification code.'}, status=400)
-        if verification_code.is_expired():
-            return JsonResponse({'message': 'The verification code has expired.'}, status=400)
-        # Update the user's status to verified
-        user.is_verified = True
-        user.save()
-        verification_code.delete()
-        return JsonResponse({'message': 'Email verified successfully.'})
-    except VerifyEmailCode.DoesNotExist:
-        return JsonResponse({'message': 'User does not exist.'}, status=404)
+        if not user.is_verified:
+            try:
+                verification_code = VerifyEmailCode.objects.get(user=user)
+                if verification_code.code != code:
+                    return JsonResponse({'message': 'Invalid verification code.'}, status=400)
+                if verification_code.is_expired():
+                    return JsonResponse({'message': 'The verification code has expired.'}, status=400)
+                # Update the user's status to verified
+                user.is_verified = True
+                user.save()
+                verification_code.delete()
+                return JsonResponse({'message': 'Email verified successfully.'})
+            except VerifyEmailCode.DoesNotExist:
+                return JsonResponse({'message': 'Invalid verification code.'}, status=404)
+        else:
+            return JsonResponse({'message': 'Email already verified.'}, status=400)
+    except UserModel.DoesNotExist:
+        return JsonResponse({'message': 'Invalid user.'}, status=404)
 
 
 @api_view(['POST'])
@@ -98,13 +106,16 @@ def verify_code(request, uid):
         code = request.data.get('code')
         # uid = force_str(urlsafe_base64_decode(uidb64))
         user = UserModel.objects.get(pk=uid)
-        verification_code = ResetPasswordCode.objects.get(user=user)
-        if verification_code.code != code:
-            return JsonResponse({'message': 'Invalid verification code.'}, status=400)
-        if verification_code.is_expired():
-            return JsonResponse({'message': 'The verification code has expired.'}, status=400)
-        serializer = ResetPasswordCodeSerializer(verification_code)
-        return JsonResponse(serializer.data, status=201)
+        try:
+            verification_code = ResetPasswordCode.objects.get(user=user)
+            if verification_code.code != code:
+                return JsonResponse({'message': 'Invalid verification code.'}, status=400)
+            if verification_code.is_expired():
+                return JsonResponse({'message': 'The verification code has expired.'}, status=400)
+            serializer = ResetPasswordCodeSerializer(verification_code)
+            return JsonResponse(serializer.data, status=201)
+        except ResetPasswordCode.DoesNotExist:
+            return JsonResponse({'message': 'Invalid verification code.'}, status=404)
     except ResetPasswordCode.DoesNotExist or UserModel.DoesNotExist:
         return JsonResponse({'message': 'Invalid verification code.'}, status=404)
 
@@ -115,14 +126,17 @@ def reset_password(request, uid, token):
     try:
         # Update the user's password
         user = UserModel.objects.get(pk=uid)
-        verification_code = ResetPasswordCode.objects.get(user=user)
-        if verification_code.token != token:
-            return JsonResponse({'message': 'Invalid token.'}, status=400)
-        new_password = request.data.get('new_password')
-        user.set_password(new_password)
-        user.save()
-        verification_code.delete()
-        return JsonResponse({'message': 'Password reset successfully.'}, status=201)
+        try:
+            verification_code = ResetPasswordCode.objects.get(user=user)
+            if verification_code.token != token:
+                return JsonResponse({'message': 'Invalid token.'}, status=400)
+            new_password = request.data.get('new_password')
+            user.set_password(new_password)
+            user.save()
+            verification_code.delete()
+            return JsonResponse({'message': 'Password reset successfully.'}, status=201)
+        except ResetPasswordCode.DoesNotExist:
+            return JsonResponse({'message': 'Invalid token.'}, status=404)
     except UserModel.DoesNotExist:
         return JsonResponse({'message': 'Invalid user.'}, status=404)
 
