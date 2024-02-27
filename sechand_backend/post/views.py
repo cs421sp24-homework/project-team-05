@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.db import IntegrityError
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import ItemSerializer
 from .models import Item
 import uuid
@@ -9,6 +10,7 @@ import uuid
 # Model(Item): id name description tags price user_id
 
 @api_view(['GET'])
+# @permission_classes([AllowAny])
 def GetAllItems(request):
     count = request.GET.get('count', 20)
     # Sanitize params
@@ -44,6 +46,7 @@ def GetAllUserItems(request, user_id):
         return JsonResponse({}, status=200)
 
 @api_view(['POST'])
+# @permission_classes([AllowAny])
 def CreateItem(request):
     # TODO: verify User login status
     req_data = request.data
