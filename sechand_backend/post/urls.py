@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("allItems/view/<uuid:item_id>", views.GetAllUserItems, name="GetAllUserItems"),
+
     # GET ex: /post/all
     path("allItems/view", views.GetAllItems, name="GetAllItems"),
 

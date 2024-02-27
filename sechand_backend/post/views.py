@@ -10,7 +10,17 @@ import uuid
 
 @api_view(['GET'])
 def GetAllItems(request):
-    all_items = Item.objects.all()
+    count = request.GET.get('count', 20)
+    # Sanitize params
+    try:
+        count = int(count)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid count parameter, must be an integer'}, status=400)
+    
+    if count < 1 or count > 30:
+        return JsonResponse({'error': 'Count parameter too large'}, status=400)
+    
+    all_items = Item.objects.all()[:count]
     serializer = ItemSerializer(all_items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
@@ -22,6 +32,16 @@ def GetSingleItem(request, item_id):
         return JsonResponse(serializer.data, status=200)
     except Item.DoesNotExist:
         return JsonResponse({'error': 'Item not found'}, status=404)
+
+@api_view(['GET'])
+def GetAllUserItems(request, user_id):
+    # TODO: verify Seller qualification
+    user_items = Item.objects.filter(user_id = user_id)
+    if user_items.exists():
+        serializer = ItemSerializer(user_items, many=True)
+        return JsonResponse(serializer.data, status=200)
+    else:
+        return JsonResponse({}, status=200)
 
 @api_view(['POST'])
 def CreateItem(request):
