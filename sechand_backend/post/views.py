@@ -10,7 +10,7 @@ import uuid
 # Model(Item): id name description tags price user_id
 
 @api_view(['GET'])
-# @permission_classes([AllowAny])
+@permission_classes([AllowAny])
 def GetAllItems(request):
     count = request.GET.get('count', 20)
     # Sanitize params
@@ -27,7 +27,8 @@ def GetAllItems(request):
     return JsonResponse(serializer.data, safe=False, status=200)
 
 @api_view(['GET'])
-def GetSingleItem(request, item_id):
+@permission_classes([AllowAny])
+def GetItem(request, item_id):
     try:
         item = Item.objects.get(id = item_id)
         serializer = ItemSerializer(item)
@@ -36,8 +37,9 @@ def GetSingleItem(request, item_id):
         return JsonResponse({'error': 'Item not found'}, status=404)
 
 @api_view(['GET'])
-def GetAllUserItems(request, user_id):
+def GetAllUserItems(request):
     # TODO: verify Seller qualification
+    user_id = request.data.get('user_id')
     user_items = Item.objects.filter(user_id = user_id)
     if user_items.exists():
         serializer = ItemSerializer(user_items, many=True)
@@ -46,7 +48,7 @@ def GetAllUserItems(request, user_id):
         return JsonResponse({}, status=200)
 
 @api_view(['POST'])
-# @permission_classes([AllowAny])
+@permission_classes([AllowAny])
 def CreateItem(request):
     # TODO: verify User login status
     req_data = request.data
@@ -80,6 +82,7 @@ def UpdateItem(request, item_id):
         return JsonResponse(serializer.errors, status=400)
     
 @api_view(['DELETE'])
+@permission_classes([AllowAny])
 def DeleteItem(request, item_id):
     try:
         # TODO: verify Seller qualification
