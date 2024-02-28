@@ -11,20 +11,22 @@ import uuid
 
 @api_view(['GET'])
 def GetAllUserItems(request):
-    # TODO: verify Seller qualification
-    user_id = request.data.get('user_id')
-    user_items = Item.objects.filter(user_id = user_id)
-    if user_items.exists():
-        serializer = ItemSerializer(user_items, many=True)
-        return JsonResponse(serializer.data, status=200)
+    if(request.user):
+        user_id = request.user.id
+        user_items = Item.objects.filter(user_id = user_id)
+        if user_items.exists():
+            serializer = ItemSerializer(user_items, many=True)
+            return JsonResponse(serializer.data, status=200)
+        else:
+            return JsonResponse({}, status=200)
     else:
-        return JsonResponse({}, status=200)
+        return JsonResponse({'error': 'User did not login or have valid credentials'}, status=400)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def GetAllItems(request):
     # get user status
-    count = request.GET.get('count', 20)
+    count = request.data.get('count', 4)
     # Sanitize params
     try:
         count = int(count)
@@ -49,11 +51,14 @@ def ProcessSingleItem(request, item_id):
         except Item.DoesNotExist:
             return JsonResponse({'error': 'Item not found'}, status=404)          
     elif(request.method == "PATCH"):
-        try:
+        if(request.user):
+            try:
             # TODO: verify Seller qualification
-            item = Item.objects.get(id=item_id)
-        except Item.DoesNotExist:
-            return JsonResponse({'error': 'Item not found'}, status=404)
+                item = Item.objects.get(id=item_id)
+            except Item.DoesNotExist:
+                return JsonResponse({'error': 'Item not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'User did not login or have valid credentials'}, status=400)
         
         serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
@@ -62,19 +67,22 @@ def ProcessSingleItem(request, item_id):
         else:
             return JsonResponse(serializer.errors, status=400)
     elif(request.method == "DELETE"):
-        try:
-            # TODO: verify Seller qualification
-            item = Item.objects.get(id=item_id)
-            item.delete()
-            return JsonResponse({'message': 'Item deleted'}, status=200)
-        except Item.DoesNotExist:
-            return JsonResponse({'error': 'Item not found'}, status=404)
+        if(request.user):
+            user_id = request.user.id
+            try:
+                item = Item.objects.get(id=item_id, user_id=user_id)
+                item.delete()
+                return JsonResponse({'message': 'Item deleted'}, status=200)
+            except Item.DoesNotExist:
+                return JsonResponse({'error': 'Item not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'User did not login or have valid credentials'}, status=400)
         
 @api_view(['POST'])
 # TODO: remove when actural release
 @permission_classes([AllowAny])
 def CreateNewItem(request):
-    # TODO: verify Seller qualification
+    if(request.user):
         req_data = request.data
         saved = False
         while not saved:
@@ -88,4 +96,6 @@ def CreateNewItem(request):
                 except IntegrityError:
                     continue
             else:
-                return JsonResponse(serializer.errors, status=400)
+                return JsonResponse({'error': 'Failed with serializing new object.'}, status=400)
+    else:
+        return JsonResponse({'error': 'User did not login or have valid credentials'}, status=400)

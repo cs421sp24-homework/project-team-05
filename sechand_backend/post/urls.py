@@ -6,11 +6,13 @@ urlpatterns = [
     path("UserItems/all", views.GetAllUserItems, name="GetAllUserItems"),
 
     # GET
+    # request.body parameter:
+    #   int count: indicates numbers of each request should return
     path("Items/all", views.GetAllItems, name="GetAllItems"),
 
-    # GET PATCH DELETE
-    path("Item/<uuid:item_id>", views.ProcessSingleItem, name="GetSingleItem"),
-
     # POST
-    path("Item/new", views.CreateItem, name="CreateItem")
+    path("Item/new", views.CreateNewItem, name="CreateItem"),
+
+    # GET PATCH DELETE
+    path("Item/<uuid:item_id>", views.ProcessSingleItem, name="GetSingleItem")
 ]
