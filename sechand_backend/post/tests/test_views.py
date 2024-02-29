@@ -31,24 +31,20 @@ class GetAllItemsTest(TestCase):
         response = self.client.get(self.url, {'count': 5})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-# class ProcessSingleItemTest(TestCase):
-#     def setUp(self):
-#         self.client = APIClient()
-#         self.user = User.objects.create_user(username='testuser', password='testpass')
-#         self.item = Item.objects.create(name='Test Item', description='Test Desc', category='Test Category', price=10.01, user=self.user)
-#         self.url = reverse('CreateNewItem', kwargs={'item_id': self.item.id})
+class ProcessSingleItemTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.item = Item.objects.create(name='Test Item', description='Test Desc', category='Test Category', price=10.01, seller=self.user)
+        self.url = reverse('ProcessSingleItem', kwargs={'item_id': self.item.id})
 
-#     def test_get_single_item(self):
-#         response = self.client.get(self.url)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_get_single_item(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-#     def test_patch_single_item_no_auth(self):
-#         response = self.client.patch(self.url, {'name': 'Updated Name'})
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_delete_single_item_with_auth(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-#     def test_delete_single_item_with_auth(self):
-#         self.client.force_authenticate(user=self.user)
-#         response = self.client.delete(self.url)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    

@@ -14,5 +14,5 @@ urlpatterns = [
     path("Item/new", views.CreateNewItem, name="CreateNewItem"),
 
     # GET PATCH DELETE
-    path("Item/<uuid:item_id>", views.ProcessSingleItem, name="GetSingleItem")
+    path("Item/<uuid:item_id>", views.ProcessSingleItem, name="ProcessSingleItem")
 ]
