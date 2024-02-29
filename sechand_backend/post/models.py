@@ -9,7 +9,7 @@ class Item(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField()
     # TODO: shrink below length limit
-    catagory = models.CharField(max_length=128, null=True)
+    category = models.CharField(max_length=128, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_sold = models.BooleanField(default=False)
