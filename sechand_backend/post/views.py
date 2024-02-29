@@ -47,7 +47,7 @@ def ProcessSingleItem(request, item_id):
     if(request.method == "GET"):
         try:
             item = Item.objects.get(id = item_id)
-            serializer = ItemSerializer(item)
+            serializer = ItemSerializerWithSellerName(item)
             return JsonResponse(serializer.data, status=200)
         except Item.DoesNotExist:
             return JsonResponse({'error': 'Item not found'}, status=404)          
