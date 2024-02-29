@@ -1,9 +1,10 @@
 <template>
-  <div class="card" @click="onClick()">
-    <img :src="card.imageUrl" class="card-img-top" :alt="card.title" />
+  <div class="card" @click="cardDetail">
+    <img :src="card.imageUrl" class="card-img-top" :alt="card.name" />
     <div class="card-body">
-      <h5 class="card-title">{{ card.title }}</h5>
-      <p class="card-text">{{ card.text }}</p>
+      <h5 class="card-name">{{ card.name }}</h5>
+      <p class="card-description">{{ card.description }}</p>
+      <p class="card-price">Price: ${{ card.price }}</p>
     </div>
     <div class="card-seller">{{ card.seller }}</div>
   </div>
@@ -15,8 +16,9 @@ export default {
     card: Object,
   },
   methods: {
-    onClick() {
-      this.$emit("card-detail");
+    cardDetail(card) {
+      this.$router.push("/showitem/" + card.id);
+      console.log("Detail");
     },
   },
 };
@@ -27,6 +29,7 @@ export default {
   width: 18rem;
   cursor: pointer;
 }
+
 .card-seller {
   position: absolute;
   bottom: 0;

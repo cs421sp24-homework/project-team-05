@@ -1,17 +1,13 @@
 <template>
-  <div class="container">
-    <UserNavbar @profile="profile" icon_src="/icon.jpg" Username="User" />
+  <div>
+    <UserNavbar icon_src="/icon.jpg" Username="User" />
     <Seach />
-    <Dropdown
-      text="Location"
-      @dropdown-click="$emit('showLocation')"
-      emitMethod="Updatelocation"
-      :dropdownData="locations"
-    ></Dropdown>
+    <Dropdown text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
+      :dropdownData="locations"></Dropdown>
     <Cards :cards="cardsData" @item-detail="handleItemDetail" />
   </div>
 </template>
-  <script>
+<script>
 import UserNavbar from "../components/UserNavbar.vue";
 import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
@@ -33,48 +29,49 @@ export default {
       cardsData: [
         {
           id: 1,
-          title: "Title 1",
-          text: "Text for card 1",
+          name: "Title 1",
+          description: "Text for card 1",
           imageUrl: "/icon.jpg",
+          seller: "Seller 1",
+          price: 100,
         },
         {
           id: 2,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
+          name: "Title 1",
+          description: "Text for card 1",
+          imageUrl: "/icon.jpg",
+          seller: "Seller 1",
+          price: 100,
         },
         {
           id: 3,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
+          name: "Title 1",
+          description: "Text for card 1",
+          imageUrl: "/icon.jpg",
+          seller: "Seller 1",
+          price: 100,
         },
         {
           id: 4,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
+          name: "Title 1",
+          description: "Text for card 1",
+          imageUrl: "/icon.jpg",
+          seller: "Seller 1",
+          price: 100,
         },
         {
           id: 5,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 6,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
+          name: "Title 1",
+          description: "Text for card 1",
+          imageUrl: "/icon.jpg",
+          seller: "Seller 1",
+          price: 100,
         },
       ],
     };
   },
   methods: {
-    profile() {
-      // this.$router.push("/profile");
-      console.log("profile");
-    },
+
     showLocation() {
       console.log("showLocation");
     },

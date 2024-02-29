@@ -3,29 +3,19 @@
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
         <img src="/icon.jpg" alt="Icon" class="mr-2 icon" />
-        Sechand</a
-      >
+        Sechand</a>
       <div class="row justify-content-end">
         <div class="col-auto">
-          <img
-            :src="icon_src"
-            alt="User Icon"
-            class="user-icon"
-            @click="openUserProfile"
-          />
+          <img :src="icon_src" alt="User Icon" class="user-icon" @click="profile" />
         </div>
         <div class="col-auto">
-          <Button
-            @btn-click="$emit('profile')"
-            :text="Username"
-            color="transparent"
-          ></Button>
+          <Button @btn-click="profile" :text="Username" color="transparent"></Button>
         </div>
       </div>
     </div>
   </nav>
 </template>
-  <script>
+<script>
 import Button from "./Button.vue";
 export default {
   name: "UserNavbar",
@@ -36,19 +26,32 @@ export default {
   components: {
     Button,
   },
+  methods: {
+    profile() {
+      this.$router.push("/me");
+      console.log("profile");
+    },
+  }
 };
 </script>
-  <style>
+<style>
 .space {
-  margin-left: 10px; /* Adjust the margin to create space between buttons */
+  margin-left: 10px;
+  /* Adjust the margin to create space between buttons */
 }
+
 .icon {
-  width: 30px; /* Adjust width as needed */
-  height: 30px; /* Adjust height as needed */
+  width: 30px;
+  /* Adjust width as needed */
+  height: 30px;
+  /* Adjust height as needed */
 }
+
 .user-icon {
-  width: 30px; /* Adjust width as needed */
-  height: 30px; /* Adjust height as needed */
+  width: 30px;
+  /* Adjust width as needed */
+  height: 30px;
+  /* Adjust height as needed */
   cursor: pointer;
 }
 </style>

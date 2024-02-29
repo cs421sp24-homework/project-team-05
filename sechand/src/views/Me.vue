@@ -1,10 +1,6 @@
 <template>
-  <div class="container">
-    <UserNavbar
-      :icon_src="icon_src"
-      :Username="Username"
-      @profile="openUserProfile"
-    />
+  <div>
+    <UserNavbar :icon_src="icon_src" :Username="Username" />
     <div class="row">
       <div class="col-12">
         <h1>My Profile</h1>
@@ -14,12 +10,7 @@
     <div class="row mb-3">
       <div class="col-12">
         <div class="d-flex align-items-center">
-          <img
-            :src="icon_src"
-            alt="User Icon"
-            class="me-3"
-            style="width: 300px; height: 300px; border-radius: 50%"
-          />
+          <img :src="icon_src" alt="User Icon" class="me-3" style="width: 300px; height: 300px; border-radius: 50%" />
           <div>
             <p class="mb-1 font-large-vh font-large-vw">{{ Username }}</p>
             <!-- Increase font size -->
@@ -27,12 +18,7 @@
             <!-- Increase font size -->
           </div>
         </div>
-        <Button
-          class="edit-profile-btn"
-          text="Edit Profile"
-          color="transparent"
-          @click="editProfile"
-        >
+        <Button class="edit-profile-btn" text="Edit Profile" color="transparent" @click="editProfile">
         </Button>
       </div>
     </div>
@@ -107,9 +93,6 @@ export default {
     handleItemDetail(id) {
       console.log("Item detail", id);
     },
-    openUserProfile() {
-      console.log("Open user profile");
-    },
     editProfile() {
       // this.$router.push("/profile");
       console.log("Edit profile");
@@ -120,31 +103,46 @@ export default {
 <style scoped>
 /* Add scoped styles if needed */
 .font-large-vh {
-  font-size: 3vh; /* Font size will be 10% of the viewport height */
+  font-size: 3vh;
+  /* Font size will be 10% of the viewport height */
 }
 
 .font-large-vw {
-  font-size: 3vw; /* Font size will be 10% of the viewport width */
+  font-size: 3vw;
+  /* Font size will be 10% of the viewport width */
 }
+
 .card-container {
-  overflow-x: auto; /* Enable horizontal scrollbar */
-  white-space: nowrap; /* Prevent card items from wrapping */
+  overflow-x: auto;
+  /* Enable horizontal scrollbar */
+  white-space: nowrap;
+  /* Prevent card items from wrapping */
 }
 
 .card {
-  display: inline-block; /* Display cards in one row */
-  margin-right: 10px; /* Add margin between cards */
+  display: inline-block;
+  /* Display cards in one row */
+  margin-right: 10px;
+  /* Add margin between cards */
 }
+
 .edit-profile-btn {
-  background: none; /* No background color */
-  border: none; /* No border */
-  color: inherit; /* Inherit text color */
-  text-decoration: underline; /* Underline text */
-  cursor: pointer; /* Change cursor to pointer on hover */
-  outline: none; /* Remove default focus outline */
+  background: none;
+  /* No background color */
+  border: none;
+  /* No border */
+  color: inherit;
+  /* Inherit text color */
+  text-decoration: underline;
+  /* Underline text */
+  cursor: pointer;
+  /* Change cursor to pointer on hover */
+  outline: none;
+  /* Remove default focus outline */
 }
 
 .edit-profile-btn:hover {
-  color: #555; /* Change text color on hover */
+  color: #555;
+  /* Change text color on hover */
 }
 </style>

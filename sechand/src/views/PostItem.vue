@@ -1,10 +1,6 @@
 <template>
-  <div class="container">
-    <UserNavbar
-      :icon_src="icon_src"
-      :Username="Username"
-      @profile="openUserProfile"
-    />
+  <div>
+    <UserNavbar :icon_src="icon_src" :Username="Username" />
     <div class="row">
       <div class="col-12">
         <h1>New Post</h1>
@@ -16,33 +12,15 @@
           <!-- Item Name -->
           <div class="mb-3">
             <label for="itemName" class="form-label">Item Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="itemName"
-              v-model="itemName"
-              required
-            />
+            <input type="text" class="form-control" id="itemName" v-model="itemName" required />
           </div>
 
           <!-- Upload Picture -->
           <div class="mb-3 d-flex align-items-center">
-            <label for="uploadPicture" class="form-label me-2"
-              >Upload Picture</label
-            >
-            <input
-              type="file"
-              id="uploadPicture"
-              accept="image/*"
-              style="display: none"
-              ref="fileInput"
-              @change="handleFileUpload"
-            />
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="$refs.fileInput.click()"
-            >
+            <label for="uploadPicture" class="form-label me-2">Upload Picture</label>
+            <input type="file" id="uploadPicture" accept="image/*" style="display: none" ref="fileInput"
+              @change="handleFileUpload" />
+            <button type="button" class="btn btn-primary" @click="$refs.fileInput.click()">
               Choose File
             </button>
           </div>
@@ -50,46 +28,24 @@
           <!-- Description -->
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea
-              class="form-control"
-              id="description"
-              v-model="description"
-              rows="3"
-              required
-            ></textarea>
+            <textarea class="form-control" id="description" v-model="description" rows="3" required></textarea>
           </div>
 
           <!-- Price -->
           <div class="mb-3">
             <label for="price" class="form-label">Price</label>
-            <input
-              type="number"
-              class="form-control"
-              id="price"
-              v-model="price"
-              required
-            />
+            <input type="number" class="form-control" id="price" v-model="price" required />
           </div>
 
           <!-- Address -->
           <div class="mb-3">
             <label for="address" class="form-label">Address</label>
-            <input
-              type="text"
-              class="form-control"
-              id="address"
-              :value="address"
-              readonly
-            />
+            <input type="text" class="form-control" id="address" :value="address" readonly />
           </div>
 
           <!-- Buttons -->
           <div class="d-flex justify-content-end">
-            <button
-              type="button"
-              class="btn btn-secondary me-2"
-              @click="cancel"
-            >
+            <button type="button" class="btn btn-secondary me-2" @click="cancel">
               Cancel
             </button>
             <button type="submit" class="btn btn-primary">Post</button>
@@ -100,12 +56,7 @@
         <!-- Image Preview -->
         <div class="mb-3">
           <label class="form-label">Image Preview</label>
-          <img
-            v-if="picture"
-            :src="picturePreview"
-            class="img-fluid"
-            alt="Image Preview"
-          />
+          <img v-if="picture" :src="picturePreview" class="img-fluid" alt="Image Preview" />
           <div v-else class="text-muted">No image selected</div>
         </div>
       </div>
@@ -113,7 +64,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 import UserNavbar from "@/components/UserNavbar.vue";
 export default {
   name: "NewPost",

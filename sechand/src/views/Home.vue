@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <Navbar @login="login" @signup="signup" />
     <Seach />
     <Dropdown
