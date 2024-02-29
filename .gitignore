@@ -35,3 +35,6 @@ coverage
 /sechand_backend/sechand_backend/__pycache__
 /venv
 *.pyc
+**/__pycache__/
+**/migrations/__pycache__
+*.pyc
