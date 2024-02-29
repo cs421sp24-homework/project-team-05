@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar :icon_src="icon_src" :Username="Username" />
+    <UserNavbar :currentUser="currentUser" />
     <div class="row">
       <div class="col-12">
         <h1>New Post</h1>
@@ -40,7 +40,7 @@
           <!-- Address -->
           <div class="mb-3">
             <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" id="address" :value="address" readonly />
+            <input type="text" class="form-control" id="address" :value="this.currentUser.address" readonly />
           </div>
 
           <!-- Buttons -->
@@ -69,13 +69,14 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 export default {
   name: "NewPost",
+  props: {
+    currentUser: Object,
+  },
   components: {
     UserNavbar,
   },
   data() {
     return {
-      icon_src: "/icon.jpg",
-      Username: "User",
       itemName: "",
       description: "",
       price: "",

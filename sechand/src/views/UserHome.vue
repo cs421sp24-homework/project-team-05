@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar icon_src="/icon.jpg" Username="User" />
+    <UserNavbar :currentUser="currentUser" />
     <Seach />
     <Dropdown text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
       :dropdownData="locations"></Dropdown>
@@ -14,6 +14,10 @@ import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
 import axios from "axios";
 export default {
+  name: "UserHome",
+  props: {
+    currentUser: Object,
+  },
   components: {
     UserNavbar,
     Seach,

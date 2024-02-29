@@ -12,7 +12,7 @@ import uuid
 
 @api_view(['GET'])
 def GetAllUserItems(request):
-    if(request.user):
+    # if(request.user):
         user_id = request.user.id
         user_items = Item.objects.filter(seller = user_id)
         if user_items.exists():
@@ -20,14 +20,14 @@ def GetAllUserItems(request):
             return JsonResponse(serializer.data, status=200)
         else:
             return JsonResponse({}, status=200)
-    else:
-        return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
+    # else:
+    #     return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def GetAllItems(request):
     # get user status
-    count = request.data.get('count', 4)
+    count = request.data.get('count', 10)
     # Sanitize params
     try:
         count = int(count)
@@ -52,14 +52,14 @@ def ProcessSingleItem(request, item_id):
         except Item.DoesNotExist:
             return JsonResponse({'error': 'Item not found'}, status=404)          
     elif(request.method == "PATCH"):
-        if(request.user):
-            try:
-            # TODO: verify Seller qualification
-                item = Item.objects.get(id=item_id)
-            except Item.DoesNotExist:
-                return JsonResponse({'error': 'Item not found'}, status=404)
-        else:
-            return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        # if(request.user):
+        try:
+        # TODO: verify Seller qualification
+            item = Item.objects.get(id=item_id)
+        except Item.DoesNotExist:
+            return JsonResponse({'error': 'Item not found'}, status=404)
+        # else:
+        #     return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
         serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
@@ -68,7 +68,7 @@ def ProcessSingleItem(request, item_id):
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif(request.method == "DELETE"):
-        if(request.user):
+        # if(request.user):
             user_id = request.user.id
             # user_id = request.data.get('user_id')
             try:
@@ -77,14 +77,14 @@ def ProcessSingleItem(request, item_id):
                 return JsonResponse({'message': 'Item deleted'}, status=200)
             except Item.DoesNotExist:
                 return JsonResponse({'error': 'Item not found'}, status=404)
-        else:
-            return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        # else:
+        #     return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
 @api_view(['POST'])
 # TODO: remove when actural release
 @permission_classes([AllowAny])
 def CreateNewItem(request):
-    if(request.user):
+    # if(request.user):
         req_data = request.data
         saved = False
         while not saved:
@@ -99,5 +99,5 @@ def CreateNewItem(request):
                     continue
             else:
                 return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    # else:
+    #     return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)

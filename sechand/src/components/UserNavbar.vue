@@ -6,10 +6,10 @@
         Sechand</a>
       <div class="row justify-content-end">
         <div class="col-auto">
-          <img :src="icon_src" alt="User Icon" class="user-icon" @click="profile" />
+          <img :src="this.currentUser.image" alt="User Icon" class="user-icon" @click="profile" />
         </div>
         <div class="col-auto">
-          <Button @btn-click="profile" :text="Username" color="transparent"></Button>
+          <Button @btn-click="profile" :text="this.currentUser.displayname" color="transparent"></Button>
         </div>
       </div>
     </div>
@@ -20,8 +20,7 @@ import Button from "./Button.vue";
 export default {
   name: "UserNavbar",
   props: {
-    icon_src: String,
-    Username: String,
+    currentUser: Object,
   },
   components: {
     Button,

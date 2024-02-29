@@ -8,18 +8,14 @@ export default {
   components: {
     HelloWorld,
   },
-  props: {
-    icon_src: String,
-    Username: String,
-  },
   data() {
     return {
       user: {
-        address: null,
-        displayname: "",
+        address: "dwaugduwagdwabuiwgdujwabd",
+        displayname: "sbxzx",
         email: "zxu129@jh.edu",
         id: 11,
-        image: null,
+        image: "/icon.jpg",
         username: "user",
       },
     };

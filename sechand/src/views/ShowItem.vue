@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar :icon_src="icon_src" :Username="Username" />
+        <UserNavbar :currentUser="currentUser" />
         <div class="item-detail">
             <!-- Left side: Image -->
             <div class="left-side">
@@ -11,7 +11,7 @@
             <div class="right-side">
                 <h2>{{ item.name }}</h2>
                 <p>Price: ${{ item.price }}</p>
-                <p>Seller: {{ item.seller }}</p>
+                <p>Seller: {{ item.displayname }}</p>
                 <img :src="item.sellerIcon" alt="Seller Icon" />
 
                 <!-- Description -->
@@ -41,8 +41,6 @@ export default {
     data() {
         return {
             isCurrentUserSeller: false,
-            icon_src: "/icon.jpg",
-            Username: "User",
             isLoading: false,
             item: {},
             id: null,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar :icon_src="icon_src" :Username="Username" />
+    <UserNavbar :currentUser="currentUser" />
     <div class="row">
       <div class="col-12">
         <h1>My Profile</h1>
@@ -10,15 +10,16 @@
     <div class="row mb-3">
       <div class="col-12">
         <div class="d-flex align-items-center">
-          <img :src="icon_src" alt="User Icon" class="me-3" style="width: 300px; height: 300px; border-radius: 50%" />
+          <img :src="this.currentUser.image" alt="User Icon" class="me-3"
+            style="width: 300px; height: 300px; border-radius: 50%" />
           <div>
-            <p class="mb-1 font-large-vh font-large-vw">{{ Username }}</p>
+            <p class="mb-1 font-large-vh font-large-vw">{{ this.currentUser.displayname }}</p>
             <!-- Increase font size -->
-            <p class="mb-0 font-large-vh font-large-vw">{{ location }}</p>
+            <p class="mb-0 font-large-vh font-large-vw">{{ this.currentUser.address }}</p>
             <!-- Increase font size -->
           </div>
         </div>
-        <Button class="edit-profile-btn" text="Edit Profile" color="transparent" @click="editProfile">
+        <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
         </Button>
       </div>
     </div>
@@ -40,6 +41,9 @@ import Button from "@/components/Button.vue";
 import axios from "axios";
 export default {
   name: "Me",
+  props: {
+    currentUser: Object,
+  },
   components: {
     UserNavbar,
     Cards,
@@ -47,9 +51,6 @@ export default {
   },
   data() {
     return {
-      icon_src: "/icon.jpg",
-      Username: "User",
-      location: "Location",
       cardsData: [],
     };
   },
@@ -117,7 +118,7 @@ export default {
 }
 
 .edit-profile-btn:hover {
-  color: #555;
+  color: #8a1717;
   /* Change text color on hover */
 }
 </style>

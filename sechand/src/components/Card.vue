@@ -6,7 +6,7 @@
       <p class="card-description">{{ card.description }}</p>
       <p class="card-price">Price: ${{ card.price }}</p>
     </div>
-    <div class="card-seller">{{ card.seller }}</div>
+    <div class="card-seller">{{ card.displayname }}</div>
   </div>
 </template>
 <script>
