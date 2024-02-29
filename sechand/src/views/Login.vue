@@ -72,7 +72,7 @@
                 <label class="form-label" style="text-align: left; margin-top: 4%;">New Password</label>
                 <input type="password" class="form-control" placeholder="Enter your new password" @input="initTerr" v-model="newPW"/>
                 <div class="form-text" style="font-size: small;">
-                    Your password must be 8-20 characters long
+                    * 6-20 characters including letters and numbers
                 </div>
             </div>
 
@@ -86,8 +86,8 @@
             </div>
 
             <div style="text-align: center; margin-top: 2%; margin-bottom: 2%;">
-                <button class="btn btn-secondary" style="margin-right:8%; width: 12%;" @click="exitReset">Cancel</button>
-                <button class="btn btn-primary" style="width: 12%;" @click="tryReset">Reset</button>
+                <button class="btn btn-secondary" style="font-size: 1.2vw; margin-right:8%; width: 15%;" @click="exitReset">Cancel</button>
+                <button class="btn btn-primary" style="font-size: 1.2vw; width: 15%;" @click="tryReset">Reset</button>
             </div>
 
         </div>
@@ -108,7 +108,7 @@
                 toast_err:0,
                 verCode: "",
                 newPW: "",
-                repPW:""
+                repPW: ""
             }
         },
 
@@ -117,52 +117,75 @@
                 if (this.state == 1) return "Empty JHED!";
                 else if (this.state == 2) return "Empty password!";
                 else if (this.state == 3) return "Unexpected error, please retry later.";
-                else if (this.state == 4) return "Email not registered";
+                else if (this.state == 4) return "JHED not registered";
                 else if (this.state == 5) return "Incorrect password!";
                 else if (this.state == 6) return "Fill in the JHED and suffix to reset the password!";
-                // TODO err msg -- network issue
+                else if (this.state == 7) return "Unxpected error. Please retry later.";
                 return "no msg";
             },
             toast_err_text(){
                 if (this.toast_err == 1) return "Incorrect verification code!";
-                else if (this.toast_err == 2) return "Invalid length of the new password";
+                else if (this.toast_err == 2) return "Invalid format of the new password";
                 else if (this.toast_err == 3) return "Passwords do not match.";
                 else if (this.toast_err == 4) return "Please fill in the verification code.";
-                // TODO err msg -- network issue
+                else if (this.toast_err == 5) return "The verification code has expired. Please re-verify.";
+                else if (this.toast_err == 6) return "Unxpected error. Please retry later.";
                 return "no msg";
             }
         },
 
         methods: {
             tryLogin(){
+                console.log("Here");
                 if (this.jhed.length == 0) this.state = 1;
-                else if (this.password == 0) this.state = 2;
-                // TODO http request -- login (registered? password?)
-                // axios.post('http://127.0.0.1:8000/register/', {
-                //     "uid": this.userID,
-                //     "uname": this.userName,
-                //     "pw":  this.password
-                // })
-                // .then(response => {
-                //     if (!response.data.Reg_success) {
-                //         this.state = 5
-                //         this.userID = ""
-                //     }
-                //     else {
-                //         this.state = 0
-                //         this.$emit("registered", {uid: this.userID, pw: this.password})
-                //         this.$router.push('/login')
-                //     }
-                // })
-                // .catch(error => {
-                //     this.satte = 6
-                //     console.error('Error fetching data:', error)
-                // })
+                else if (this.password.length == 0) this.state = 2;
+                else{
+                    axios.post('http://127.0.0.1:8000/user/login/', {
+                        "username": this.jhed.toLowerCase(),
+                        "password":  this.password
+                    })
+                    .then(response => {
+                        if (!response.data.registered) {
+                            this.state = 4;
+                        }
+                        else if (!response.data.success) {
+                            this.state = 5;
+                            this.password = "";
+                        }
+                        else {
+                            console.log(response.data.userInfo);
+                            this.$emit('userLogin', response.data.userInfo);
+                            this.$router.push('/');
+                        }
+                    })
+                    .catch(error => {
+                        this.state = 7;
+                        console.error('Error fetching data:', error);
+                    })
+                }
+                
             },
             toReset() {
                 if (this.jhed.length == 0) this.state = 6;
-                // TODO http request -- check registered & send verification code
-                else this.isResetting = true;
+                else {
+                    axios.post('http://127.0.0.1:8000/user/forgot-password/', {
+                        "email": (this.jhed + this.suffix).toLowerCase()
+                    })
+                    .then(response => {
+                        if (!response.data.registered) {
+                            this.state = 4;
+                        }
+                        else {
+                            this.state = 0;
+                            this.isResetting = true;
+                        }
+                    })
+                    .catch(error => {
+                        this.state = 7;
+                        console.error('Error fetching data:', error);
+                    })
+                    
+                }
             },
             exitReset() {
                 this.newPW = "";
@@ -174,11 +197,40 @@
                 this.verCode = code;
             },
             tryReset() {
+                const lengthRegex = /.{6,20}/
+                const digitRegex = /\d/
+                const letterRegex = /[a-zA-Z]/
+
                 if (this.verCode.length == 0) this.toast_err = 4;
-                else if (this.newPW.length > 20 || this.newPW.length < 8) this.toast_err = 2;
+                else if (!(lengthRegex.test(this.newPW) && digitRegex.test(this.newPW) && letterRegex.test(this.newPW))) this.toast_err = 2;
                 else if (this.newPW != this.repPW) this.toast_err = 3;
-                // TODO http request -- confirm reset
-                else this.toast_err = 0;
+                else {
+                    this.toast_err = 0;
+                    axios.post('http://127.0.0.1:8000/user/reset-password/'+this.jhed, {
+                        "code": this.verCode,
+                        "new_password": this.newPW
+                    })
+                    .then(response => {
+                        if (!response.data.correct) {
+                            this.toast_err = 1;
+                            this.$refs.code.clear();
+                        }
+                        else if (response.data.expired) {
+                            window.alert("This verification code has expired.");
+                            this.password = "";
+                            this.exitReset();
+                        }
+                        else {
+                            window.alert("Your password has been reset.");
+                            this.password = "";
+                            this.exitReset();
+                        }
+                    })
+                    .catch(error => {
+                        this.state = 7;
+                        console.error('Error fetching data:', error);
+                    })
+                };
             },
             initToast() {
                 this.toast_err = 0;
@@ -197,7 +249,17 @@
 
         components:{
             CodeContainer
+        },
+
+        mounted() {
+            var autofill = this.$route.query;
+            if (autofill.jhed != undefined) {
+                this.jhed = autofill.jhed;
+                this.password = autofill.password;
+                this.suffix = autofill.suffix;
+            }
         }
+
     }
 </script>
 

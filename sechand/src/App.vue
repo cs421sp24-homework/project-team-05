@@ -1,12 +1,21 @@
 <template>
-    <router-view></router-view>
+    <router-view @userLogin="userLogin" :currentUser="user"></router-view>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
     export default {
-        components: {
-            HelloWorld,
-        }
+        data(){
+            return {
+                login: false,
+                user: null,
+            }
+        },
+
+        methods:{
+            userLogin(data){
+                this.login = true;
+                this.user = data;
+            }
+        },
     }
 </script>

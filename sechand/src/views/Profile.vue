@@ -1,5 +1,6 @@
 <template>
     <!-- TODO nav bar -->
+    <Navbar/>
     <div id="left"></div>
     <div id="right"></div>
 
@@ -50,7 +51,7 @@
 
 <script>
 import axios from 'axios';
-// TODO import nav bar
+import Navbar from '@/components/Navbar.vue';
 
 export default {
     data(){
@@ -115,12 +116,38 @@ export default {
         },
     },
 
+    props: {
+        currentUser: Object
+    },
+
     mounted (){
+        var uid = this.currentUser.id;
         // TODO http request -- get profile
+        axios.post('http://127.0.0.1:8000/user/forgot-password/', {
+            "email": (this.jhed + this.suffix).toLowerCase()
+        })
+        .then(response => {
+            if (!response.data.registered) {
+                this.state = 4;
+            }
+            else {
+                this.state = 0;
+                this.isResetting = true;
+            }
+        })
+        .catch(error => {
+            this.state = 7;
+            console.error('Error fetching data:', error);
+        })
+        
         this.show_uname = this.uname;
         this.show_addr  = this.addr;
         this.show_mobile= this.mobile;
         this.visible    = this.visible;
+    },
+
+    components:{
+        Navbar
     }
 }
 
