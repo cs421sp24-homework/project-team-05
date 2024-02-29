@@ -65,8 +65,9 @@ export default {
         } catch (error) {
             console.error(error);
         }
+        console.log(this.id);
         console.log(this.currentUser.id);
-        if (this.currentUser.id === this.item.user_id) {
+        if (this.currentUser.id === this.item.seller) {
             this.isCurrentUserSeller = true;
         }
     },

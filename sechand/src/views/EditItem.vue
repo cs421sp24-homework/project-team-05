@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar :icon_src="icon_src" :Username="Username" />
+        <UserNavbar :currentUser="currentUser" />
         <div class="row">
             <div class="col-12">
                 <h1>New Post</h1>
@@ -35,7 +35,7 @@
                     <!-- Price -->
                     <div class="mb-3">
                         <label for="price" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="price" v-model="item.price" required />
+                        <input type="number" step="0.01" class="form-control" id="price" v-model="item.price" required />
                     </div>
 
                     <!-- Address -->
