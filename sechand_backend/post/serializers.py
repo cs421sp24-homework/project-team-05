@@ -18,4 +18,4 @@ class ItemSerializerWithSellerName(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'category', 'price', 'seller', 'displayname', 'is_sold']
 
     def get_displayname(self, obj):
-        return obj.user_id.displayname if obj.user_id else None
+        return obj.seller.displayname if obj.seller else None
