@@ -27,6 +27,7 @@
         <h2>My Items</h2>
         <div class="card-container">
           <Cards :cards="cardsData" @item-detail="handleItemDetail" />
+          <Button text="New Post" color="green" @click="newPost"></Button>
         </div>
       </div>
     </div>
@@ -36,6 +37,7 @@
 import UserNavbar from "@/components/UserNavbar.vue";
 import Cards from "@/components/Cards.vue";
 import Button from "@/components/Button.vue";
+import axios from "axios";
 export default {
   name: "Me",
   components: {
@@ -48,46 +50,16 @@ export default {
       icon_src: "/icon.jpg",
       Username: "User",
       location: "Location",
-      cardsData: [
-        {
-          id: 1,
-          title: "Title 1",
-          text: "Text for card 1",
-          imageUrl: "/icon.jpg",
-          seller: "Seller 1",
-        },
-        {
-          id: 2,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 3,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 4,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 5,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 6,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-      ],
+      cardsData: [],
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all');
+      this.cardsData = response.data;
+    } catch (error) {
+      console.error(error);
+    }
   },
   methods: {
     handleItemDetail(id) {
@@ -96,6 +68,9 @@ export default {
     editProfile() {
       // this.$router.push("/profile");
       console.log("Edit profile");
+    },
+    newPost() {
+      this.$router.push("/postitem");
     },
   },
 };

@@ -27,11 +27,12 @@
   
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
+import axios from "axios";
 export default {
 
     name: "ShowItem",
     props: {
-
+        currentUser: Object,
         item: {
             type: Object,
             required: true
@@ -43,15 +44,8 @@ export default {
             icon_src: "/icon.jpg",
             Username: "User",
             isLoading: false,
-            item: {
-                id: 1,
-                name: "Title 1",
-                description: "Text for card 1",
-                imageUrl: "/icon.jpg",
-                seller: "Seller 1",
-                sellerid: 1,
-                price: 100,
-            },
+            item: {},
+            id: null,
         };
     },
     components: {
@@ -59,30 +53,25 @@ export default {
     },
     methods: {
         editItem() {
-            this.$router.push("/postitem/" + this.item.id);
+            this.$router.push({ name: 'EditItem', params: { id: this.id } });
         }
     },
-    created() {
+    async created() {
         // Check if the current user is the seller of the item
-        if (this.Username === this.item.seller) {
+        this.id = this.$route.params.id;
+
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
+            console.log(response.data);
+            this.item = response.data;
+        } catch (error) {
+            console.error(error);
+        }
+        console.log(this.currentUser.id);
+        if (this.currentUser.id === this.item.user_id) {
             this.isCurrentUserSeller = true;
         }
-    }
-
-
-    // mounted() {
-    //     this.isLoading = true;
-    //     axios.get('/api/items') // Assuming your backend API endpoint is '/api/items'
-    //         .then(response => {
-    //             this.items = response.data;
-    //         })
-    //         .catch(error => {
-    //             console.error('Error fetching data:', error);
-    //         })
-    //         .finally(() => {
-    //             this.isLoading = false;
-    //         });
-    // }
+    },
 };
 </script>
   

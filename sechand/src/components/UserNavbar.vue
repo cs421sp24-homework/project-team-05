@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <img src="/icon.jpg" alt="Icon" class="mr-2 icon" />
+        <img src="/icon.jpg" alt="Icon" class="mr-2 icon" @click="goToHome" />
         Sechand</a>
       <div class="row justify-content-end">
         <div class="col-auto">
@@ -30,6 +30,10 @@ export default {
     profile() {
       this.$router.push("/me");
       console.log("profile");
+    },
+    goToHome() {
+      this.$router.push("/userhome");
+      console.log("goToHome");
     },
   }
 };

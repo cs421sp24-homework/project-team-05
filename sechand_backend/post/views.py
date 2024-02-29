@@ -69,6 +69,7 @@ def ProcessSingleItem(request, item_id):
     elif(request.method == "DELETE"):
         if(request.user):
             user_id = request.user.id
+            # user_id = request.data.get('user_id')
             try:
                 item = Item.objects.get(id=item_id, user_id=user_id)
                 item.delete()

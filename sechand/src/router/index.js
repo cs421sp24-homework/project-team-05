@@ -4,6 +4,7 @@ import UserHome from '../views/UserHome.vue'
 import Me from '../views/Me.vue'
 import PostItem from '../views/PostItem.vue'
 import ShowItem from '../views/ShowItem.vue'
+import EditItem from '../views/EditItem.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/showitem/:id',
       name: 'ShowItem',
       component: ShowItem,
+    },
+    {
+      path: '/edititem/:id',
+      name: 'EditItem',
+      component: EditItem,
     },
   ]
 })

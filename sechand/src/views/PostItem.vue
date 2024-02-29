@@ -66,6 +66,7 @@
   
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
+import axios from "axios";
 export default {
   name: "NewPost",
   components: {
@@ -92,31 +93,35 @@ export default {
     cancel() {
       console.log("Cancelled");
     },
-    submitForm() {
-      console.log("Form submitted");
-    },
-    // async submitForm() {
-    //   try {
-    //     const formData = new FormData();
-    //     formData.append('itemName', this.itemName);
-    //     formData.append('description', this.description);
-    //     formData.append('price', this.price);
-    //     formData.append('address', this.address);
-    //     if (this.picture) {
-    //       formData.append('picture', this.picture);
-    //     }
-    //     const response = await axios.post('/api/new-post', formData, {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //       }
-    //     });
-    //     console.log("Form submitted successfully:", response.data);
-    //     // Optionally, you can navigate to another page after successful form submission
-    //     // this.$router.push('/success');
-    //   } catch (error) {
-    //     console.error("Error submitting form:", error);
-    //   }
+    // submitForm() {
+    //   console.log("Form submitted");
     // },
+    async submitForm() {
+      console.log("summitted");
+      try {
+        const formData = new FormData();
+        formData.append('name', this.itemName);
+        formData.append('description', this.description);
+        formData.append('tag', ["ABC"]);
+        formData.append('price', this.price);
+        formData.append('user_id', 16);
+        // formData.append('user_id', this.user.id);
+        if (this.picture) {
+          formData.append('picture', this.picture);
+        }
+        console.log(formData);
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/post/Item/new', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        console.log("Form submitted successfully:", response.data);
+        // Optionally, you can navigate to another page after successful form submission
+        // this.$router.push('/success');
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+    },
   },
 };
 </script>

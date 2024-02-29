@@ -12,6 +12,7 @@ import UserNavbar from "../components/UserNavbar.vue";
 import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
+import axios from "axios";
 export default {
   components: {
     UserNavbar,
@@ -26,49 +27,17 @@ export default {
         { id: 2, label: "Location 2", link: "#" },
         { id: 3, label: "Location 3", link: "#" },
       ],
-      cardsData: [
-        {
-          id: 1,
-          name: "Title 1",
-          description: "Text for card 1",
-          imageUrl: "/icon.jpg",
-          seller: "Seller 1",
-          price: 100,
-        },
-        {
-          id: 2,
-          name: "Title 1",
-          description: "Text for card 1",
-          imageUrl: "/icon.jpg",
-          seller: "Seller 1",
-          price: 100,
-        },
-        {
-          id: 3,
-          name: "Title 1",
-          description: "Text for card 1",
-          imageUrl: "/icon.jpg",
-          seller: "Seller 1",
-          price: 100,
-        },
-        {
-          id: 4,
-          name: "Title 1",
-          description: "Text for card 1",
-          imageUrl: "/icon.jpg",
-          seller: "Seller 1",
-          price: 100,
-        },
-        {
-          id: 5,
-          name: "Title 1",
-          description: "Text for card 1",
-          imageUrl: "/icon.jpg",
-          seller: "Seller 1",
-          price: 100,
-        },
-      ],
+      isLoading: false,
+      cardsData: [],
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all');
+      this.cardsData = response.data;
+    } catch (error) {
+      console.error(error);
+    }
   },
   methods: {
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="card" @click="cardDetail">
+  <div class="card" @click="cardDetail(card)">
     <img :src="card.imageUrl" class="card-img-top" :alt="card.name" />
     <div class="card-body">
       <h5 class="card-name">{{ card.name }}</h5>
@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     cardDetail(card) {
-      this.$router.push("/showitem/" + card.id);
+      this.$router.push({ name: 'ShowItem', params: { id: card.id } });
       console.log("Detail");
     },
   },
