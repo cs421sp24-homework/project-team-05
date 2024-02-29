@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import ItemSerializer
+from .serializers import SolelyItemSerializer, ItemSerializerWithSellerName
 from .models import Item
 import uuid
 
@@ -15,7 +15,7 @@ def GetAllUserItems(request):
         user_id = request.user.id
         user_items = Item.objects.filter(user_id = user_id)
         if user_items.exists():
-            serializer = ItemSerializer(user_items, many=True)
+            serializer = SolelyItemSerializer(user_items, many=True)
             return JsonResponse(serializer.data, status=200)
         else:
             return JsonResponse({}, status=200)
@@ -37,7 +37,7 @@ def GetAllItems(request):
         return JsonResponse({'error': 'Count parameter too large'}, status=400)
     
     all_items = Item.objects.all()[:count]
-    serializer = ItemSerializer(all_items, many=True)
+    serializer = ItemSerializerWithSellerName(all_items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
 @api_view(['GET', 'PATCH', 'DELETE'])
@@ -46,7 +46,7 @@ def ProcessSingleItem(request, item_id):
     if(request.method == "GET"):
         try:
             item = Item.objects.get(id = item_id)
-            serializer = ItemSerializer(item)
+            serializer = SolelyItemSerializer(item)
             return JsonResponse(serializer.data, status=200)
         except Item.DoesNotExist:
             return JsonResponse({'error': 'Item not found'}, status=404)          
@@ -60,7 +60,7 @@ def ProcessSingleItem(request, item_id):
         else:
             return JsonResponse({'error': 'User did not login or have valid credentials'}, status=400)
         
-        serializer = ItemSerializer(item, data=request.data, partial=True)
+        serializer = SolelyItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=200)
@@ -87,7 +87,7 @@ def CreateNewItem(request):
         saved = False
         while not saved:
             req_data['id'] = uuid.uuid4()
-            serializer = ItemSerializer(data=request.data)
+            serializer = SolelyItemSerializer(data=request.data)
             if serializer.is_valid():
                 try:
                     serializer.save()
