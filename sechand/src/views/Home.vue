@@ -17,6 +17,7 @@ import HelloWorld from "../components/HelloWorld.vue";
 import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
+import axios from "axios";
 export default {
   components: {
     Navbar,
@@ -32,54 +33,24 @@ export default {
         { id: 2, label: "Location 2", link: "#" },
         { id: 3, label: "Location 3", link: "#" },
       ],
-      cardsData: [
-        {
-          id: 1,
-          title: "Title 1",
-          text: "Text for card 1 Text for card 1 Text for card 1 Text for card 1 Text for card 1 Text for card 1 Text for card 1 Text for card 1Text for card 1",
-          imageUrl: "/icon.jpg",
-          seller: "Seller 1",
-        },
-        {
-          id: 2,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 3,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 4,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 5,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-        {
-          id: 6,
-          title: "Title 2",
-          text: "Text for card 2",
-          imageUrl: "image2.jpg",
-        },
-      ],
+      cardsData: [],
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all');
+      this.cardsData = response.data;
+    } catch (error) {
+      console.error(error);
+    }
   },
   methods: {
     login() {
-      // this.$router.push("/login");
+      this.$router.push("/login");
       console.log("login");
     },
     signup() {
-      // this.$router.push("/signup");
+      this.$router.push("/signup");
       console.log("signup");
     },
     showLocation() {

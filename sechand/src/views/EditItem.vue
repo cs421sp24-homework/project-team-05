@@ -41,7 +41,7 @@
                     <!-- Address -->
                     <div class="mb-3">
                         <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="address" :value="address" readonly />
+                        <input type="text" class="form-control" id="address" :value="this.currentUser.address.name" readonly />
                     </div>
 
                     <!-- Buttons -->
@@ -82,7 +82,6 @@ export default {
     data() {
         return {
             item: {},
-            address: "123 Main Street, City, Country", // Sample address
         };
     },
     async created() {
@@ -90,7 +89,12 @@ export default {
         this.id = this.$route.params.id;
 
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
+            const accessToken = localStorage.getItem('access_token');
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             console.log(response.data);
             this.item = response.data;
         } catch (error) {
@@ -107,9 +111,11 @@ export default {
         },
         deleteItem() {
             try {
+                const accessToken = localStorage.getItem('access_token');
                 const response = axios.delete(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${accessToken}`
                     },
                     data: {
                         id: this.currentUser.id
@@ -117,6 +123,7 @@ export default {
 
                 });
                 console.log("Form submitted successfully:", response.data);
+                this.$router.go(-2);
 
             } catch (error) {
                 console.error("Error submitting form:", error);
@@ -135,12 +142,15 @@ export default {
                     formData.append('picture', this.picture);
                 }
                 console.log(formData);
+                const accessToken = localStorage.getItem('access_token');
                 const response = await axios.patch(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${accessToken}`
                     }
                 });
                 console.log("Form submitted successfully:", response.data);
+                this.$router.go(-1);
                 // Optionally, you can navigate to another page after successful form submission
                 // this.$router.go(-1);
             } catch (error) {

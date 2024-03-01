@@ -17,7 +17,7 @@ def GetAllUserItems(request):
         user_items = Item.objects.filter(seller = user_id)
         if user_items.exists():
             serializer = ItemSerializer(user_items, many=True)
-            return JsonResponse(serializer.data, status=200)
+            return JsonResponse(serializer.data, safe=False, status=200)
         else:
             return JsonResponse({}, status=200)
     # else:
@@ -88,7 +88,6 @@ def CreateNewItem(request):
         req_data = request.data
         saved = False
         while not saved:
-            req_data['id'] = uuid.uuid4()
             serializer = ItemSerializer(data=request.data)
             if serializer.is_valid():
                 try:

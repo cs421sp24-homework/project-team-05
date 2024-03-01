@@ -1,7 +1,7 @@
 <template>
     <div :class="{ 'blurred': isResetting }" style="user-select: none;">
         <div id="left">
-            <h1 id="title">SecHand</h1>
+            <h1 id="title" @click="toHome">SecHand</h1>
             <img id="logo" src="../assets/logo_temp.svg"/>
             <h2 id="slogan"> {This is a slogan This is a slogan This is a slogan This is a slogan} </h2>
         </div>
@@ -176,7 +176,8 @@
                         localStorage.setItem('access_token', response.data.access);
                         localStorage.setItem('refresh_token', response.data.refresh);
                         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-                        this.$router.push('/profile');
+                        console.log(userInfo);
+                        this.$router.push('/userhome');
                     } catch (error) {
                         console.error('Login error:', error);
                         // Handle login error (e.g., show error message)
@@ -265,6 +266,9 @@
             },
             toSignUp() {
                 this.$router.push('/signup');
+            },
+            toHome(){
+                this.$router.push('/');
             }
         },
 

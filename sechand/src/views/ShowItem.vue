@@ -87,7 +87,12 @@ export default {
         this.id = this.$route.params.id;
         console.log("collect", this.isitemCollected);
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
+            const accessToken = localStorage.getItem('access_token');
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             console.log(response.data);
             this.item = response.data;
         } catch (error) {

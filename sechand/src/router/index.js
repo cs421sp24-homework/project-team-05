@@ -21,26 +21,31 @@ const router = createRouter({
       path: '/userhome',
       name: 'UserHome',
       component: UserHome,
+      meta: { requiresAuth: true }
     },
     {
       path: '/me',
       name: 'Me',
       component: Me,
+      meta: { requiresAuth: true }
     },
     {
       path: '/postitem',
       name: 'PostItem',
       component: PostItem,
+      meta: { requiresAuth: true }
     },
     {
       path: '/showitem/:id',
       name: 'ShowItem',
       component: ShowItem,
+      meta: { requiresAuth: true }
     },
     {
       path: '/edititem/:id',
       name: 'EditItem',
       component: EditItem,
+      meta: { requiresAuth: true }
     },
     {
         path: '/login',
@@ -49,13 +54,29 @@ const router = createRouter({
     },
     {
         path: '/signup',
-        component: Signup
+        component: Signup,
+        
     },
     {
         path: '/profile',
-        component: Profile
+        component: Profile,
+        meta: { requiresAuth: true }
     },
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('access_token');
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next({ name: 'Home' });
+    } else {
+      next(); 
+    }
+  } else {
+    next(); 
+  }
+});
+
 
 export default router

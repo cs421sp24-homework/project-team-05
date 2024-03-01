@@ -37,7 +37,12 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all');
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+      });
       this.cardsData = response.data;
     } catch (error) {
       console.error(error);

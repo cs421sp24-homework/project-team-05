@@ -1,6 +1,6 @@
 <template>
     <router-view @userLogin="userLogin" 
-                 @logout="logout"
+                 @userLogout="logout"
                  :currentUser="user"
                  :addrList="addrList"
                  :token="token"></router-view>
@@ -26,7 +26,9 @@ import axios from 'axios';
             },
 
             logout(){
-
+                this.login = false;
+                this.user = null;
+                this.token = null;
             }
         },
 

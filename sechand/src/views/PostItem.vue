@@ -40,7 +40,7 @@
           <!-- Address -->
           <div class="mb-3">
             <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" id="address" :value="this.currentUser.address" readonly />
+            <input type="text" class="form-control" id="address" :value="this.currentUser.address.name" readonly />
           </div>
 
           <!-- Buttons -->
@@ -105,20 +105,23 @@ export default {
         formData.append('description', this.description);
         formData.append('tag', ["ABC"]);
         formData.append('price', this.price);
-        formData.append('user_id', 16);
+        formData.append('seller', this.currentUser.id);
         // formData.append('user_id', this.user.id);
         if (this.picture) {
           formData.append('picture', this.picture);
         }
         console.log(formData);
+        const accessToken = localStorage.getItem('access_token');
         const response = await axios.post('http://127.0.0.1:8000/api/v1/post/Item/new', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${accessToken}`
           }
         });
         console.log("Form submitted successfully:", response.data);
         // Optionally, you can navigate to another page after successful form submission
-        // this.$router.push('/success');
+        this.$router.push('/me');
+
       } catch (error) {
         console.error("Error submitting form:", error);
       }

@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="#" @click="goToHome">
         <img src="/icon.jpg" alt="Icon" class="mr-2 icon" />
         Sechand</a
       >
@@ -26,6 +26,12 @@ export default {
   name: "Navbar",
   components: {
     Button,
+  },
+  methods:{
+    goToHome() {
+      this.$router.push("/");
+      console.log("goToHome");
+    },
   },
 };
 </script>

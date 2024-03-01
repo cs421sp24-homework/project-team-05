@@ -15,7 +15,7 @@
           <div>
             <p class="mb-1 font-large-vh font-large-vw">{{ this.currentUser.displayname }}</p>
             <!-- Increase font size -->
-            <p class="mb-0 font-large-vh font-large-vw">{{ this.currentUser.address }}</p>
+            <p class="mb-0 font-large-vh font-large-vw">{{ this.currentUser.address.name }}</p>
             <!-- Increase font size -->
           </div>
         </div>
@@ -51,6 +51,7 @@ export default {
   name: "Me",
   props: {
     currentUser: Object,
+
   },
   components: {
     UserNavbar,
@@ -65,14 +66,24 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all');
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        },
+      });
       this.postCardsData = response.data;
     } catch (error) {
       console.error(error);
     }
     // history card data
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all');
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        },
+      });
       this.historyCardsData = response.data;
     } catch (error) {
       console.error(error);
@@ -83,7 +94,7 @@ export default {
       console.log("Item detail", id);
     },
     editProfile() {
-      // this.$router.push("/profile");
+      this.$router.push("/profile");
       console.log("Edit profile");
     },
     newPost() {

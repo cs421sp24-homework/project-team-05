@@ -1,8 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="/icon.jpg" alt="Icon" class="mr-2 icon" @click="goToHome" />
+      <a class="navbar-brand" href="#" @click="goToHome">
+        <img src="/icon.jpg" alt="Icon" class="mr-2 icon" />
         Sechand</a>
       <div class="row justify-content-end">
         <div class="col-auto">
@@ -11,6 +11,10 @@
         <div class="col-auto">
           <Button @btn-click="profile" :text="this.currentUser.displayname" color="transparent"></Button>
         </div>
+        <div class="col-auto">
+          <Button @btn-click="logout" text="Logout" color="red"></Button>
+        </div>
+
       </div>
     </div>
   </nav>
@@ -34,6 +38,16 @@ export default {
       this.$router.push("/userhome");
       console.log("goToHome");
     },
+    logout() {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.clear(); // Clears all local storage
+      sessionStorage.clear(); // Clears all session storage
+      this.$emit("userLogout", {});
+      this.$router.replace({ name: 'Home' });
+      // this.$router.push("/")
+    }
+
   }
 };
 </script>

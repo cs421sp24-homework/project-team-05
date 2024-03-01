@@ -1,5 +1,5 @@
 <template>
-    <UserNavbar/>
+    <UserNavbar :currentUser="currentUser" />
     <div id="left"></div>
     <div id="right"></div>
 
@@ -55,7 +55,6 @@
 
 <script>
 import axios from 'axios';
-import Navbar from '@/components/Navbar.vue';
 import UserNavbar from '@/components/UserNavbar.vue';
 
 export default {
@@ -140,7 +139,8 @@ export default {
     },
 
     props: {
-        currentUser: Object
+        currentUser: Object,
+        addrList: Array
     },
 
     mounted (){
@@ -171,11 +171,8 @@ export default {
     },
 
     components:{
-        Navbar
+        UserNavbar
     },
-    props:{
-        addrList: Array,
-    }
 }
 
 </script>
