@@ -7,9 +7,11 @@ import datetime, uuid
 # Create your models here.
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=10)
     address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True)
     displayname = models.CharField(max_length=30)
     image = models.ImageField(upload_to='media/', blank=True, null=True)
+    is_visible = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
