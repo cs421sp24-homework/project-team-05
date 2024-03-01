@@ -1,6 +1,5 @@
 <template>
-    <!-- TODO nav bar -->
-    <Navbar/>
+    <UserNavbar/>
     <div id="left"></div>
     <div id="right"></div>
 
@@ -57,6 +56,7 @@
 <script>
 import axios from 'axios';
 import Navbar from '@/components/Navbar.vue';
+import UserNavbar from '@/components/UserNavbar.vue';
 
 export default {
     data(){
