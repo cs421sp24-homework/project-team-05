@@ -1,1 +1,1 @@
-web: gunicorn Sechand_backend.Sechand_backend.wsgi:application
+web: gunicorn sechand_backend.sechand_backend.wsgi:application
