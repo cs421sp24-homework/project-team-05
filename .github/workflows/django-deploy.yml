@@ -42,4 +42,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: "jtao26@jh.edu"
-          breanch: "main"
+          branch: "main"
