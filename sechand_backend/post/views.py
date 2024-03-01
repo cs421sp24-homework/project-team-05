@@ -4,8 +4,8 @@ from django.db import IntegrityError
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import ItemSerializer, ItemSerializerWithSellerName
-from .models import Item
+from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer
+from .models import Item, UserPurchase, UserCollection
 import uuid
 
 # Model(Item): id name description tags price user_id
@@ -13,8 +13,8 @@ import uuid
 @api_view(['GET'])
 def GetAllUserItems(request):
     if(request.user):
-        user_id = request.user.id
-        user_items = Item.objects.filter(seller = user_id)
+        #TODO: validate user token again
+        user_items = Item.objects.filter(seller = request.user.id)
         if user_items.exists():
             serializer = ItemSerializer(user_items, many=True)
             return JsonResponse(serializer.data, status=200)
@@ -41,6 +41,20 @@ def GetAllItems(request):
     serializer = ItemSerializerWithSellerName(all_items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def GetUserCollection(request):
+    if(request.user):
+        #TODO: validate user token again
+        collections = UserCollection.objects.filter(user = request.user.id)
+        if collections.exists():
+            serializer = CollectionSerializer(collections, many=True)
+            return JsonResponse(serializer.data, safe=False, status=200)
+        else:
+            return JsonResponse({}, status=200)
+    else:
+       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([AllowAny])
 def ProcessSingleItem(request, item_id):
@@ -54,7 +68,7 @@ def ProcessSingleItem(request, item_id):
     elif(request.method == "PATCH"):
         if(request.user):
             try:
-            # TODO: verify Seller qualification
+            #TODO: validate user token again
                 item = Item.objects.get(id=item_id)
             except Item.DoesNotExist:
                 return JsonResponse({'error': 'Item not found'}, status=404)
@@ -69,6 +83,7 @@ def ProcessSingleItem(request, item_id):
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif(request.method == "DELETE"):
         if(request.user):
+            #TODO: validate user token again
             user_id = request.user.id
             try:
                 item = Item.objects.get(id=item_id, seller=user_id)
@@ -84,6 +99,7 @@ def ProcessSingleItem(request, item_id):
 @permission_classes([AllowAny])
 def CreateNewItem(request):
     if(request.user):
+        #TODO: validate user token again
         req_data = request.data
         saved = False
         while not saved:
