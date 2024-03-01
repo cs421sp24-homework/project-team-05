@@ -21,6 +21,11 @@ class ItemSerializerWithSellerName(serializers.ModelSerializer):
         return obj.seller.displayname if obj.seller else None
 
 class CollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCollection
+        fields = ['user', 'item']
+    
+class CollectionDeserializer(serializers.ModelSerializer):
     item = ItemSerializerWithSellerName(read_only=True)
     user_id = serializers.SerializerMethodField()
 

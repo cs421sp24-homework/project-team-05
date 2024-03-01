@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer
+from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer, CollectionDeserializer
 from .models import Item, UserPurchase, UserCollection
 import uuid
 
@@ -41,19 +41,34 @@ def GetAllItems(request):
     serializer = ItemSerializerWithSellerName(all_items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def AddNewCollection(request):
+    # if(request.user):
+    #TODO: validate user token again
+    serializer = CollectionSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+    else:
+        return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
+    # else:
+    #     return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def GetUserCollection(request):
-    if(request.user):
+    # if(request.user):
         #TODO: validate user token again
+        # user_id = request.data['id']
         collections = UserCollection.objects.filter(user = request.user.id)
         if collections.exists():
-            serializer = CollectionSerializer(collections, many=True)
+            serializer = CollectionDeserializer(collections, many=True)
             return JsonResponse(serializer.data, safe=False, status=200)
         else:
             return JsonResponse({}, status=200)
-    else:
-       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+    # else:
+    #    return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([AllowAny])
@@ -103,7 +118,6 @@ def CreateNewItem(request):
         req_data = request.data
         saved = False
         while not saved:
-            req_data['id'] = uuid.uuid4()
             serializer = ItemSerializer(data=request.data)
             if serializer.is_valid():
                 try:
