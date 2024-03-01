@@ -27,8 +27,16 @@
       <div class="col-12">
         <h2>My Items</h2>
         <div class="card-container">
-          <Cards :cards="cardsData" @item-detail="handleItemDetail" />
+          <Cards :cards="postCardsData" @item-detail="handleItemDetail" />
           <Button text="New Post" color="green" @click="newPost"></Button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2>Order History</h2>
+        <div class="card-container">
+          <Cards :cards="historyCardsData" @item-detail="handleItemDetail" />
         </div>
       </div>
     </div>
@@ -51,13 +59,21 @@ export default {
   },
   data() {
     return {
-      cardsData: [],
+      postCardsData: [],
+      historyCardsData: [],
     };
   },
   async created() {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all');
-      this.cardsData = response.data;
+      this.postCardsData = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+    // history card data
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all');
+      this.historyCardsData = response.data;
     } catch (error) {
       console.error(error);
     }

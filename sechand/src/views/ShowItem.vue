@@ -19,7 +19,9 @@
                     <h3>Description:</h3>
                     <p>{{ item.description }}</p>
                 </div>
-                <button v-if="isCurrentUserSeller" @click="editItem">Edit</button>
+                <Button v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
+                <Button v-if="!isitemCollected" @click="collectItem" text="Collect" color="lightgreen"></Button>
+                <Button v-if="isitemCollected" @click="unCollectItem" text="Collected" color="orange"></Button>
             </div>
         </div>
     </div>
@@ -28,6 +30,7 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
+import Button from "@/components/Button.vue";
 export default {
 
     name: "ShowItem",
@@ -41,6 +44,7 @@ export default {
     data() {
         return {
             isCurrentUserSeller: false,
+            isitemCollected: false,
             isLoading: false,
             item: {},
             id: null,
@@ -48,16 +52,40 @@ export default {
     },
     components: {
         UserNavbar,
+        Button
     },
     methods: {
+
         editItem() {
             this.$router.push({ name: 'EditItem', params: { id: this.id } });
+        },
+        async collectItem() {
+            console.log("Collecting item");
+            // try {
+            //     const response = await axios.post(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
+            //     console.log(response.data);
+            // } catch (error) {
+            //     console.error(error);
+            // }
+            this.isitemCollected = true;
+            console.log("collect", this.isitemCollected);
+        },
+        unCollectItem() {
+            console.log("UnCollecting item");
+            // try {
+            //     const response = await axios.delete(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
+            //     console.log(response.data);
+            // } catch (error) {
+            //     console.error(error);
+            // }
+            this.isitemCollected = false;
+            console.log("uncollect", this.isitemCollected);
         }
     },
     async created() {
         // Check if the current user is the seller of the item
         this.id = this.$route.params.id;
-
+        console.log("collect", this.isitemCollected);
         try {
             const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
             console.log(response.data);
@@ -70,6 +98,14 @@ export default {
         if (this.currentUser.id === this.item.seller) {
             this.isCurrentUserSeller = true;
         }
+        // get if item in collection
+        // try {
+        //     const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
+        //     console.log(response.data);
+        //     this.isitemCollected = response.data;
+        // } catch (error) {
+        //     console.error(error);
+        // }
     },
 };
 </script>
