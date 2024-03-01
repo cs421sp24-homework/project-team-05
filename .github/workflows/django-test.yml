@@ -10,9 +10,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 2
+      max-parallel: 1
       matrix:
-        python-version: [3.11, 3.12, 3.12.1]
+        python-version: [3.12.1]
 
     steps:
     - uses: actions/checkout@v4
@@ -27,4 +27,4 @@ jobs:
     - name: Run Tests
       run: |
         cd sechand_backend
-        python manage.py test
+        python manage.py test --settings=sechand_backend.settings_test
