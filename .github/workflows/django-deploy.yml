@@ -1,14 +1,13 @@
-name: Django CI
+name: Django CICD Deploy
 
 on:
   push:
-    branches: [ "main", "development" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "development" ]
-
+    branches: [ "main" ]
+  
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
@@ -29,3 +28,18 @@ jobs:
       run: |
         cd sechand_backend
         python manage.py test --settings=sechand_backend.settings_test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    name: Deploy App to Heroku
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: Deploy
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: "jtao26@jh.edu"
+          breanch: "main"
