@@ -33,12 +33,3 @@ class ResetPasswordCodeSerializer(serializers.ModelSerializer):
         model = ResetPasswordCode
         fields = ['user', 'code', 'token', 'created_at']
         read_only_fields = ['created_at']
-<<<<<<< HEAD
-
-
-class AddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Address
-        fields = ['id', 'name', 'street', 'zipcode', 'latitude', 'longitude']
-=======
->>>>>>> front-end
