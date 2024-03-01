@@ -44,21 +44,21 @@ def GetAllItems(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def AddNewCollection(request):
-    # if(request.user):
-    #TODO: validate user token again
-    serializer = CollectionSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return JsonResponse(serializer.data, status=201)
+    if(request.user):
+        #TODO: validate user token again
+        serializer = CollectionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        else:
+            return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
-    # else:
-    #     return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def GetUserCollection(request):
-    # if(request.user):
+    if(request.user):
         #TODO: validate user token again
         # user_id = request.data['id']
         collections = UserCollection.objects.filter(user = request.user.id)
@@ -67,8 +67,8 @@ def GetUserCollection(request):
             return JsonResponse(serializer.data, safe=False, status=200)
         else:
             return JsonResponse({}, status=200)
-    # else:
-    #    return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+    else:
+       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([AllowAny])
