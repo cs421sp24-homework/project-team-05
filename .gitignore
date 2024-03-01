@@ -32,7 +32,13 @@ coverage
 
 */db.sqlite3
 /venv_3_12_1
+/sechand_backend/sechand_backend/__pycache__
+/venv
+*.pyc
 **/__pycache__/
 **/migrations/__pycache__
 *.pyc
+<<<<<<< HEAD
 /venv/
+=======
+>>>>>>> frontend-dev-lyx

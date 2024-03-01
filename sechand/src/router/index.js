@@ -1,13 +1,43 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import Home from '../views/Home.vue'
+import UserHome from '../views/UserHome.vue'
+import Me from '../views/Me.vue'
+import PostItem from '../views/PostItem.vue'
+import ShowItem from '../views/ShowItem.vue'
+import EditItem from '../views/EditItem.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: HomeView
-    // },
+    {
+      path: '/',
+      name: 'Home',
+      component: Home,
+    },
+    {
+      path: '/userhome',
+      name: 'UserHome',
+      component: UserHome,
+    },
+    {
+      path: '/me',
+      name: 'Me',
+      component: Me,
+    },
+    {
+      path: '/postitem',
+      name: 'PostItem',
+      component: PostItem,
+    },
+    {
+      path: '/showitem/:id',
+      name: 'ShowItem',
+      component: ShowItem,
+    },
+    {
+      path: '/edititem/:id',
+      name: 'EditItem',
+      component: EditItem,
+    },
   ]
 })
 
