@@ -14,6 +14,7 @@ urlpatterns = [
     path('reset-password/<jhed>', views.reset_password, name='reset-password'),
     path('profile/', views.get_user_profile, name='get-user-profile'),
     path('profile/update', views.update_user_profile, name='update-user-profile'),
+    path('init-info/', views.init_info, name='init-info'),
     path('logout/', LogoutView.as_view(), name='logout')
 ]
 

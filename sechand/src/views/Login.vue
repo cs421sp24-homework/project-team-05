@@ -135,33 +135,54 @@
         },
 
         methods: {
-            tryLogin(){
-                console.log("Here");
+
+            async tryLogin(){
+        
                 if (this.jhed.length == 0) this.state = 1;
                 else if (this.password.length == 0) this.state = 2;
                 else{
-                    axios.post('http://127.0.0.1:8000/user/login/', {
+                    var userInfo = null;
+                    await axios.post('http://127.0.0.1:8000/user/login/', {
                         "username": this.jhed.toLowerCase(),
                         "password":  this.password
                     })
                     .then(response => {
                         if (!response.data.registered) {
                             this.state = 4;
+                            return;
                         }
                         else if (!response.data.success) {
                             this.state = 5;
                             this.password = "";
+                            return;
                         }
                         else {
-                            console.log(response.data.userInfo);
-                            this.$emit('userLogin', response.data.userInfo);
-                            this.$router.push('/');
+                            userInfo = response.data.userInfo;
                         }
                     })
                     .catch(error => {
                         this.state = 7;
                         console.error('Error fetching data:', error);
+                        return;
                     })
+
+                    // get token
+                    try {
+                        const response = await axios.post('http://127.0.0.1:8000/api/token/', {
+                        "username": this.jhed.toLowerCase(),
+                        "password":  this.password
+                    });
+                        this.$emit('userLogin', {"user": userInfo, "token": response.data});
+                        localStorage.setItem('access_token', response.data.access);
+                        localStorage.setItem('refresh_token', response.data.refresh);
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+                        this.$router.push('/profile');
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        // Handle login error (e.g., show error message)
+                        this.$emit('cancelLogin', {});
+                        return;
+                    }
                 }
                 
             },

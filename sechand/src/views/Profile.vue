@@ -10,6 +10,11 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label" style="text-align: left;">JHU Email</label>
+            <input type="text" class="form-control" @input="initState" disabled v-model="email"/>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label" style="text-align: left;">Nick Name</label>
             <input type="text" class="form-control" placeholder="Enter your nick name" @input="initState" :disabled="!isEditting" v-model="show_uname"/>
             <div class="form-text" style="font-size: small;" :style="{ visibility: isEditting ? 'visible' : 'hidden' }">
@@ -33,7 +38,7 @@
             <input type="text" class="form-control" placeholder="Enter your number" style="width: 11vw;" @input="initState" :disabled="!isEditting" v-model="show_mobile"/>
             <input type="text" class="form-control" placeholder="Visible to all users" style="width: 9.5vw;" disabled/>
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="checkbox" v-model="visible" aria-label="Checkbox for following text input" :disabled="!isEditting">
+                <input class="form-check-input mt-0" type="checkbox" v-model="show_visible" aria-label="Checkbox for following text input" :disabled="!isEditting">
             </div>
         </div>
 
@@ -56,10 +61,10 @@ import Navbar from '@/components/Navbar.vue';
 export default {
     data(){
         return {
-            uname: "IsaacXU",
-            addrList: ["addr1", "addr2","addr3","addr4", ],
-            addr: "addr1",
-            mobile: "1234567890",
+            email: "",
+            uname: "",
+            addr: "",
+            mobile: "",
             prefix: "+1",
             visible: false,
             isEditting: false,
@@ -76,7 +81,7 @@ export default {
             if (this.state == 1) return "Invalid length of nick name!";
             else if (this.state == 2) return "Invalid US mobile number!";
             else if (this.state == 3) return "Unexpected error. Please try again later.";
-            return "no msg"
+            return "no msg";
         },
     },
 
@@ -94,26 +99,44 @@ export default {
             if (this.show_uname.length > 16 || this.show_uname.length < 6) this.state = 1;
             else if (this.show_mobile.length != 10 || isNaN(Number(this.show_mobile, 10))) this.state = 2;
             else {
-                // TODO http request -- submit new info
-                // if success
-                this.visible = this.show_visible;
-                this.mobile = this.show_mobile;
-                this.uname = this.show_uname;
-                this.addr = this.show_addr;
-                this.isEditting = false;
-                // if failed
-                // this.state = 3; // network issue
-                // this.show_visible = this.visible;
-                // this.show_mobile = this.mobile;
-                // this.show_uname = this.uname;
-                // this.show_addr = this.addr;
-    
+                const accessToken = localStorage.getItem('access_token');
+                axios.patch('http://127.0.0.1:8000/user/profile/update', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    "displayname": this.show_uname,
+                    "address": this.show_addr,
+                    "phone": this.show_mobile,
+                    "is_visible": this.show_visible,
+                })
+                .then(response => {
+                    console.log(response.data);
+                    this.visible = this.show_visible;
+                    this.mobile = this.show_mobile;
+                    this.uname = this.show_uname;
+                    this.addr = this.show_addr;
+                    this.isEditting = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    window.alert("Failed to edit your profile.");
+                    this.state = 3; // network issue
+                    this.show_visible = this.visible;
+                    this.show_mobile = this.mobile;
+                    this.show_uname = this.uname;
+                    this.show_addr = this.addr;
+                    this.isEditting = false;
+                })    
             }
         },
 
         toEdit() {
             this.isEditting = true;
         },
+
+        initState() {
+            this.state = 0;
+        }
     },
 
     props: {
@@ -121,33 +144,37 @@ export default {
     },
 
     mounted (){
-        var uid = this.currentUser.id;
-        // TODO http request -- get profile
-        axios.post('http://127.0.0.1:8000/user/forgot-password/', {
-            "email": (this.jhed + this.suffix).toLowerCase()
+        const accessToken = localStorage.getItem('access_token');
+        axios.get('http://127.0.0.1:8000/user/profile/', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         })
         .then(response => {
-            if (!response.data.registered) {
-                this.state = 4;
-            }
-            else {
-                this.state = 0;
-                this.isResetting = true;
-            }
+            console.log(response.data);
+            this.email = response.data.email;
+            this.uname = response.data.displayname;
+            this.addr = response.data.address.name;
+            this.mobile = response.data.phone;
+            this.visible = response.data.is_visible;
+            this.show_uname = this.uname;
+            this.show_addr  = this.addr;
+            this.show_mobile= this.mobile;
+            this.show_visible= this.visible;
         })
         .catch(error => {
-            this.state = 7;
             console.error('Error fetching data:', error);
+            window.alert("Failed to get your profile.");
+            this.$router.push('/'); //TODO '/me'
         })
         
-        this.show_uname = this.uname;
-        this.show_addr  = this.addr;
-        this.show_mobile= this.mobile;
-        this.visible    = this.visible;
     },
 
     components:{
         Navbar
+    },
+    props:{
+        addrList: Array,
     }
 }
 
@@ -157,14 +184,14 @@ export default {
 
 #left{
     float: left;
-    width: 30vw;
+    width: 20vw;
     height: 100vh;
     background-color: #007bff;  
 }
 
 #right{
     float: right;
-    width: 30vw;
+    width: 20vw;
     height: 100vh;
     background-color: #007bff;  
 }
@@ -172,7 +199,7 @@ export default {
 
 #main {
     float: inline-start;
-    width: 30vw;
+    width: 50vw;
     margin-left: 5vw;
     user-select: none;
 }

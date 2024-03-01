@@ -42,7 +42,7 @@
                 <label class="form-label" style="text-align: left; margin-top: 4%;">Closest Address</label>
                 <select v-model="addr" class="form-select form-control" :disabled="isVerifying" @input="initState">
                     <option disabled>Select the closest address to you...</option>
-                    <option v-for="(item, index) of addrList">{{ index+1 + ". " + item }}</option>
+                    <option v-for="(item, index) of addrList">{{item }}</option>
                 </select>
             </div>
             
@@ -115,7 +115,7 @@ import CodeContainer from '@/components/CodeContainer.vue';
                 password:"",
                 repeat:"",
                 addr:"Select the closest address to you...",
-                addrList: ["addr1", "addr2", "addr3", "addr4"],
+                // addrList: ["nine east", "Social"],
                 uname:"",
                 prefix: "+1",
                 mobile: "",
@@ -173,7 +173,7 @@ import CodeContainer from '@/components/CodeContainer.vue';
                         "email": (this.jhed + this.suffix).toLowerCase(),
                         "phone": this.mobile,
                         "displayname": this.uname,
-                        "address": this.addr.split(".")[0],
+                        "address": this.addr,
                         "image": null,
                         "is_visible": this.visible,
                     })
@@ -255,6 +255,10 @@ import CodeContainer from '@/components/CodeContainer.vue';
             CodeContainer,
             Navbar
         },
+
+        props:{
+            addrList: Array,
+        }
     }
 </script>
 

@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import VerifyEmailCode, ResetPasswordCode, Address
 from .utils import send_verify_email, send_reset_password
-from .serializers import CustomUserSerializer, VerifyEmailCodeSerializer, ResetPasswordCodeSerializer
+from .serializers import CustomUserSerializer, VerifyEmailCodeSerializer, ResetPasswordCodeSerializer, AddressSerializer
 
 
 UserModel = get_user_model()
@@ -53,11 +53,11 @@ def register(request):
     email = request.data.get('email')
     phone = request.data.get('phone')
     displayname = request.data.get('displayname')
-    address_id = request.data.get('address')
-    address = Address.objects.get(id=address_id)
+    address_name = request.data.get('address')
+    address = Address.objects.get(name=address_name)
     image = request.data.get('image')
     is_visible = request.data.get('is_visible')
-    print(username, password, email)
+    # print(username, password, email)
     try:
         user = UserModel.objects.get(username=username)
         if not user.is_verified:
@@ -150,28 +150,6 @@ def forgot_password(request):
         return JsonResponse({"registered": False, "sent": False})
 
 
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def verify_code(request, uid):
-#     code = request.data.get('code')
-#     try:
-#         code = request.data.get('code')
-#         # uid = force_str(urlsafe_base64_decode(uidb64))
-#         user = UserModel.objects.get(pk=uid)
-#         try:
-#             verification_code = ResetPasswordCode.objects.get(user=user)
-#             if verification_code.code != code:
-#                 return JsonResponse({'message': 'Invalid verification code.'}, status=400)
-#             if verification_code.is_expired():
-#                 return JsonResponse({'message': 'The verification code has expired.'}, status=400)
-#             serializer = ResetPasswordCodeSerializer(verification_code)
-#             return JsonResponse(serializer.data, status=201)
-#         except ResetPasswordCode.DoesNotExist:
-#             return JsonResponse({'message': 'Invalid verification code.'}, status=404)
-#     except ResetPasswordCode.DoesNotExist or UserModel.DoesNotExist:
-#         return JsonResponse({'message': 'Invalid verification code.'}, status=404)
-
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def reset_password(request, jhed):
@@ -197,17 +175,41 @@ def reset_password(request, jhed):
 
 @api_view(['GET'])
 def get_user_profile(request):
-    user = request.user
-    serializer = CustomUserSerializer(user)
-    return JsonResponse(serializer.data, status=200)
-
+    try:
+        user = request.user
+        serializer = CustomUserSerializer(user)
+        return JsonResponse(serializer.data, status=200)
+    except:
+        return JsonResponse(serializer.errors, status=400)
 
 @api_view(['PATCH'])
 def update_user_profile(request):
-    user = request.user
-    serializer = CustomUserSerializer(user, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
+    try:
+        user = request.user
+        displayname = request.data.get('displayname')
+        address_name = request.data.get('address')
+        address = Address.objects.get(name=address_name)
+        phone = request.data.get('phone')
+        is_visible = request.data.get('is_visible')
+
+        print(address.id, address.name)
+
+        user.displayname = displayname
+        user.address = address
+        user.phone = phone
+        user.is_visible = is_visible
+        user.save()
+
+        serializer = CustomUserSerializer(user)
         return JsonResponse(serializer.data, status=200)
-    else:
-        return JsonResponse(serializer.errors, status=400)
+    except Exception as e:
+        print(e)
+        return JsonResponse({'message': 'Unable to edit profile.'}, status=404)
+    
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def init_info(request):
+    all_addresses = Address.objects.all().values_list('name', flat=True)
+    print(all_addresses)
+    return JsonResponse({"addrList": list(all_addresses)})

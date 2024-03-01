@@ -4,10 +4,18 @@ from .models import VerifyEmailCode, ResetPasswordCode, Address
 
 UserModel = get_user_model()
 
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['id', 'name', 'street', 'zipcode', 'latitude', 'longitude']
+
+
 class CustomUserSerializer(serializers.ModelSerializer):
+    address = AddressSerializer(read_only=True)
+
     class Meta:
         model = UserModel
-        fields = ['id', 'username', 'email', 'address', 'displayname', 'image']
+        fields = ['id', 'username', 'email', 'address', 'displayname', 'image', 'phone', 'is_visible']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -25,9 +33,3 @@ class ResetPasswordCodeSerializer(serializers.ModelSerializer):
         model = ResetPasswordCode
         fields = ['user', 'code', 'token', 'created_at']
         read_only_fields = ['created_at']
-
-
-class AddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Address
-        fields = ['id', 'name', 'street', 'zipcode', 'latitude', 'longitude']
