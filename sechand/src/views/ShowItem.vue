@@ -18,7 +18,7 @@
 
                 <!-- Description -->
                 <div class="description">
-                    <h3>Description:</h3>
+                    <h5>Description:</h5>
                     <p>{{ item.description }}</p>
                 </div>
                 <Button v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
@@ -33,16 +33,17 @@
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 import Button from "@/components/Button.vue";
+import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
 
     name: "ShowItem",
-    props: {
-        currentUser: Object,
-        item: {
-            type: Object,
-            required: true
-        }
-    },
+    // props: {
+    //     currentUser: Object,
+    //     item: {
+    //         type: Object,
+    //         required: true
+    //     }
+    // },
     data() {
         return {
             isCurrentUserSeller: false,
@@ -50,6 +51,7 @@ export default {
             isLoading: false,
             item: {},
             id: null,
+            currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     components: {
@@ -89,12 +91,7 @@ export default {
         this.id = this.$route.params.id;
         console.log("collect", this.isitemCollected);
         try {
-            const accessToken = localStorage.getItem('access_token');
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
+            const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${this.id}`);
             console.log(response.data);
             this.item = response.data;
         } catch (error) {
@@ -132,6 +129,7 @@ export default {
 
 .right-side {
     flex: 1;
+    align-items: flex-start;
 }
 
 .description {
@@ -139,6 +137,7 @@ export default {
 }
 
 .price {
+    margin-top: 20px;
     font-size: 20px;
     font-weight: bold;
 }

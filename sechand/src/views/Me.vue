@@ -68,12 +68,12 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import Cards from "@/components/Cards.vue";
 import Button from "@/components/Button.vue";
 import axios from "axios";
+import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   name: "Me",
-  props: {
-    currentUser: Object,
-
-  },
+  // props: {
+  //   currentUser: Object,
+  // },
   components: {
     UserNavbar,
     Cards,
@@ -83,12 +83,13 @@ export default {
     return {
       postCardsData: [],
       historyCardsData: [],
+      currentUser: JSON.parse(localStorage.getItem('user'))
     };
   },
   async created() {
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all', {
+      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/UserItems/all', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         },
@@ -100,7 +101,7 @@ export default {
     // history card data
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all', {
+      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/UserItems/all', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         },

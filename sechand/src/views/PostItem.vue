@@ -69,11 +69,12 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
+import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   name: "NewPost",
-  props: {
-    currentUser: Object,
-  },
+  // props: {
+  //   currentUser: Object,
+  // },
   components: {
     UserNavbar,
   },
@@ -84,6 +85,7 @@ export default {
       price: "",
       address: "123 Main Street, City, Country", // Sample address
       picture: null,
+      currentUser: JSON.parse(localStorage.getItem('user'))
     };
   },
   methods: {
@@ -108,11 +110,9 @@ export default {
           formData.append('picture', this.picture);
         }
         console.log(formData);
-        const accessToken = localStorage.getItem('access_token');
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/post/Item/new', formData, {
+        const response = await axios.post(HTTP_PREFIX + 'api/v1/post/Item/new', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${accessToken}`
+            'Content-Type': 'multipart/form-data'
           }
         });
         console.log("Form submitted successfully:", response.data);

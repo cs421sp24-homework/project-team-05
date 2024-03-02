@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from post.models import Item
 import datetime, uuid
 
 # Create your models here.
@@ -48,3 +49,7 @@ class Address(models.Model):
 
     def __str__(self):
         return self.name
+    
+class UserPurchase(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)

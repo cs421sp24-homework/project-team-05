@@ -16,11 +16,12 @@ import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
 import axios from "axios";
+import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   name: "UserHome",
-  props: {
-    currentUser: Object,
-  },
+  // props: {
+  //   currentUser: Object,
+  // },
   components: {
     UserNavbar,
     Seach,
@@ -36,12 +37,15 @@ export default {
       ],
       isLoading: false,
       cardsData: [],
+      currentUser: JSON.parse(localStorage.getItem('user'))
     };
   },
   async created() {
+
+
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all', {
+      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/Items/all', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }
@@ -81,7 +85,7 @@ export default {
 </script>
 <style>
 .container {
-  margin-top: 5px;
+  margin-top: 12vh;
   margin-left: 5vw;
 }
 

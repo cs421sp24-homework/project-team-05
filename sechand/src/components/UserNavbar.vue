@@ -23,11 +23,16 @@
 import Button from "./Button.vue";
 export default {
   name: "UserNavbar",
-  props: {
-    currentUser: Object,
-  },
+  // props: {
+  //   currentUser: Object,
+  // },
   components: {
     Button,
+  },
+  data() {
+    return {
+      currentUser: JSON.parse(localStorage.getItem('user'))
+    };
   },
   methods: {
     profile() {

@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg">
-    <div class="container">
+    <div class="navbar-elements">
       <a class="navbar-brand" href="#" @click="goToHome">
         <img src="../assets/logo_temp.svg" alt="Icon" class="mr-2 icon" />
         Sechand</a>
@@ -31,14 +31,6 @@ export default {
 };
 </script>
 <style>
-.navbar {
-  background-color: #98a497;
-  padding-top: 20px;
-  /* Increase top padding */
-  padding-bottom: 20px;
-  /* Increase bottom padding */
-}
-
 .space {
   margin-left: 10px;
   /* Adjust the margin to create space between buttons */
@@ -52,6 +44,15 @@ export default {
   /* Increase bottom padding */
 }
 
+.navbar-elements {
+  margin-left: 5vw;
+  margin-right: 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .navbar-brand {
   color: #ffffff;
   /* Text color */
@@ -61,14 +62,6 @@ export default {
   line-height: 1;
 }
 
-.navbar-nav {
-  display: flex;
-  align-items: center;
-}
-
-.nav-item {
-  margin-left: 10px;
-}
 
 .icon {
   width: 40px;

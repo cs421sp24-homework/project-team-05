@@ -2,7 +2,7 @@
   <div>
     <Navbar @login="login" @signup="signup" />
     <div class="container">
-      <Seach class="search" />
+      <Seach />
       <Dropdown class="buttons" text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
         :dropdownData="locations"></Dropdown>
       <Cards :cards="cardsData" @item-detail="handleItemDetail" />
@@ -17,6 +17,7 @@ import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
 import axios from "axios";
+import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   components: {
     Navbar,
@@ -37,7 +38,7 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all');
+      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/Items/all');
       this.cardsData = response.data;
     } catch (error) {
       console.error(error);
@@ -80,13 +81,10 @@ export default {
 </script>
 <style>
 .container {
-  margin-top: 20px;
+  margin-top: 12vh;
   margin-left: 5vw;
 }
 
-.search {
-  margin-top: 20px;
-}
 
 .buttons {
   margin-top: 20px;

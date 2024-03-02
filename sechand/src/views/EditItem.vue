@@ -75,17 +75,19 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
+import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
     name: "EditItem",
-    props: {
-        currentUser: Object,
-    },
+    // props: {
+    //     currentUser: Object,
+    // },
     components: {
         UserNavbar,
     },
     data() {
         return {
             item: {},
+            currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     async created() {
@@ -93,12 +95,7 @@ export default {
         this.id = this.$route.params.id;
 
         try {
-            const accessToken = localStorage.getItem('access_token');
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
+            const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${this.id}`);
             console.log(response.data);
             this.item = response.data;
         } catch (error) {
@@ -115,11 +112,9 @@ export default {
         },
         deleteItem() {
             try {
-                const accessToken = localStorage.getItem('access_token');
-                const response = axios.delete(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, {
+                const response = axios.delete(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${accessToken}`
+                        'Content-Type': 'multipart/form-data'
                     },
                     data: {
                         id: this.currentUser.id
@@ -146,11 +141,9 @@ export default {
                     formData.append('picture', this.picture);
                 }
                 console.log(formData);
-                const accessToken = localStorage.getItem('access_token');
-                const response = await axios.patch(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, formData, {
+                const response = await axios.patch(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${accessToken}`
+                        'Content-Type': 'multipart/form-data'
                     }
                 });
                 console.log("Form submitted successfully:", response.data);
