@@ -23,11 +23,20 @@
 import Button from "./Button.vue";
 export default {
   name: "UserNavbar",
-  props: {
-    currentUser: Object,
-  },
+  // props: {
+  //   currentUser: Object,
+  // },
   components: {
     Button,
+  },
+  data() {
+    return {
+      currentUser: null
+    };
+  },
+  created() {
+    this.currentUser = JSON.parse(localStorage.getItem('user'));
+    console.log("current user:", this.currentUser);
   },
   methods: {
     profile() {
@@ -39,11 +48,11 @@ export default {
       console.log("goToHome");
     },
     logout() {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
+      // localStorage.removeItem('access_token');
+      // localStorage.removeItem('refresh_token');
       localStorage.clear(); // Clears all local storage
       sessionStorage.clear(); // Clears all session storage
-      this.$emit("userLogout", {});
+      // this.$emit("userLogout", {});
       this.$router.replace({ name: 'Home' });
       // this.$router.push("/")
     }
