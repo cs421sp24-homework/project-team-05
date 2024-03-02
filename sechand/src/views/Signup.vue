@@ -223,7 +223,7 @@ import CodeContainer from '@/components/CodeContainer.vue';
                         }
                         else {
                             // success
-                            this.$router.push({ name: 'login', query: {"jhed": this.jhed,
+                            this.$router.push({ name: 'Login', query: {"jhed": this.jhed,
                                                                        "suffix": this.suffix,
                                                                        "password": this.password  } });
                         }
