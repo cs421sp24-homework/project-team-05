@@ -4,7 +4,7 @@
   </button>
 </template>
   
-  <script>
+<script>
 export default {
   name: "Button",
   props: {
@@ -18,3 +18,13 @@ export default {
   },
 };
 </script>
+<style scoped>
+.btn:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.btn {
+  margin: 4px 2px;
+}
+</style>

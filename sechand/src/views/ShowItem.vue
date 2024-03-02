@@ -1,18 +1,20 @@
 <template>
     <div>
         <UserNavbar :currentUser="currentUser" />
-        <div class="item-detail">
+        <div class="item-detail container">
             <!-- Left side: Image -->
             <div class="left-side">
-                <img :src="item.imageUrl" alt="Item Image" style="width: 300px; height: 300px; border-radius: 50%" />
+                <img :src="item.imageUrl" alt="Item Image" style="width: 500px; height: 500px; border-radius: 50%" />
             </div>
 
             <!-- Right side: Details -->
             <div class="right-side">
                 <h2>{{ item.name }}</h2>
-                <p>Price: ${{ item.price }}</p>
-                <p>Seller: {{ item.displayname }}</p>
-                <img :src="item.sellerIcon" alt="Seller Icon" />
+                <p class="price">Price: ${{ item.price }}</p>
+
+                <p>
+                    <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
+                </p>
 
                 <!-- Description -->
                 <div class="description">
@@ -124,14 +126,20 @@ export default {
 
 .left-side {
     flex: 1;
+    width: 50vw;
     margin-right: 20px;
 }
 
 .right-side {
-    flex: 2;
+    flex: 1;
 }
 
 .description {
     margin-top: 20px;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: bold;
 }
 </style>

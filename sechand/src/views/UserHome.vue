@@ -1,10 +1,13 @@
 <template>
   <div>
     <UserNavbar :currentUser="currentUser" />
-    <Seach />
-    <Dropdown text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
-      :dropdownData="locations"></Dropdown>
-    <Cards :cards="cardsData" @item-detail="handleItemDetail" />
+    <div class="container">
+      <Seach />
+      <Dropdown class="buttons" text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
+        :dropdownData="locations"></Dropdown>
+      <Cards :cards="cardsData" @item-detail="handleItemDetail" />
+    </div>
+
   </div>
 </template>
 <script>
@@ -40,7 +43,7 @@ export default {
       const accessToken = localStorage.getItem('access_token');
       const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all', {
         headers: {
-            'Authorization': `Bearer ${accessToken}`
+          'Authorization': `Bearer ${accessToken}`
         }
       });
       this.cardsData = response.data;
@@ -76,3 +79,17 @@ export default {
   },
 };
 </script>
+<style>
+.container {
+  margin-top: 5px;
+  margin-left: 5vw;
+}
+
+.search {
+  margin-top: 20px;
+}
+
+.buttons {
+  margin-top: 20px;
+}
+</style>

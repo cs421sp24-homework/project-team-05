@@ -38,7 +38,4 @@ coverage
 **/__pycache__/
 **/migrations/__pycache__
 *.pyc
-<<<<<<< HEAD
 /venv/
-=======
->>>>>>> frontend-dev-lyx

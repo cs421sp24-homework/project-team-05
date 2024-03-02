@@ -9,6 +9,7 @@
     <div class="card-seller">{{ card.displayname }}</div>
   </div>
 </template>
+
 <script>
 export default {
   name: "Card",
@@ -23,11 +24,42 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .card {
   margin: 10px;
-  width: 18rem;
+  width: 250px;
+  /* Adjust the width as needed */
+  height: 350px;
+  /* Adjust the height as needed */
   cursor: pointer;
+  position: relative;
+  /* Add relative positioning to the card */
+}
+
+.card-img-top {
+  width: 100%;
+  height: 200px;
+  /* Adjust the image height as needed */
+  object-fit: cover;
+  /* Ensure the image covers the entire space */
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.card-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-description {
+  margin-bottom: 0.5rem;
+}
+
+.card-price {
+  margin-bottom: 0.5rem;
 }
 
 .card-seller {
@@ -37,5 +69,4 @@ export default {
   background-color: rgba(255, 255, 255, 0.5);
   color: rgb(0, 0, 0);
   padding: 5px;
-}
-</style>
+}</style>
