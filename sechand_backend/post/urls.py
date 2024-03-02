@@ -10,6 +10,10 @@ urlpatterns = [
     #   int count: indicates numbers of each request should return
     path("Items/all", views.GetAllItems, name="GetAllItems"),
 
+    path("Items/Collection/new", views.AddNewCollection, name="AddNewCollection"),
+
+    path("Items/Collection", views.GetUserCollection, name="GetUserCollection"),
+
     # POST
     path("Item/new", views.CreateNewItem, name="CreateNewItem"),
 
