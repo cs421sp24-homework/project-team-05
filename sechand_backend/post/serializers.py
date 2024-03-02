@@ -1,6 +1,6 @@
 from rest_framework import serializers
+from .models import Item, UserCollection
 
-from .models import Item, UserCollection, UserPurchase
 
 # Model(Item): id name description tags price user_id
 class ItemSerializer(serializers.ModelSerializer):

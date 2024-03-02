@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer, CollectionDeserializer
-from .models import Item, UserPurchase, UserCollection
+from .models import Item, UserCollection
 import uuid
 
 # Model(Item): id name description tags price user_id

@@ -3,11 +3,13 @@ from django.contrib.auth import get_user_model, authenticate, login
 from django.http import JsonResponse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_str
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import VerifyEmailCode, ResetPasswordCode, Address
+from .models import VerifyEmailCode, ResetPasswordCode, Address, UserPurchase
 from .utils import send_verify_email, send_reset_password
-from .serializers import CustomUserSerializer, VerifyEmailCodeSerializer, ResetPasswordCodeSerializer, AddressSerializer
+from .serializers import CustomUserSerializer, VerifyEmailCodeSerializer, PurchaseHistorySerializer
+from .serializers import ResetPasswordCodeSerializer, AddressSerializer, PurchaseHistoryDeserializer
 
 
 UserModel = get_user_model()
@@ -214,3 +216,32 @@ def init_info(request):
     all_addresses = Address.objects.all().values_list('name', flat=True)
     # print(all_addresses)
     return JsonResponse({"addrList": list(all_addresses)})
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_order_history(request):
+    if(request.user):
+        #TODO: validate user token again
+        # user_id = request.data['id']
+        history = UserPurchase.objects.filter(user = request.user.id)
+        if history.exists():
+            serializer = PurchaseHistoryDeserializer(history, many=True)
+            return JsonResponse(serializer.data, safe=False, status=200)
+        else:
+            return JsonResponse({}, status=200)
+    else:
+       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def add_new_purchase_history(request):
+    if(request.user):
+        #TODO: validate user token again
+        serializer = PurchaseHistorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        else:
+            return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)

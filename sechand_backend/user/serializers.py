@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import VerifyEmailCode, ResetPasswordCode, Address
+from .models import VerifyEmailCode, ResetPasswordCode, Address, UserPurchase
+from post.serializers import ItemSerializerWithSellerName
 
 UserModel = get_user_model()
 
@@ -33,3 +34,19 @@ class ResetPasswordCodeSerializer(serializers.ModelSerializer):
         model = ResetPasswordCode
         fields = ['user', 'code', 'token', 'created_at']
         read_only_fields = ['created_at']
+
+class PurchaseHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPurchase
+        fields = ['user', 'item']
+    
+class PurchaseHistoryDeserializer(serializers.ModelSerializer):
+    item = ItemSerializerWithSellerName(read_only=True)
+    user_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserPurchase
+        fields = ['user_id', 'item']
+
+    def get_user_id(self, obj):
+        return obj.user.id if obj.user else None

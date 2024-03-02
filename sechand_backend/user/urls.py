@@ -15,7 +15,9 @@ urlpatterns = [
     path('profile/', views.get_user_profile, name='get_user_profile'),
     path('profile/update', views.update_user_profile, name='update_user_profile'),
     path('init-info/', views.init_info, name='init_info'),
-    path('logout/', LogoutView.as_view(), name='logout')
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('profile/order-history', views.get_order_history, name='get_order_history'),
+    path('profile/order-history/new', views.add_new_purchase_history, name='add_new_purchase_history')
 ]
 
 if settings.DEBUG:

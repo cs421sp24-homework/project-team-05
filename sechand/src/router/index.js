@@ -8,6 +8,7 @@ import EditItem from '../views/EditItem.vue'
 import Login from '.././views/Login.vue'
 import Signup from '.././views/Signup.vue'
 import Profile from '.././views/Profile.vue'
+import Empty from '@/views/Empty.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,16 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/showitem',
+      component: Empty,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/edititem',
+      component: Empty,
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/showitem/:id',
       name: 'ShowItem',
       component: ShowItem,
@@ -50,16 +61,19 @@ const router = createRouter({
     {
         path: '/login',
         component: Login,
-        name: 'login'
+        name: 'Login',
+        meta: { requiresAuth: false }
     },
     {
         path: '/signup',
         component: Signup,
-        
+        name: "Signup",
+        meta: { requiresAuth: false }
     },
     {
         path: '/profile',
         component: Profile,
+        name: 'Profile',
         meta: { requiresAuth: true }
     },
   ]
@@ -73,9 +87,6 @@ router.beforeEach((to, from, next) => {
     } else {
       next(); 
     }
-  } else {
-    next(); 
-  }
 });
 
 
