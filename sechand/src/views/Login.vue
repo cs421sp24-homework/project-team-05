@@ -172,9 +172,10 @@
                         "username": this.jhed.toLowerCase(),
                         "password":  this.password
                     });
-                        this.$emit('userLogin', {"user": userInfo, "token": response.data});
-                        localStorage.setItem('access_token', response.data.access);
-                        localStorage.setItem('refresh_token', response.data.refresh);
+                        // this.$emit('userLogin', {"user": userInfo, "token": response.data});
+                        localStorage.setItem('accessToken', response.data.access);
+                        localStorage.setItem('refreshToken', response.data.refresh);
+                        localStorage.setItem('user', JSON.stringify(userInfo));
                         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
                         console.log(userInfo);
                         this.$router.push('/userhome');

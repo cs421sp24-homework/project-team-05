@@ -80,17 +80,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = localStorage.getItem('access_token');
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!isAuthenticated) {
-            next({ name: 'Home' });
-        } 
-        else {
-            next();
-        }
-    } 
-    else {
-        next(); 
+  const isAuthenticated = localStorage.getItem('accessToken');
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next({ name: 'Home' });
+    } else {
+      next(); 
     }
 });
 
