@@ -43,5 +43,9 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+<<<<<<< HEAD
           heroku_email: "jtao26@jh.edu"
           appdir: "sechand_backend"
+=======
+          heroku_email: "jtao26@jh.edu"
+>>>>>>> 9a07ce7081d98e6aa84b533ed6512e6ffa46c2e6

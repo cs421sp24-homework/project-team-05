@@ -7,11 +7,11 @@
       >
       <div class="row justify-content-end">
         <div class="col-auto">
-          <Button @btn-click="$emit('login')" text="Login" color="red"></Button>
+          <Button @btn-click="$emit('Login')" text="Login" color="red"></Button>
         </div>
         <div class="col-auto">
           <Button
-            @btn-click="$emit('signup')"
+            @btn-click="$emit('Signup')"
             text="Sign Up"
             color="red"
           ></Button>

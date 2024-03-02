@@ -14,7 +14,7 @@
             
             <label class="form-label input" style="text-align: left; margin-top: 4%;">JHED</label>
             <div class="input-group mb-3 input">
-                <input v-model="jhed" type="text" class="form-control" placeholder="Enter your JHED" style="width: 50%;" @focus="initState" :disabled="isResetting">
+                <input id="jhed" v-model="jhed" type="text" class="form-control" placeholder="Enter your JHED" style="width: 50%;" @focus="initState" :disabled="isResetting">
                 <select v-model="suffix" class="form-select form-control" :disabled="isResetting">
                     <option>@jh.edu</option>
                     <option>@jhu.edu</option>
@@ -23,7 +23,7 @@
 
             <div class="mb-3 input">
                 <label class="form-label" style="text-align: left; margin-top: 4%;">Password</label>
-                <input type="password" class="form-control" placeholder="Enter your password" v-model="password" @focus="initState" :disabled="isResetting"/>
+                <input id="pw" type="password" class="form-control" placeholder="Enter your password" v-model="password" @focus="initState" :disabled="isResetting"/>
             </div>
 
             <div style="color: red; font-size: 0.7vw; margin-left: 20%;">
@@ -37,7 +37,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 3%;">
-                <button class="btn btn-primary" style="width: 60%; font-size: 1vw;" @click="tryLogin" :disabled="isResetting">Login</button>
+                <button id="logBtn" class="btn btn-primary" style="width: 60%; font-size: 1vw;" @click="tryLogin" :disabled="isResetting">Login</button>
             </div>
 
             <div style="text-align: center; margin-top: 8%;">
