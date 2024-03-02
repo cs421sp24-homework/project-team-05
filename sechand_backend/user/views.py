@@ -17,7 +17,7 @@ UserModel = get_user_model()
 def custom_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
-    print(username, password)
+    # print(username, password)
     try:
         user = UserModel.objects.get(username=username)
         if user.check_password(password):
@@ -182,6 +182,7 @@ def get_user_profile(request):
     except:
         return JsonResponse(serializer.errors, status=400)
 
+
 @api_view(['PATCH'])
 def update_user_profile(request):
     try:
@@ -192,7 +193,7 @@ def update_user_profile(request):
         phone = request.data.get('phone')
         is_visible = request.data.get('is_visible')
 
-        print(address.id, address.name)
+        # print(address.id, address.name)
 
         user.displayname = displayname
         user.address = address
@@ -203,7 +204,7 @@ def update_user_profile(request):
         serializer = CustomUserSerializer(user)
         return JsonResponse(serializer.data, status=200)
     except Exception as e:
-        print(e)
+        # print(e)
         return JsonResponse({'message': 'Unable to edit profile.'}, status=404)
     
 
@@ -211,5 +212,5 @@ def update_user_profile(request):
 @permission_classes([AllowAny])
 def init_info(request):
     all_addresses = Address.objects.all().values_list('name', flat=True)
-    print(all_addresses)
+    # print(all_addresses)
     return JsonResponse({"addrList": list(all_addresses)})
