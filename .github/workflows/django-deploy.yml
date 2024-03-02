@@ -27,9 +27,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       working-directory: ./sechand_backend
-      run: |
-        cd sechand_backend
-        python manage.py test --settings=sechand_backend.settings_test
+      run: python manage.py test --settings=sechand_backend.settings_test
 
   Backend-Prod-Deplotment:
     needs: Backend-Tests
