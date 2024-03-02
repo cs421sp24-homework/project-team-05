@@ -1,9 +1,12 @@
 <template>
-    <router-view @userLogin="userLogin" 
+    <!-- <router-view @userLogin="userLogin" 
                  @userLogout="logout"
                  :currentUser="user"
                  :addrList="addrList"
-                 :token="token"></router-view>
+                 :token="token"></router-view> -->
+    <router-view @userLogin="userLogin" 
+                 @userLogout="logout"
+                 :addrList="addrList"></router-view>
 </template>
 
 <script>
@@ -21,27 +24,27 @@ import axios from 'axios';
         methods:{
             userLogin(data){
                 this.login = true;
-                this.user = data.user;
-                this.token = data.token;
+                // this.user = data.user;
+                // this.token = data.token;
             },
 
             logout(){
                 this.login = false;
-                this.user = null;
-                this.token = null;
+                // this.user = null;
+                // this.token = null;
             }
         },
 
         async mounted(){
             await axios.get('http://127.0.0.1:8000/user/init-info')
-                .then(response => {
-                    console.log(response.data);
-                    this.addrList = response.data.addrList;
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    window.alert("Failed to fetch address.");
-                })
+            .then(response => {
+                console.log(response.data);
+                this.addrList = response.data.addrList;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                window.alert("Failed to fetch address.");
+            })
         }
     }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar :currentUser="currentUser" />
+        <UserNavbar/>
         <div class="item-detail">
             <!-- Left side: Image -->
             <div class="left-side">
@@ -34,13 +34,13 @@ import Button from "@/components/Button.vue";
 export default {
 
     name: "ShowItem",
-    props: {
-        currentUser: Object,
-        item: {
-            type: Object,
-            required: true
-        }
-    },
+    // props: {
+    //     currentUser: Object,
+    //     item: {
+    //         type: Object,
+    //         required: true
+    //     }
+    // },
     data() {
         return {
             isCurrentUserSeller: false,
@@ -48,6 +48,7 @@ export default {
             isLoading: false,
             item: {},
             id: null,
+            currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     components: {
@@ -87,12 +88,7 @@ export default {
         this.id = this.$route.params.id;
         console.log("collect", this.isitemCollected);
         try {
-            const accessToken = localStorage.getItem('access_token');
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
             console.log(response.data);
             this.item = response.data;
         } catch (error) {

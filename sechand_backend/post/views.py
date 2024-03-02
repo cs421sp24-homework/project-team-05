@@ -27,7 +27,7 @@ def GetAllUserItems(request):
 @permission_classes([AllowAny])
 def GetAllItems(request):
     # get user status
-    count = request.data.get('count', 10)
+    count = request.data.get('count', 4)
     # Sanitize params
     try:
         count = int(count)
@@ -100,7 +100,6 @@ def ProcessSingleItem(request, item_id):
         if(request.user):
             #TODO: validate user token again
             user_id = request.user.id
-            # user_id = request.data.get('user_id')
             try:
                 item = Item.objects.get(id=item_id, seller=user_id)
                 item.delete()
