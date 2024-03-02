@@ -68,7 +68,6 @@
   
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
-import UploadPic from "@/components/UploadPic.vue";
 import axios from "axios";
 export default {
   name: "NewPost",
@@ -77,7 +76,6 @@ export default {
   },
   components: {
     UserNavbar,
-    UploadPic,
   },
   data() {
     return {
