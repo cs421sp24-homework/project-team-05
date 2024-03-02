@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar :currentUser="currentUser" />
+    <UserNavbar/>
     <Seach />
     <Dropdown text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
       :dropdownData="locations"></Dropdown>
@@ -15,9 +15,9 @@ import Cards from "../components/Cards.vue";
 import axios from "axios";
 export default {
   name: "UserHome",
-  props: {
-    currentUser: Object,
-  },
+  // props: {
+  //   currentUser: Object,
+  // },
   components: {
     UserNavbar,
     Seach,
@@ -33,16 +33,12 @@ export default {
       ],
       isLoading: false,
       cardsData: [],
+      currentUser: JSON.parse(localStorage.getItem('user'))
     };
   },
   async created() {
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-      });
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/Items/all');
       this.cardsData = response.data;
     } catch (error) {
       console.error(error);

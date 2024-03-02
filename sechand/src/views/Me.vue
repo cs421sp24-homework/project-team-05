@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar :currentUser="currentUser" />
+    <UserNavbar/>
     <div class="row">
       <div class="col-12">
         <h1>My Profile</h1>
@@ -49,10 +49,9 @@ import Button from "@/components/Button.vue";
 import axios from "axios";
 export default {
   name: "Me",
-  props: {
-    currentUser: Object,
-
-  },
+  // props: {
+  //   currentUser: Object,
+  // },
   components: {
     UserNavbar,
     Cards,
@@ -62,28 +61,19 @@ export default {
     return {
       postCardsData: [],
       historyCardsData: [],
+      currentUser: JSON.parse(localStorage.getItem('user'))
     };
   },
   async created() {
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        },
-      });
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all');
       this.postCardsData = response.data;
     } catch (error) {
       console.error(error);
     }
     // history card data
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        },
-      });
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/post/UserItems/all');
       this.historyCardsData = response.data;
     } catch (error) {
       console.error(error);

@@ -1,5 +1,5 @@
 <template>
-    <UserNavbar :currentUser="currentUser" />
+    <UserNavbar/>
     <div id="left"></div>
     <div id="right"></div>
 
@@ -72,6 +72,7 @@ export default {
             show_mobile: "",
             show_visible: null,
             state: 0,
+            currentUser: JSON.parse(localStorage.getItem('user'))
         }
     },
 
@@ -98,11 +99,7 @@ export default {
             if (this.show_uname.length > 16 || this.show_uname.length < 6) this.state = 1;
             else if (this.show_mobile.length != 10 || isNaN(Number(this.show_mobile, 10))) this.state = 2;
             else {
-                const accessToken = localStorage.getItem('access_token');
                 axios.patch('http://127.0.0.1:8000/user/profile/update', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    },
                     "displayname": this.show_uname,
                     "address": this.show_addr,
                     "phone": this.show_mobile,
@@ -139,17 +136,11 @@ export default {
     },
 
     props: {
-        currentUser: Object,
+        // currentUser: Object,
         addrList: Array
     },
-
     mounted (){
-        const accessToken = localStorage.getItem('access_token');
-        axios.get('http://127.0.0.1:8000/user/profile/', {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
+        axios.get('http://127.0.0.1:8000/user/profile/')
         .then(response => {
             console.log(response.data);
             this.email = response.data.email;
