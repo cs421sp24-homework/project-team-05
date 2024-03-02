@@ -41,7 +41,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 8%;">
-                <button class="underline btn" :disabled="isResetting" @click="toSignUp">
+                <button id="toSignUp" class="underline btn" :disabled="isResetting" @click="toSignUp">
                     New to Sechand? Signup!
                 </button>
             </div>
