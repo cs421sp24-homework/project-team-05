@@ -17,7 +17,7 @@ def GetAllUserItems(request):
         user_items = Item.objects.filter(seller = request.user.id)
         if user_items.exists():
             serializer = ItemSerializer(user_items, many=True)
-            return JsonResponse(serializer.data, status=200)
+            return JsonResponse(serializer.data, safe=False, status=200)
         else:
             return JsonResponse({}, status=200)
     else:
