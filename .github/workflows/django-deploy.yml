@@ -2,12 +2,12 @@ name: Django CICD Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "pre-deploy" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "pre-deploy" ]
   
 jobs:
-  test:
+  Backend-Tests:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
@@ -21,20 +21,22 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
+      working-directory: ./sechand_backend
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
+      working-directory: ./sechand_backend
       run: |
         cd sechand_backend
         python manage.py test --settings=sechand_backend.settings_test
 
-  deploy:
-    needs: test
+  Backend-Prod-Deplotment:
+    needs: Backend-Tests
     runs-on: ubuntu-latest
-    name: Deploy App to Heroku
+    name: Deploy Backend Server to Heroku
     steps:
-      - name: checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
       - name: Deploy
         uses: akhileshns/heroku-deploy@v3.13.15
@@ -42,4 +44,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: "jtao26@jh.edu"
-          breanch: "main"
+          appdir: "sechand_backend"
