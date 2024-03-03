@@ -1,0 +1,5 @@
+{
+    "env": {
+      "VITE_HOST": "@API_HOST"
+    }
+  }
