@@ -91,7 +91,6 @@ SecHand is developed using the following version of technologies:
     ```
 
 #### (3) Install Django backend dependencies
-
 - To install necessary dependencies, first you need to navigate to the root folder of the backend server, use:
     ```cmd
     cd sechand_backend
@@ -147,8 +146,13 @@ SecHand is developed using the following version of technologies:
     npm install
     ```
 - A `node_modules` folder will be created and all dependencies will be installed in there.
+#### (6) Add .env file
+- Create `.env` file at the frontend folder, and fill in following contect:
+    ```
+    VITE_HOST = "http://localhost:8000/"
+    ```
 
-#### (6) Run the Vue frontend
+#### (7) Run the Vue frontend
 
 - Use the following command to start the frontend:
     ```cmd
