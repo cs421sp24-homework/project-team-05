@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-dotenv.config();
+// dotenv.config();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,9 +14,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     }
-  },
-  define: {
-    // Define your environment variables here
-    'process.env': process.env,
   },
 })

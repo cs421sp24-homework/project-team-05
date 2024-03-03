@@ -165,6 +165,27 @@ SecHand is developed using the following version of technologies:
 
 - The frontend should now running on: http://localhost:5173/
 
+## Use SecHand
+### Register your account
+- Start using SecHand by registering your account. At the homepage of our website, click the Sign up button at the top right corner.
+- Double check it when you input your message, we will require you to input the verification code we send you.
+- Check the phone number privacy settings. Display your phone number to others? it's up to you.
+- After click "Verify JHED by E-mail", wait for a bit to let the system send your code. If the page does not automatically pop up a window asking for your code, please click the button again.
+
+### Log in to your account
+- Enter your JHED and password to log in.
+- Anytime if you changed your mind and not wish to log in, click the orange title we have at top left, and you will be redirected to home page.
+
+### Post your item out
+- Click your name at the navigation bar to enter your personal homepage, where you can manage the item you posted, your personal information, etc.
+- Now click new post to post your item.
+
+### Edit or Delete your item
+- Sometimes you may find out you want something to be different, like desctiption. So you need to edit some information.
+- Click the item you want to edit inside your personal homepage, then edit or delete the item as you wish.
+
+
+
 ## Developing
 - **Remember NOT INCLUDE any cache file to the repo, add them to .gitignore** 
 
