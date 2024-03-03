@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar :currentUser="currentUser" />
+        <UserNavbar />
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -52,8 +52,8 @@
                             <button type="button" class="btn btn-secondary me-2" @click="cancel">
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-primary">Post</button>
-                            <button type="button" class="btn btn-danger me-2" @click="deleteItem">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn btn-danger me-2" @click="deleteItem">
                                 Delete
                             </button>
                         </div>
@@ -78,9 +78,6 @@ import axios from "axios";
 import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
     name: "EditItem",
-    // props: {
-    //     currentUser: Object,
-    // },
     components: {
         UserNavbar,
     },
@@ -122,7 +119,7 @@ export default {
 
                 });
                 console.log("Form submitted successfully:", response.data);
-                this.$router.go(-2);
+                this.$router.push("/me");
 
             } catch (error) {
                 console.error("Error submitting form:", error);
@@ -161,6 +158,11 @@ export default {
 <style>
 .btn {
     margin-left: 4px;
+}
+
+.btn:hover {
+    opacity: 0.8;
+    cursor: pointer;
 }
 </style>
     

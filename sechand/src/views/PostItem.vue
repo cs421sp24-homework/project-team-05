@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar :currentUser="currentUser" />
+    <UserNavbar />
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -72,9 +72,6 @@ import axios from "axios";
 import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   name: "NewPost",
-  // props: {
-  //   currentUser: Object,
-  // },
   components: {
     UserNavbar,
   },

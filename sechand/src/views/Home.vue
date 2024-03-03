@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar @login="login" @signup="signup" />
+    <Navbar />
     <div class="container">
       <Seach />
       <Dropdown class="buttons" text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
@@ -45,14 +45,6 @@ export default {
     }
   },
   methods: {
-    login() {
-      this.$router.push("/login");
-      console.log("login");
-    },
-    signup() {
-      this.$router.push("/signup");
-      console.log("signup");
-    },
     showLocation() {
       console.log("showLocation");
     },

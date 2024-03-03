@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar :currentUser="currentUser" />
+    <UserNavbar />
     <div class="container">
       <Seach />
       <Dropdown class="buttons" text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
@@ -19,9 +19,7 @@ import axios from "axios";
 import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   name: "UserHome",
-  // props: {
-  //   currentUser: Object,
-  // },
+
   components: {
     UserNavbar,
     Seach,

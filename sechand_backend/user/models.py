@@ -52,4 +52,4 @@ class Address(models.Model):
     
 class UserPurchase(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.UUIDField()

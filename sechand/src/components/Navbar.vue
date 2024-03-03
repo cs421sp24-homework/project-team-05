@@ -6,10 +6,10 @@
         Sechand</a>
       <div class="row justify-content-end">
         <div class="col-auto">
-          <Button @btn-click="$emit('login')" text="Login" color="transparent"></Button>
+          <Button @btn-click="login" text="Login" color="transparent"></Button>
         </div>
         <div class="col-auto">
-          <Button @btn-click="$emit('signup')" text="Sign Up" color="transparent"></Button>
+          <Button @btn-click="signup" text="Sign Up" color="transparent"></Button>
         </div>
       </div>
     </div>
@@ -26,6 +26,14 @@ export default {
     goToHome() {
       this.$router.push("/");
       console.log("goToHome");
+    },
+    login() {
+      this.$router.push("/login");
+      console.log("login");
+    },
+    signup() {
+      this.$router.push("/signup");
+      console.log("signup");
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <UserNavbar :currentUser="currentUser" />
-    <div class="contain">
+    <UserNavbar />
+    <div class="contain" :key="componentKey">
       <div class="row">
         <div class="col-12">
           <h1>My Profile</h1>
@@ -81,12 +81,15 @@ export default {
   },
   data() {
     return {
+      componentKey: 0,
       postCardsData: [],
       historyCardsData: [],
       currentUser: JSON.parse(localStorage.getItem('user'))
     };
   },
   async created() {
+    this.componentKey += 1; // Change key value to trigger rerender
+    console.log("Me page created", this.componentKey);
     try {
       const accessToken = localStorage.getItem('access_token');
       const response = await axios.get(HTTP_PREFIX + 'api/v1/post/UserItems/all', {
@@ -112,6 +115,9 @@ export default {
     }
   },
   methods: {
+    forceRerender() {
+      this.$forceUpdate(); // Call forceUpdate to trigger rerender
+    },
     handleItemDetail(id) {
       console.log("Item detail", id);
     },

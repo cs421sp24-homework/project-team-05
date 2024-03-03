@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar :currentUser="currentUser" />
+        <UserNavbar />
         <div class="item-detail container">
             <!-- Left side: Image -->
             <div class="left-side">
@@ -37,13 +37,6 @@ import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
 
     name: "ShowItem",
-    // props: {
-    //     currentUser: Object,
-    //     item: {
-    //         type: Object,
-    //         required: true
-    //     }
-    // },
     data() {
         return {
             isCurrentUserSeller: false,

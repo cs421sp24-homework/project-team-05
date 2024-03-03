@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Item, UserCollection
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Model(Item): id name description tags price user_id
@@ -26,12 +27,20 @@ class CollectionSerializer(serializers.ModelSerializer):
         fields = ['user', 'item']
     
 class CollectionDeserializer(serializers.ModelSerializer):
-    item = ItemSerializerWithSellerName(read_only=True)
+    item_details = serializers.SerializerMethodField()
     user_id = serializers.SerializerMethodField()
 
     class Meta:
         model = UserCollection
-        fields = ['user_id', 'item']
+        fields = ['user_id', 'item_details']
 
     def get_user_id(self, obj):
         return obj.user.id if obj.user else None
+    
+    def get_item_details(self, obj):
+        try:
+            # Assuming 'seller' is now a field storing user identifier directly
+            item_instance = Item.objects.get(id=obj.item)
+            return ItemSerializerWithSellerName(item_instance).data
+        except ObjectDoesNotExist:
+            return None
