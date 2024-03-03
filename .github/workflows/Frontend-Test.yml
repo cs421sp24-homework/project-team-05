@@ -2,9 +2,9 @@ name: Vue Frontend Test
 
 on:
   push:
-    branches: [ "development" ]
+    branches: [ "main", "development" ]
   pull_request:
-    branches: [ "development" ]
+    branches: [ "main", "development" ]
 
 jobs:
   test:
