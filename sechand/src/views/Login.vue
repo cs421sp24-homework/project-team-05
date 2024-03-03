@@ -149,7 +149,8 @@ export default {
             else if (this.password.length == 0) this.state = 2;
             else {
                 var userInfo = null;
-                await axios.post('user/login/', {
+                const HTTP_PREFIX = import.meta.env.VITE_HOST;
+                await axios.post(HTTP_PREFIX + 'user/login/', {
                     "username": this.jhed.toLowerCase(),
                     "password": this.password
                 })
@@ -181,8 +182,8 @@ export default {
                         "password": this.password
                     });
                     // this.$emit('userLogin', {"user": userInfo, "token": response.data});
-                    localStorage.setItem('accessToken', response.data.access);
-                    localStorage.setItem('refreshToken', response.data.refresh);
+                    localStorage.setItem('access_token', response.data.access);
+                    localStorage.setItem('refresh_token', response.data.refresh);
                     localStorage.setItem('user', JSON.stringify(userInfo));
                     axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
                     console.log(userInfo);
