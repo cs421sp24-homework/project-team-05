@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath sechand_backend sechand_backend.wsgi
