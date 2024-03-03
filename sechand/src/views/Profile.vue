@@ -52,6 +52,8 @@
             </div>
 
             <div style="text-align: center; margin-top: 4%; margin-bottom: 2%;">
+                <button v-if="!isEditting" class="btn btn-secondary" style="margin-right:15%; width: 20%;"
+                    @click="goBack">Back</button>
                 <button v-if="!isEditting" class="btn btn-primary" style="width: 20%;" @click="toEdit">Edit</button>
                 <button v-if="isEditting" class="btn btn-secondary" style="margin-right:15%; width: 20%;"
                     @click="exitCancel">Cancel</button>
@@ -115,7 +117,7 @@ export default {
                 })
                     .then(response => {
                         console.log(response.data);
-                        this.$emit('updateUser', response.data);
+                        localStorage.setItem('user', JSON.stringify(response.data));
                         this.visible = this.show_visible;
                         this.mobile = this.show_mobile;
                         this.uname = this.show_uname;
@@ -142,6 +144,9 @@ export default {
 
         initState() {
             this.state = 0;
+        },
+        goBack() {
+            this.$router.go(-1);
         }
     },
 
