@@ -11,9 +11,9 @@ class Item(models.Model):
     # TODO: shrink below length limit
     category = models.CharField(max_length=128, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_sold = models.BooleanField(default=False)
 
 class UserCollection(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    item = models.ForeignKey(Item)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    item = models.UUIDField()

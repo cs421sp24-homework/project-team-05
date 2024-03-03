@@ -204,7 +204,7 @@ def update_user_profile(request):
         user.save()
 
         serializer = CustomUserSerializer(user)
-        return JsonResponse(serializer.data, status=200)
+        return JsonResponse({'userInfo': serializer.data}, status=200)
     except Exception as e:
         # print(e)
         return JsonResponse({'message': 'Unable to edit profile.'}, status=404)
