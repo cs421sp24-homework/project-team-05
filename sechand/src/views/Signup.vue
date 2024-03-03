@@ -116,7 +116,6 @@
 import axios from 'axios';
 import Navbar from '@/components/Navbar.vue';
 import CodeContainer from '@/components/CodeContainer.vue';
-import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
     data() {
         return {
@@ -164,6 +163,7 @@ export default {
 
     methods: {
         toVerify() {
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
             const lengthRegex = /.{6,20}/
             const digitRegex = /\d/
             const letterRegex = /[a-zA-Z]/
@@ -217,6 +217,7 @@ export default {
             this.verCode = code;
         },
         trySignup() {
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
             if (this.verCode.length == 0) this.toast_err = 1;
 
             else {

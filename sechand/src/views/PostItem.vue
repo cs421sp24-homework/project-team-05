@@ -69,7 +69,6 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
-import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   name: "NewPost",
   components: {
@@ -94,6 +93,7 @@ export default {
       console.log("Cancelled");
     },
     async submitForm() {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
       console.log("submmitted");
       try {
         const formData = new FormData();

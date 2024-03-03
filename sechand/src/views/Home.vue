@@ -17,7 +17,8 @@ import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
 import axios from "axios";
-import HTTP_PREFIX from "../router/apiEntry.js";
+
+
 export default {
   components: {
     Navbar,
@@ -37,6 +38,7 @@ export default {
     };
   },
   async created() {
+    const HTTP_PREFIX = import.meta.env.VITE_HOST;
     try {
       const response = await axios.get(HTTP_PREFIX + 'api/v1/post/Items/all');
       this.cardsData = response.data;

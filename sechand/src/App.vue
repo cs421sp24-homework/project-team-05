@@ -9,7 +9,6 @@
 
 <script>
 import axios from 'axios';
-import HTTP_PREFIX from './router/apiEntry';
 
 export default {
     data() {
@@ -40,8 +39,8 @@ export default {
     },
 
     async mounted() {
-
-        console.log(HTTP_PREFIX)
+        const HTTP_PREFIX = import.meta.env.VITE_HOST;
+        // console.log("mounted", HTTP_PREFIX);
         await axios.get(HTTP_PREFIX + 'user/init-info')
             .then(response => {
                 console.log(response.data);

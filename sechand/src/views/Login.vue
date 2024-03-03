@@ -103,7 +103,7 @@
 <script>
 import axios from 'axios';
 import CodeContainer from '@/components/CodeContainer.vue';
-import HTTP_PREFIX from "../router/apiEntry.js";
+
 export default {
     data() {
         return {
@@ -175,6 +175,7 @@ export default {
 
                 // get token
                 try {
+                    const HTTP_PREFIX = import.meta.env.VITE_HOST;
                     const response = await axios.post(HTTP_PREFIX + 'api/token/', {
                         "username": this.jhed.toLowerCase(),
                         "password": this.password
@@ -196,6 +197,7 @@ export default {
 
         },
         toReset() {
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
             if (this.jhed.length == 0) this.state = 6;
             else {
                 axios.post(HTTP_PREFIX + 'user/forgot-password/', {
@@ -227,6 +229,7 @@ export default {
             this.verCode = code;
         },
         tryReset() {
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
             const lengthRegex = /.{6,20}/
             const digitRegex = /\d/
             const letterRegex = /[a-zA-Z]/
@@ -386,4 +389,5 @@ legend {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}</style>
+}
+</style>

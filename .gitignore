@@ -39,8 +39,6 @@ coverage
 **/migrations/__pycache__
 *.pyc
 /venv/
-<<<<<<< HEAD
-=======
 .vercel/
 .vscode
->>>>>>> b68bedc46c56c664a142f285cbced1c0593279d0
+.env

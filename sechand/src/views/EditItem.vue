@@ -75,7 +75,6 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
-import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
     name: "EditItem",
     components: {
@@ -92,6 +91,7 @@ export default {
         this.id = this.$route.params.id;
 
         try {
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
             const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${this.id}`);
             console.log(response.data);
             this.item = response.data;
@@ -109,6 +109,8 @@ export default {
         },
         deleteItem() {
             try {
+                const HTTP_PREFIX = import.meta.env.VITE_HOST;
+                console.log("2222", HTTP_PREFIX)
                 const response = axios.delete(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -127,6 +129,7 @@ export default {
         },
         async submitForm() {
             console.log("summitted");
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
             try {
                 const formData = new FormData();
                 formData.append('name', this.item.name);

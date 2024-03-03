@@ -68,7 +68,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import Cards from "@/components/Cards.vue";
 import Button from "@/components/Button.vue";
 import axios from "axios";
-import HTTP_PREFIX from "../router/apiEntry.js";
+
 export default {
   name: "Me",
   // props: {
@@ -88,6 +88,8 @@ export default {
     };
   },
   async created() {
+    const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    console.log("11111", import.meta.env.VITE_LOCAL_HOST);
     this.componentKey += 1; // Change key value to trigger rerender
     console.log("Me page created", this.componentKey);
     try {

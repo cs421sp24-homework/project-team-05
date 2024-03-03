@@ -33,7 +33,6 @@
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 import Button from "@/components/Button.vue";
-import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
 
     name: "ShowItem",
@@ -80,6 +79,7 @@ export default {
         }
     },
     async created() {
+        const HTTP_PREFIX = import.meta.env.VITE_HOST;
         // Check if the current user is the seller of the item
         this.id = this.$route.params.id;
         console.log("collect", this.isitemCollected);

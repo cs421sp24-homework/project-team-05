@@ -16,7 +16,6 @@ import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
 import axios from "axios";
-import HTTP_PREFIX from "../router/apiEntry.js";
 export default {
   name: "UserHome",
 
@@ -39,7 +38,7 @@ export default {
     };
   },
   async created() {
-
+    const HTTP_PREFIX = import.meta.env.VITE_HOST;
 
     try {
       const accessToken = localStorage.getItem('access_token');
