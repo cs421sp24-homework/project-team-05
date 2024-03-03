@@ -11,17 +11,17 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000/';
 
 // Function to get the access token from localStorage
 function getAccessToken() {
-    return localStorage.getItem('accessToken');
+    return localStorage.getItem('access_token');
 }
 
 // Function to save the access token to localStorage
 function saveAccessToken(accessToken) {
-    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('access_token', accessToken);
 }
 
 // Function to clear the access token from localStorage
 function clearAccessToken() {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem('access_token');
 }
 
 // Request interceptor to add the auth token to every request
@@ -42,7 +42,7 @@ axios.interceptors.response.use(response => response, async error => {
         originalRequest._retry = true;  // Marking the request to ensure we don't get into an infinite loop
         try {
             // Here you should call your backend API to refresh the access token using a refresh token
-            const response = await axios.post('/api/token/refresh/', { refreshToken: localStorage.getItem('refreshToken') });
+            const response = await axios.post('/api/token/refresh/', { refreshToken: localStorage.getItem('refresh_token') });
             const newAccessToken = response.data.accessToken;
             saveAccessToken(newAccessToken);  // Save the new access token
             axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;  // Update the global header
