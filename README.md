@@ -166,6 +166,10 @@ SecHand is developed using the following version of technologies:
 - The frontend should now running on: http://localhost:5173/
 
 ## Use SecHand
+### Access website
+- Use the following link to access SecHand: https://sechand-todd-taos-projects.vercel.app/
+- Or you can run it on your own machine
+
 ### Register your account
 - Start using SecHand by registering your account. At the homepage of our website, click the Sign up button at the top right corner.
 - Double check it when you input your message, we will require you to input the verification code we send you.
