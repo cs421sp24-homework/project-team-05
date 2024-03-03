@@ -56,7 +56,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "https://sechand.vercel.app",
 ]
 
 ROOT_URLCONF = "sechand_backend.urls"
