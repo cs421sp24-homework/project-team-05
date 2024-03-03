@@ -39,6 +39,8 @@ export default {
   },
   async created() {
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    console.log(import.meta.env.VITE_HOST);
+    console.log(HTTP_PREFIX);
     try {
       const response = await axios.get(HTTP_PREFIX + 'api/v1/post/Items/all');
       this.cardsData = response.data;
