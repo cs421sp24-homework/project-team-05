@@ -39,12 +39,6 @@ def custom_login(request):
     except UserModel.DoesNotExist:
         # 3.2. not registered
         return JsonResponse({'registered': False, 'success': False, 'userInfo': None})
-    
-    # 1. registered, correct password
-    # 2. registered, incorrect password
-    # 3. not registered
-    #   3.1. registered, not verified
-    #   3.2. not registered
 
 
 @api_view(['POST'])
@@ -204,7 +198,7 @@ def update_user_profile(request):
         user.save()
 
         serializer = CustomUserSerializer(user)
-        return JsonResponse({'userInfo': serializer.data}, status=200)
+        return JsonResponse(serializer.data, status=200)
     except Exception as e:
         # print(e)
         return JsonResponse({'message': 'Unable to edit profile.'}, status=404)
