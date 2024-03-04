@@ -1,8 +1,8 @@
-name: Django CICD Deploy
+name: Backend Server AutoTest & Deploy
 
 on:
   push:
-    branches: [ "main", "pre-deploy", "development" ]
+    branches: [ "main", "pre-deploy" ]
   pull_request:
     branches: [ "main", "pre-deploy" ]
   
@@ -29,7 +29,7 @@ jobs:
       working-directory: ./sechand_backend
       run: python manage.py test --settings=sechand_backend.settings_test
 
-  Backend-Prod-Deplotment:
+  Backend-Prod-Deployment:
     needs: Backend-Tests
     runs-on: ubuntu-latest
     name: Deploy Backend Server to Heroku

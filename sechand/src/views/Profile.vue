@@ -168,6 +168,7 @@ export default {
                 this.show_addr = this.addr;
                 this.show_mobile = this.mobile;
                 this.show_visible = this.visible;
+                localStorage.setItem('user', JSON.stringify(response.data));
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
