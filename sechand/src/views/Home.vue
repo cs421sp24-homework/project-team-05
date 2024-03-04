@@ -5,11 +5,12 @@
       <Seach />
       <Dropdown class="buttons" text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
         :dropdownData="locations"></Dropdown>
-      <Cards :cards="cardsData" @item-detail="handleItemDetail" />
+      <Cards :cards="cardsData" />
     </div>
 
   </div>
 </template>
+
 <script>
 import Navbar from "../components/Navbar.vue";
 // import HelloWorld from "../components/HelloWorld.vue";
@@ -68,13 +69,10 @@ export default {
     UpdateLocation(item) {
       console.log(item);
     },
-    handleItemDetail(cardId) {
-      console.log("Detail for card:", cardId);
-      // Handle the detail view for the clicked card
-    },
   },
 };
 </script>
+
 <style>
 .container {
   margin-top: 12vh;

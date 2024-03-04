@@ -181,7 +181,7 @@ export default {
                         "username": this.jhed.toLowerCase(),
                         "password": this.password
                     });
-                    // this.$emit('userLogin', {"user": userInfo, "token": response.data});
+                    this.$emit('userLogin', {});
                     localStorage.setItem('access_token', response.data.access);
                     localStorage.setItem('refresh_token', response.data.refresh);
                     localStorage.setItem('user', JSON.stringify(userInfo));

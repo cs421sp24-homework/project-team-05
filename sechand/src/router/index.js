@@ -40,7 +40,7 @@ const router = createRouter({
     {
       path: '/showitem',
       component: Empty,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/edititem',
@@ -51,7 +51,7 @@ const router = createRouter({
       path: '/showitem/:id',
       name: 'ShowItem',
       component: ShowItem,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/edititem/:id',
@@ -85,6 +85,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!isAuthenticated) {
             next({ name: 'Home' });
+
         } 
         else {
             next();

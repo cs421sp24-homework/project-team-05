@@ -4,7 +4,8 @@
                  :currentUser="user"
                  :addrList="addrList"
                  :token="token"></router-view> -->
-    <router-view @userLogin="userLogin" @userLogout="logout" :addrList="addrList" @updateUser="updateUser"></router-view>
+    <router-view @userLogin="userLogin" @userLogout="logout" :addrList="addrList" :logined="login"
+        @updateUser="updateUser"></router-view>
 </template>
 
 <script>
@@ -23,6 +24,7 @@ export default {
     methods: {
         userLogin(data) {
             this.login = true;
+            console.log("userLogin", this.login);
             // this.user = data.user;
             // this.token = data.token;
         },
@@ -40,14 +42,14 @@ export default {
 
     async mounted() {
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
-        // console.log("mounted", HTTP_PREFIX);
-        await axios.get(HTTP_PREFIX + 'user/init-info/')
+        console.log("mounted", HTTP_PREFIX);
+        await axios.get(HTTP_PREFIX + 'user/init-info')
             .then(response => {
                 console.log(response.data);
                 this.addrList = response.data.addrList;
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
+                // console.error('Error fetching data:', error);
                 window.alert("Failed to fetch address.");
             })
     }

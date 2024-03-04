@@ -19,6 +19,7 @@ export default {
   methods: {
     cardDetail(card) {
       this.$router.push({ name: 'ShowItem', params: { id: card.id } });
+
       console.log("Detail");
     },
   },
@@ -69,4 +70,5 @@ export default {
   background-color: rgba(255, 255, 255, 0.5);
   color: rgb(0, 0, 0);
   padding: 5px;
-}</style>
+}
+</style>

@@ -1,6 +1,7 @@
 <template>
     <div>
-        <UserNavbar />
+        <UserNavbar v-if="logined" />
+        <Navbar v-else />
         <div class="item-detail container">
             <!-- Left side: Image -->
             <div class="left-side">
@@ -28,14 +29,18 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 import Button from "@/components/Button.vue";
+import Navbar from "@/components/Navbar.vue";
 export default {
 
     name: "ShowItem",
+    props: {
+        logined: Boolean
+    },
     data() {
         return {
             isCurrentUserSeller: false,
@@ -48,7 +53,8 @@ export default {
     },
     components: {
         UserNavbar,
-        Button
+        Button,
+        Navbar
     },
     methods: {
 
@@ -81,8 +87,9 @@ export default {
     async created() {
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
         // Check if the current user is the seller of the item
+
         this.id = this.$route.params.id;
-        console.log("collect", this.isitemCollected);
+        // console.log("collect", this.isitemCollected);
         try {
             const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${this.id}`);
             console.log(response.data);
@@ -90,10 +97,12 @@ export default {
         } catch (error) {
             console.error(error);
         }
-        console.log(this.id);
-        console.log(this.currentUser.id);
-        if (this.currentUser.id === this.item.seller) {
-            this.isCurrentUserSeller = true;
+        // console.log(this.id);
+        // console.log(this.currentUser.id);
+        if (this.logined) {
+            if (this.currentUser.id === this.item.seller) {
+                this.isCurrentUserSeller = true;
+            }
         }
         // get if item in collection
         // try {
@@ -106,7 +115,7 @@ export default {
     },
 };
 </script>
-  
+
 <style scoped>
 .item-detail {
     display: flex;

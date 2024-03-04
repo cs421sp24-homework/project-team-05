@@ -5,11 +5,12 @@
       <Seach />
       <Dropdown class="buttons" text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
         :dropdownData="locations"></Dropdown>
-      <Cards :cards="cardsData" @item-detail="handleItemDetail" />
+      <Cards :cards="cardsData" />
     </div>
 
   </div>
 </template>
+
 <script>
 import UserNavbar from "../components/UserNavbar.vue";
 import Seach from "../components/Seach.vue";
@@ -45,7 +46,11 @@ export default {
       const response = await axios.get(HTTP_PREFIX + 'api/v1/post/Items/all', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
-        }
+        },
+        // params: {
+        //   count: 20
+        //   // Add other data parameters here if needed
+        // }
       });
       this.cardsData = response.data;
     } catch (error) {
@@ -80,6 +85,7 @@ export default {
   },
 };
 </script>
+
 <style>
 .container {
   margin-top: 12vh;

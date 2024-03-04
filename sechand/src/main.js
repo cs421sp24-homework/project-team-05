@@ -38,6 +38,7 @@ axios.interceptors.request.use(request => {
 // Response interceptor to refresh the token when needed
 axios.interceptors.response.use(response => response, async error => {
     const originalRequest = error.config;
+    console.log("22",error);
     if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;  // Marking the request to ensure we don't get into an infinite loop
         try {

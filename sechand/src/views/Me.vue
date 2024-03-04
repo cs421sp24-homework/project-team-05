@@ -191,7 +191,7 @@ export default {
 
 .card-container {
   overflow-x: auto;
-  white-space: nowrap;
+  white-space: wrap;
 }
 
 .card {
