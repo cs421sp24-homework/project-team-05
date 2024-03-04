@@ -2,7 +2,7 @@ name: Django CICD Deploy
 
 on:
   push:
-    branches: [ "main", "pre-deploy", "development" ]
+    branches: [ "main", "pre-deploy" ]
   pull_request:
     branches: [ "main", "pre-deploy" ]
   
