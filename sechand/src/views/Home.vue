@@ -13,7 +13,6 @@
 
 <script>
 import Navbar from "../components/Navbar.vue";
-// import HelloWorld from "../components/HelloWorld.vue";
 import Seach from "../components/Seach.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
@@ -23,7 +22,6 @@ import axios from "axios";
 export default {
   components: {
     Navbar,
-    // HelloWorld,
     Seach,
     Dropdown,
     Cards,

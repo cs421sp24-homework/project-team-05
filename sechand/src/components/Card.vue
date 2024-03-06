@@ -19,7 +19,6 @@ export default {
   methods: {
     cardDetail(card) {
       this.$router.push({ name: 'ShowItem', params: { id: card.id } });
-
       console.log("Detail");
     },
   },
