@@ -310,7 +310,7 @@ export default {
     margin-left: 4%;
     font-family: "Comic Sans MS";
     font-size: 3vw;
-    color: rgb(255, 111, 0);
+    color: #758673;
     user-select: none;
 }
 
@@ -318,7 +318,7 @@ export default {
     float: left;
     height: 100vh;
     width: 50%;
-    background-color: rgb(165, 190, 255);
+    background-color: #d8e8fa;
 }
 
 #right {

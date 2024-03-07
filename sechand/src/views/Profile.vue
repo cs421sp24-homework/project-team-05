@@ -194,14 +194,14 @@ export default {
     float: left;
     width: 20vw;
     height: 100vh;
-    background-color: #007bff;
+    background-color: #d8e8fa;
 }
 
 #right {
     float: right;
     width: 20vw;
     height: 100vh;
-    background-color: #007bff;
+    background-color: #d8e8fa;
 }
 
 
