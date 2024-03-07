@@ -21,7 +21,7 @@
                 <input type="text" class="form-control" placeholder="Enter your nick name" @input="initState"
                     :disabled="!isEditting" v-model="show_uname" />
                 <div class="form-text" style="font-size: small;" :style="{ visibility: isEditting ? 'visible' : 'hidden' }">
-                    Your nick name must be 6-16 characters long.
+                    Your nick name must be 4-16 characters long.
                 </div>
             </div>
 
@@ -106,7 +106,7 @@ export default {
 
         toSave() {
             const HTTP_PREFIX = import.meta.env.VITE_HOST;
-            if (this.show_uname.length > 16 || this.show_uname.length < 6) this.state = 1;
+            if (this.show_uname.length > 16 || this.show_uname.length < 4) this.state = 1;
             else if (this.show_mobile.length != 10 || isNaN(Number(this.show_mobile, 10))) this.state = 2;
             else {
                 axios.patch(HTTP_PREFIX + 'user/profile/update', {

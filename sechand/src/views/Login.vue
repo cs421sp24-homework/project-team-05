@@ -144,7 +144,6 @@ export default {
     methods: {
 
         async tryLogin() {
-
             if (this.jhed.length == 0) this.state = 1;
             else if (this.password.length == 0) this.state = 2;
             else {
@@ -154,46 +153,41 @@ export default {
                     "username": this.jhed.toLowerCase(),
                     "password": this.password
                 })
-                    .then(response => {
-                        if (!response.data.registered) {
-                            this.state = 4;
-                            return;
+                .then(async response => {
+                    if (!response.data.registered) {
+                        console.log("HHHHHHHHHHHHH");
+                        this.state = 4;
+                    }
+                    else if (!response.data.success) {
+                        this.state = 5;
+                        this.password = "";
+                    }
+                    else {
+                        userInfo = response.data.userInfo;
+                        try {
+                            const HTTP_PREFIX = import.meta.env.VITE_HOST;
+                            const response = await axios.post(HTTP_PREFIX + 'api/token/', {
+                                "username": this.jhed.toLowerCase(),
+                                "password": this.password
+                            });
+                            this.$emit('userLogin', {});
+                            localStorage.setItem('access_token', response.data.access);
+                            localStorage.setItem('refresh_token', response.data.refresh);
+                            localStorage.setItem('user', JSON.stringify(userInfo));
+                            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+                            console.log(userInfo);
+                            this.$router.push('/userhome');
+                        } catch (error) {
+                            console.error('Login error:', error);
+                            this.$emit('cancelLogin', {});
                         }
-                        else if (!response.data.success) {
-                            this.state = 5;
-                            this.password = "";
-                            return;
-                        }
-                        else {
-                            userInfo = response.data.userInfo;
-                        }
-                    })
-                    .catch(error => {
-                        this.state = 7;
-                        console.error('Error fetching data:', error);
-                        return;
-                    })
-
-                // get token
-                try {
-                    const HTTP_PREFIX = import.meta.env.VITE_HOST;
-                    const response = await axios.post(HTTP_PREFIX + 'api/token/', {
-                        "username": this.jhed.toLowerCase(),
-                        "password": this.password
-                    });
-                    this.$emit('userLogin', {});
-                    localStorage.setItem('access_token', response.data.access);
-                    localStorage.setItem('refresh_token', response.data.refresh);
-                    localStorage.setItem('user', JSON.stringify(userInfo));
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-                    console.log(userInfo);
-                    this.$router.push('/userhome');
-                } catch (error) {
-                    console.error('Login error:', error);
-                    // Handle login error (e.g., show error message)
-                    this.$emit('cancelLogin', {});
-                    return;
-                }
+                    }
+                })
+                .catch(error => {
+                    this.state = 7;
+                    console.error('Error fetching data:', error);
+                })
+                
             }
 
         },

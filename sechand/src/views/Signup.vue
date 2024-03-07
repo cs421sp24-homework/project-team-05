@@ -15,43 +15,22 @@
             </div>
 
             <div class="mb-3 input-left">
-                <label class="form-label" style="text-align: left; margin-top: 9%;">Set your Password</label>
+                <label class="form-label" style="text-align: left; margin-top: 4.5vh;">Set your Password</label>
                 <input type="password" class="form-control" placeholder="Enter your password" @input="initState"
                     :disabled="isVerifying" v-model="password" />
-                <div class="form-text" style="font-size: small;">
+                <div class="form-text" style="font-size: 0.8vw;">
                     * 6-20 characters including letters and numbers
                 </div>
             </div>
 
             <div class="mb-3 input-left">
-                <label class="form-label" style="text-align: left; margin-top: 4%;">Repeat Password</label>
+                <label class="form-label" style="text-align: left; margin-top: 3vh;">Repeat Password</label>
                 <input type="password" class="form-control" placeholder="Reapeat your password" @input="initState"
                     :disabled="isVerifying" v-model="repeat" />
             </div>
 
-        </div>
-
-        <div id="right">
-
-            <div class="mb-3 input-right">
-                <label class="form-label" style="text-align: left;">Nick Name</label>
-                <input type="text" class="form-control" placeholder="Enter your nick name" @input="initState"
-                    :disabled="isVerifying" v-model="uname" />
-                <div class="form-text" style="font-size: small;">
-                    Your nick name must be 4-16 characters long.
-                </div>
-            </div>
-
-            <div class="mb-3 input-right">
-                <label class="form-label" style="text-align: left; margin-top: 4%;">Closest Address</label>
-                <select v-model="addr" class="form-select form-control" :disabled="isVerifying" @input="initState">
-                    <option disabled>Select the closest address to you...</option>
-                    <option v-for="(item, index) of addrList">{{ item }}</option>
-                </select>
-            </div>
-
-            <label class="form-label input-right" style="text-align: left; margin-top: 5%;">USA Mobile Phone Number</label>
-            <div class="input-group mb-3 input-right">
+            <label class="form-label input-left" style="text-align: left; margin-top: 4vh;">USA Mobile Phone Number</label>
+            <div class="input-group mb-3 input-left">
                 <select v-model="prefix" class="form-select form-control" disabled>
                     <option disabled>+1</option>
                 </select>
@@ -63,6 +42,32 @@
                         aria-label="Checkbox for following text input" :disabled="isVerifying">
                 </div>
             </div>
+
+        </div>
+
+        <div id="right">
+
+
+            <div class="mb-3 input-right">
+                <label class="form-label" style="text-align: left;">Nick Name</label>
+                <input type="text" class="form-control" placeholder="Enter your nick name" @input="initState"
+                    :disabled="isVerifying" v-model="uname" />
+                <div class="form-text" style="font-size: 0.8vw;">
+                    * Your nick name must be 4-16 characters long.
+                </div>
+            </div>
+
+            <div class="mb-3 input-right">
+                <label class="form-label" style="text-align: left; margin-top: 1.7vh;">Closest Address</label>
+                <select v-model="addr" class="form-select form-control" :disabled="isVerifying" @input="initState">
+                    <option disabled>Select the closest address to you...</option>
+                    <option v-for="(item, index) of addrList">{{ item }}</option>
+                </select>
+            </div>
+
+            <label class="form-label input-right" style="text-align: left; margin-top: 5vh;">Upload an Avatar</label>
+            <ImageUploader @upload="getImage" style="margin-left: 12%; margin-top: 2vh;" :circular="true"/>
+
         </div>
 
         <div id="bottom">
@@ -82,7 +87,6 @@
             <img src="/logo.jpg" class="rounded me-2" alt="...">
             <strong class="me-auto">Verifying JHED</strong>
             <small>{{ jhed }}</small>
-            <!-- <button type="button" class="btn-close"></button> -->
         </div>
         <div class="toast-body">
             <div style="text-align: center; font-size: 1.5vw;">
@@ -116,6 +120,8 @@
 import axios from 'axios';
 import Navbar from '@/components/Navbar.vue';
 import CodeContainer from '@/components/CodeContainer.vue';
+import ImageUploader from '@/components/ImageUploader.vue';
+
 export default {
     data() {
         return {
@@ -135,7 +141,8 @@ export default {
             toast_err: 0,
             countDownTime: 0,
             counting: false,
-            signing_user: null
+            signing_user: null,
+            avatar: null
         }
     },
 
@@ -149,6 +156,7 @@ export default {
             else if (this.state == 6) return "Invalid US mobile number!";
             else if (this.state == 7) return "This JHED has been used!";
             else if (this.state == 8) return "Unexpected error. Please try later.";
+            else if (this.state == 9) return "Please upload an avatar.";
             return "no msg"
         },
 
@@ -176,33 +184,38 @@ export default {
             else if (this.uname.length > 16 || this.uname.length < 4) this.state = 4;
             else if (this.addr == "Select the closest address to you...") this.state = 5;
             else if (this.mobile.length != 10 || isNaN(Number(this.mobile, 10))) this.state = 6;
+            else if (this.avatar == null) this.state = 9;
             else {
-                axios.post(HTTP_PREFIX + 'user/register/', {
-                    "username": this.jhed.toLowerCase(),
-                    "password": this.password,
-                    "email": (this.jhed + this.suffix).toLowerCase(),
-                    "phone": this.mobile,
-                    "displayname": this.uname,
-                    "address": this.addr,
-                    "image": null,
-                    "is_visible": this.visible,
+                const formData = new FormData();
+                formData.append("username", this.jhed.toLowerCase());
+                formData.append("password", this.password);
+                formData.append("email", (this.jhed + this.suffix).toLowerCase());
+                formData.append("phone", this.mobile);
+                formData.append("displayname", this.uname);
+                formData.append("address", this.addr);
+                formData.append("image", this.avatar);
+                formData.append("is_visible", this.visible);
+                axios.post(HTTP_PREFIX + 'user/register/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 })
-                    .then(response => {
-                        console.log(response.data);
-                        if (response.data.new_user) {
-                            this.startCountDown(10);
-                            this.state = 0;
-                            this.isVerifying = true;
-                            this.signing_user = response.data.user;
-                        }
-                        else {
-                            this.state = 7;
-                        }
-                    })
-                    .catch(error => {
-                        this.state = 8;
-                        console.error('Error fetching data:', error);
-                    })
+                .then(response => {
+                    console.log(response.data);
+                    if (response.data.new_user) {
+                        this.startCountDown(10);
+                        this.state = 0;
+                        this.isVerifying = true;
+                        this.signing_user = response.data.user;
+                    }
+                    else {
+                        this.state = 7;
+                    }
+                })
+                .catch(error => {
+                    this.state = 8;
+                    console.error('Error fetching data:', error);
+                })
             }
         },
         initState() {
@@ -217,6 +230,7 @@ export default {
             this.verCode = code;
         },
         trySignup() {
+            this.startCountDown(10);
             const HTTP_PREFIX = import.meta.env.VITE_HOST;
             if (this.verCode.length == 0) this.toast_err = 1;
 
@@ -263,12 +277,18 @@ export default {
                     this.counting = false;
                 }
             }, 1000);
+        },
+        getImage(data) {
+            // let params = new FormData() ; //创建一个form对象,必须是form对象否则后端接受不到数据
+            // params.append('image', data)
+            this.avatar = data;
         }
     },
 
     components: {
         CodeContainer,
-        Navbar
+        Navbar,
+        ImageUploader
     },
 
     props: {
@@ -279,9 +299,10 @@ export default {
 
 <style scoped>
 #title {
+    font-size: 4vh;
     text-align: center;
-    margin-top: 10vh;
-    margin-bottom: 10vh;
+    margin-top: 4vh;
+    margin-bottom: 5vh;
 }
 
 .blurred {
@@ -290,27 +311,27 @@ export default {
 
 #left {
     float: left;
-    height: 45vh;
+    height: 60vh;
     width: 50%;
     border-right: 1px black solid;
 }
 
 #right {
     float: right;
-    height: 45vh;
+    height: 60vh;
     width: 50%;
 }
 
 .input-left {
     width: 60%;
     margin-left: 30%;
-    font-size: 1.2vw;
+    font-size: 2vh;
 }
 
 .input-right {
     width: 60%;
     margin-left: 10%;
-    font-size: 1.2vw;
+    font-size: 2vh;
 }
 
 #suffix {
