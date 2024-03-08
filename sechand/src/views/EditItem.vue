@@ -83,6 +83,8 @@ export default {
     data() {
         return {
             item: {},
+            picture: null,
+            pictureUrl: '',
             currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
