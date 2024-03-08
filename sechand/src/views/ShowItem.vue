@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar v-if="logined" />
+        <UserNavbar v-if="currentUser" />
         <Navbar v-else />
         <div class="item-detail container">
             <!-- Left side: Image -->
