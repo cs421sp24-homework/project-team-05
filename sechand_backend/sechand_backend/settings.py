@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    'rest_framework',
     'rest_framework_simplejwt',
     "post",
     "user"
@@ -96,6 +97,12 @@ DATABASES = {
         'PORT': '5432'
     }
 }
+
+# Azure Storage configurations
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+AZURE_ACCOUNT_NAME = 'sechand'
+AZURE_ACCOUNT_KEY = 'fMVhL17pFTQ3hxOqIrPaflUyb8pbBkYA5WUOPmd2I4f7tjK54JzfgN3tsU9YE0B9GLtHupM39RSg+AStz7GLnQ=='
+AZURE_CONTAINER = 'media'
 
 
 # Password validation

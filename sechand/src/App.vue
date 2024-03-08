@@ -43,7 +43,7 @@ export default {
     async mounted() {
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
         console.log("mounted", HTTP_PREFIX);
-        await axios.get(HTTP_PREFIX + 'user/init-info')
+        await axios.get(HTTP_PREFIX + 'user/init-info/')
             .then(response => {
                 console.log(response.data);
                 this.addrList = response.data.addrList;
