@@ -12,7 +12,7 @@
         <div class="col-12">
           <div class="d-flex align-items-center">
             <img :src="currentUser.image" alt="User Icon" class="me-3 profile-image"
-              style="width: 300px; height: 300px; border-radius: 50%" />
+              style="width: 150px; height: 150px; border-radius: 50%" />
             <div>
               <p class="mb-1 font-large-vh font-large-vw profile-name">{{ this.currentUser.displayname }}</p>
               <!-- Increase font size -->

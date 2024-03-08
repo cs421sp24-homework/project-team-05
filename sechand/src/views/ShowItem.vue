@@ -5,7 +5,7 @@
         <div class="item-detail container">
             <!-- Left side: Image -->
             <div class="left-side">
-                <img :src="item.imageUrl" alt="Item Image" style="width: 500px; height: 500px; border-radius: 50%" />
+                <img :src="item.image" alt="Item Image" style="width: 350px; height: 350px; border-radius: 50%" />
             </div>
 
             <!-- Right side: Details -->

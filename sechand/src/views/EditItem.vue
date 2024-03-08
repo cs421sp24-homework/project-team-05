@@ -62,8 +62,8 @@
                 <div class="col-md-6">
                     <!-- Image Preview -->
                     <div class="mb-3">
-                        <label class="form-label">Image Preview</label>
-                        <img v-if="picture" :src="picturePreview" class="img-fluid" alt="Image Preview" />
+                        <label class="form-label">Image Preview</label><br>
+                        <img v-if="picture" :src="pictureUrl" class="img-fluid" alt="Image Preview" />
                         <div v-else class="text-muted">No image selected</div>
                     </div>
                 </div>
@@ -102,6 +102,7 @@ export default {
     methods: {
         handleFileUpload(event) {
             this.picture = event.target.files[0];
+            this.pictureUrl = URL.createObjectURL(this.picture);
         },
         cancel() {
             this.$router.go(-1);
@@ -138,7 +139,7 @@ export default {
                 formData.append('price', this.item.price);
                 // formData.append('user_id', this.user.id);
                 if (this.picture) {
-                    formData.append('picture', this.picture);
+                    formData.append('image', this.picture);
                 }
                 console.log(formData);
                 const response = await axios.patch(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, formData, {
