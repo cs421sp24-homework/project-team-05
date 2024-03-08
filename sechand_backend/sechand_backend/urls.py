@@ -22,7 +22,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    # To access database, username: admin, password: admin1234
+    # To access database, username: admin, password: admin
     path("admin/", admin.site.urls),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
