@@ -210,7 +210,7 @@ def update_user_profile(request):
 def init_info(request):
     all_addresses = Address.objects.all().values_list('name', flat=True)
     # print(all_addresses)
-    return JsonResponse({"addrList": list(all_addresses)})
+    return JsonResponse({"addrList": sorted(list(all_addresses))})
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

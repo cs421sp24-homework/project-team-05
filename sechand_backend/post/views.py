@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer, CollectionDeserializer
 from .models import Item, UserCollection
+from user.models import Address
+from .utils import get_distance
 from django.db.models import Q
 import uuid
 
@@ -142,6 +144,8 @@ def SearchItems(request):
     lowest_price = request.GET.get('lowest_price', '')
     highest_price = request.GET.get('highest_price', '')
     category = request.GET.get('category', '')
+    location = request.GET.get('location', '')
+    distance = float(request.GET.get('distance', ''))  # should be in miles
 
     print(desc_text, "low", lowest_price, "high", highest_price, "cat", category)
 
@@ -159,6 +163,19 @@ def SearchItems(request):
     
     if category:
         query &= Q(category__exact=category)
+    
+    if location:
+        query &= Q(seller__address__name__exact=location)
+    
+    if distance:
+        user_addr = request.user.address
+        all_addresses = Address.objects.all()
+        addrLst = [addr for addr in all_addresses if get_distance(user_addr, addr) <= distance]
+        print(addrLst)
+        # for address in all_addresses:
+        #     if get_distance(user_address, address) <= distance:
+        #         addrLst.append(address)
+        query &= Q(seller__address__in=addrLst)
 
     # Execute the query
     results = Item.objects.filter(query)
