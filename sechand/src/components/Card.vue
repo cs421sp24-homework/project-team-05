@@ -35,6 +35,7 @@ export default {
   cursor: pointer;
   position: relative;
   /* Add relative positioning to the card */
+  border-radius: 30px;
 }
 
 .card-img-top {

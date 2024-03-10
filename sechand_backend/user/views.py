@@ -188,14 +188,14 @@ def update_user_profile(request):
         address_name = request.data.get('address')
         address = Address.objects.get(name=address_name)
         phone = request.data.get('phone')
-        is_visible = request.data.get('is_visible')
-
-        # print(address.id, address.name)
+        is_visible = request.data.get('is_visible') == 'true'
+        image = request.data.get('image')
 
         user.displayname = displayname
         user.address = address
         user.phone = phone
         user.is_visible = is_visible
+        user.image = image
         user.save()
 
         serializer = CustomUserSerializer(user)
