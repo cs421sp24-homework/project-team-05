@@ -1,6 +1,6 @@
 <template>
   <div class="card" @click="cardDetail(card)">
-    <img :src="card.imageUrl" class="card-img-top" :alt="card.name" />
+    <img :src="card.image" class="card-img-top" :alt="card.name" />
     <div class="card-body">
       <h5 class="card-name">{{ card.name }}</h5>
       <p class="card-description">{{ card.description }}</p>
@@ -35,6 +35,7 @@ export default {
   cursor: pointer;
   position: relative;
   /* Add relative positioning to the card */
+  border-radius: 30px;
 }
 
 .card-img-top {

@@ -11,8 +11,8 @@
       <div class="row mb-3">
         <div class="col-12">
           <div class="d-flex align-items-center">
-            <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
-              style="width: 300px; height: 300px; border-radius: 50%" />
+            <img :src="currentUser.image" alt="User Icon" class="me-3 profile-image"
+              style="width: 150px; height: 150px; border-radius: 50%" />
             <div>
               <p class="mb-1 font-large-vh font-large-vw profile-name">{{ this.currentUser.displayname }}</p>
               <!-- Increase font size -->
@@ -84,12 +84,15 @@ export default {
       componentKey: 0,
       postCardsData: [],
       historyCardsData: [],
-      currentUser: JSON.parse(localStorage.getItem('user'))
+      currentUser: JSON.parse(localStorage.getItem('user')),
+      // imageUrl: ''
     };
   },
   async created() {
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    console.log("11111", import.meta.env.VITE_LOCAL_HOST);
+    // console.log("11111", import.meta.env.VITE_LOCAL_HOST);
+    // this.imageUrl = HTTP_PREFIX + this.currentUser.image;
+    // console.log("image url", this.imageUrl);
     this.componentKey += 1; // Change key value to trigger rerender
     console.log("Me page created", this.componentKey);
     try {

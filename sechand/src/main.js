@@ -38,13 +38,13 @@ axios.interceptors.request.use(request => {
 // Response interceptor to refresh the token when needed
 axios.interceptors.response.use(response => response, async error => {
     const originalRequest = error.config;
-    console.log("22",error);
+    // console.log("Erorr",error);
     if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;  // Marking the request to ensure we don't get into an infinite loop
         try {
             // Here you should call your backend API to refresh the access token using a refresh token
-            const response = await axios.post('/api/token/refresh/', { refreshToken: localStorage.getItem('refresh_token') });
-            const newAccessToken = response.data.accessToken;
+            const response = await axios.post('/api/token/refresh/', { refresh: localStorage.getItem('refresh_token') });
+            const newAccessToken = response.data.access;
             saveAccessToken(newAccessToken);  // Save the new access token
             axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;  // Update the global header
             originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;  // Update the original request

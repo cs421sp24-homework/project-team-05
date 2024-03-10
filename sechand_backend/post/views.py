@@ -6,6 +6,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer, CollectionDeserializer
 from .models import Item, UserCollection
+from user.models import Address
+from .utils import get_distance
+from django.db.models import Q
 import uuid
 
 # Model(Item): id name description tags price user_id
@@ -27,12 +30,10 @@ def GetAllUserItems(request):
 @permission_classes([AllowAny])
 def GetAllItems(request):
     # get user status
-    print(request.data)
     count = request.data.get('count',20)
     # Sanitize params
     try:
         count = int(count)
-        print(count)
     except ValueError:
         return JsonResponse({'error': 'Invalid count parameter, must be an integer'}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -133,3 +134,48 @@ def CreateNewItem(request):
                 return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def SearchItems(request):
+    desc_text = request.GET.get('desc_text', '')
+    lowest_price = request.GET.get('lowest_price', '')
+    highest_price = request.GET.get('highest_price', '')
+    category = request.GET.get('category', '')
+    location = request.GET.get('location', '')
+    distance = float(request.GET.get('distance', ''))  # should be in miles
+
+    print(desc_text, "low", lowest_price, "high", highest_price, "cat", category)
+
+    query = Q()
+
+    if desc_text:
+        query &= (Q(name__icontains=desc_text) | Q(description__icontains=desc_text))
+    
+    if lowest_price:
+        print("filter", lowest_price)
+        query &= Q(price__gte=lowest_price)
+    
+    if highest_price:
+        query &= Q(price__lte=highest_price)
+    
+    if category:
+        query &= Q(category__exact=category)
+    
+    if location:
+        query &= Q(seller__address__name__exact=location)
+    
+    if distance:
+        user_addr = request.user.address
+        all_addresses = Address.objects.all()
+        addrLst = [addr for addr in all_addresses if get_distance(user_addr, addr) <= distance]
+        print(addrLst)
+        # for address in all_addresses:
+        #     if get_distance(user_address, address) <= distance:
+        #         addrLst.append(address)
+        query &= Q(seller__address__in=addrLst)
+
+    # Execute the query
+    results = Item.objects.filter(query)
+    serializer = ItemSerializerWithSellerName(results, many=True)
+    return JsonResponse(serializer.data, safe=False, status=200)

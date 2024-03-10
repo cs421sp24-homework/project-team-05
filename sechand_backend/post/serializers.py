@@ -7,19 +7,23 @@ from django.core.exceptions import ObjectDoesNotExist
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ('id', 'name', 'description', 'category', 'price', 'seller', 'is_sold')
+        fields = ('id', 'name', 'description', 'image', 'category', 'price', 'seller', 'is_sold')
         # Below is used for test purposes, will be REMOVED in future
         # fields = ('id', 'name', 'description', 'tags', 'price',)
 
 class ItemSerializerWithSellerName(serializers.ModelSerializer):
     displayname = serializers.SerializerMethodField()
+    sellerIcon = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'description', 'category', 'price', 'seller', 'displayname', 'is_sold']
+        fields = ['id', 'name', 'description', 'image', 'category', 'price', 'seller', 'displayname', 'sellerIcon', 'is_sold']
 
     def get_displayname(self, obj):
         return obj.seller.displayname if obj.seller else None
+    
+    def get_sellerIcon(self, obj):
+        return obj.seller.image.url if obj.seller and obj.seller.image else None
 
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:

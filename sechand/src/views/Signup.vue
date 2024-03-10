@@ -171,6 +171,7 @@ export default {
 
     methods: {
         toVerify() {
+            this.startCountDown(10);
             const HTTP_PREFIX = import.meta.env.VITE_HOST;
             const lengthRegex = /.{6,20}/
             const digitRegex = /\d/
@@ -195,34 +196,27 @@ export default {
                 formData.append("address", this.addr);
                 formData.append("image", this.avatar);
                 formData.append("is_visible", this.visible);
-                axios.post(HTTP_PREFIX + 'user/register/', formData
-                // {
-                //     "username": this.jhed.toLowerCase(),
-                //     "password": this.password,
-                //     "email": (this.jhed + this.suffix).toLowerCase(),
-                //     "phone": this.mobile,
-                //     "displayname": this.uname,
-                //     "address": this.addr,
-                //     "image": this.avatar,
-                //     "is_visible": this.visible,
-                // }
-                )
-                    .then(response => {
-                        console.log(response.data);
-                        if (response.data.new_user) {
-                            this.startCountDown(10);
-                            this.state = 0;
-                            this.isVerifying = true;
-                            this.signing_user = response.data.user;
-                        }
-                        else {
-                            this.state = 7;
-                        }
-                    })
-                    .catch(error => {
-                        this.state = 8;
-                        console.error('Error fetching data:', error);
-                    })
+                axios.post(HTTP_PREFIX + 'user/register/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    console.log(response.data);
+                    if (response.data.new_user) {
+                        this.startCountDown(10);
+                        this.state = 0;
+                        this.isVerifying = true;
+                        this.signing_user = response.data.user;
+                    }
+                    else {
+                        this.state = 7;
+                    }
+                })
+                .catch(error => {
+                    this.state = 8;
+                    console.error('Error fetching data:', error);
+                })
             }
         },
         initState() {
@@ -286,9 +280,9 @@ export default {
             }, 1000);
         },
         getImage(data) {
-            let params = new FormData() ; //创建一个form对象,必须是form对象否则后端接受不到数据
-            params.append('image', data)
-            this.avatar = params;
+            // let params = new FormData() ; //创建一个form对象,必须是form对象否则后端接受不到数据
+            // params.append('image', data)
+            this.avatar = data;
         }
     },
 
