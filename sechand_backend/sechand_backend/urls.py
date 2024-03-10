@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path("api/v1/post/", include("post.urls")),
     path("user/", include("user.urls")),
+    # Chat DEV
     path("api/v1/chat/", include("chat.urls"))
 ]
 
