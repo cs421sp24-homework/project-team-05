@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['oose-project-65116e9428b0.herokuapp.com','localhost:8000/','12
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -39,10 +40,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
-    'rest_framework',
-    'rest_framework_simplejwt',
+    "channels",
+    "rest_framework",
+    "rest_framework_simplejwt",
     "post",
-    "user"
+    "user",
+    "chat"
 ]
 
 MIDDLEWARE = [
@@ -174,4 +177,11 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
+
+ASGI_APPLICATION = 'sechand_backend.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
 }

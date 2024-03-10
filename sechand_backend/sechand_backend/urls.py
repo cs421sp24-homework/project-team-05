@@ -27,7 +27,8 @@ urlpatterns = [
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path("api/v1/post/", include("post.urls")),
-    path("user/", include("user.urls"))
+    path("user/", include("user.urls")),
+    path("api/v1/chat/", include("chat.urls"))
 ]
 
 if settings.DEBUG:
