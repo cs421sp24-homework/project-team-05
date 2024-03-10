@@ -171,6 +171,7 @@ export default {
 
     methods: {
         toVerify() {
+            this.startCountDown(10);
             const HTTP_PREFIX = import.meta.env.VITE_HOST;
             const lengthRegex = /.{6,20}/
             const digitRegex = /\d/

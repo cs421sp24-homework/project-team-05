@@ -30,12 +30,10 @@ def GetAllUserItems(request):
 @permission_classes([AllowAny])
 def GetAllItems(request):
     # get user status
-    print("get all items data", request.data)
     count = request.data.get('count', 20)
     # Sanitize params
     try:
         count = int(count)
-        print(count)
     except ValueError:
         print("Invalid count parameter, must be an integer")
         return JsonResponse({'error': 'Invalid count parameter, must be an integer'}, status=status.HTTP_400_BAD_REQUEST)
