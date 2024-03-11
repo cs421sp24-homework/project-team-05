@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Room, Message
 from .serializers import RoomSerializer, RoomSerializerWithMessages
-from django.db.models import Q
+from django.db.models import Q, Exists, OuterRef
         
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -34,13 +34,24 @@ def GetOrCreateRoom(request):
 @api_view(['GET'])
 def GetChatList(request):
     rooms = Room.objects.filter(users__contains=[request.user.id])
-    serializer = RoomSerializerWithMessages(rooms, many=True, context={'request': request})
-    sorted_data = sorted(serializer.data, key=lambda x: x['last_message']['timestamp'] if x['last_message'] is not None else x['created_at'], reverse=True)
+    #  retrieve rooms that contain chat history
+    rooms_with_messages = rooms.annotate(
+            has_message=Exists(Message.objects.filter(room=OuterRef('pk')))
+        ).filter(has_message=True)
+    serializer = RoomSerializerWithMessages(rooms_with_messages, many=True, context={'request': request})
+    sorted_data = sorted(serializer.data, key=lambda x: x['last_message']['timestamp'], reverse=True)
     return Response(sorted_data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 def GetChatListWithReceiver(request, receiver_id):
-    rooms = Room.objects.filter(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
-    serializer = RoomSerializer(rooms, many=True)
-    return Response({'chat_list': serializer.data, 'active_chat': 0, 'chat': None}, status=status.HTTP_200_OK)
+    prior_room = Room.objects.filter(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
+    other_rooms = Room.objects.filter(users__contains=[request.user.id]).exclude(
+        users__contains=[receiver_id]).annotate(
+            has_message=Exists(Message.objects.filter(room=OuterRef('pk')))
+        ).filter(has_message=True)
+    # print(prior_room.users)
+    serializer_prior = RoomSerializerWithMessages(prior_room, many=True,  context={'request': request})
+    serializer_other = RoomSerializerWithMessages(other_rooms, many=True, context={'request': request})
+    sorted_data = sorted(serializer_other.data, key=lambda x: x['last_message']['timestamp'], reverse=True)
+    return Response({'chat_list': serializer_prior.data + sorted_data, 'active_chat': 0}, status=status.HTTP_200_OK)
