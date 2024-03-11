@@ -2,7 +2,7 @@
     <div class="chat-container">
       <div class="messages">
         <div v-for="(message, index) in messages" :key="index" class="message">
-          <strong>{{ message.sender }}:</strong> {{ message.content }}
+          <strong>{{ message.message }}:</strong> {{ message.sender }}
         </div>
       </div>
       <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a message..." class="message-input">
@@ -26,6 +26,9 @@
       connect() {
         const wsPath = `ws://127.0.0.1:8000/ws/chat/${this.roomId}/`; // Use roomId in the path
         console.log('using wsPath ', wsPath)
+        if (this.ws) {
+          this.ws.close();  // Close the existing connection if it exists
+        }
         this.ws = new WebSocket(wsPath);
         this.ws.onmessage = this.receiveMessage;
         this.ws.onclose = () => {
@@ -40,8 +43,10 @@
       },
       sendMessage() {
         if (this.newMessage.trim() !== '') {
+          // senderUser = JSON.parse(localStorage.getItem('user'))
           const message = {
             "message": this.newMessage, // Adjust according to your backend expectations
+            "sender": JSON.parse(localStorage.getItem('user')).id
             // The sender should be determined by the backend.
           };
           this.ws.send(JSON.stringify(message)); // Send the message content
