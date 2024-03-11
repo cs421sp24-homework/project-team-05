@@ -22,7 +22,7 @@
             <div id="home-text">
 
                 <div id="home-headline">
-                    <div style="color: #666666; font-size: 0.8vw;">time</div>
+                    <div style="color: #666666; font-size: 0.8vw;">timeeeeeeeeeeeeeeeeeeee</div>
                     <div style="font-size: 1vw; font-weight: 700; margin-left: 0.7vw; margin-right: 0.6vw;">name</div>
                 </div>
 
@@ -137,6 +137,7 @@ export default {
     padding-top: 0.5vh;
     padding-bottom: 0.5vh;
     overflow-wrap: break-word;
+    margin-left: auto;
 }
 
 </style>
