@@ -9,6 +9,7 @@ import Login from '.././views/Login.vue'
 import Signup from '.././views/Signup.vue'
 import Profile from '.././views/Profile.vue'
 import Empty from '@/views/Empty.vue'
+import Chat from '@/views/Chat.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -76,6 +77,12 @@ const router = createRouter({
         component: Profile,
         name: 'Profile',
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/chat',
+        component: Chat,
+        name: 'Chat',
+        meta: { requiresAuth: false }
     },
   ]
 })
