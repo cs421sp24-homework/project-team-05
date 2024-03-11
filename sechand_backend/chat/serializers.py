@@ -11,7 +11,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = CustomUserSerializer(read_only=True)
-    timestamp = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    timestamp = serializers.DateTimeField(format='%m/%d/%Y %H:%M')
 
     class Meta:
         model = Message

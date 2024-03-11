@@ -138,6 +138,7 @@ export default {
     padding-right: 0.5vw;
     padding-top: 0.5vh;
     padding-bottom: 0.5vh;
+    margin-left: auto;
     overflow-wrap: break-word;
 }
 
