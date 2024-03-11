@@ -69,7 +69,7 @@ export default {
                                 }, 
                                 {
                                     id: false,
-                                    content: "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHH"
+                                    content: "GGGGGGGGGGGGGGG"
                                 }, 
                                 {
                                     id: true,

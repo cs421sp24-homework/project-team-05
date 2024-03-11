@@ -23,7 +23,7 @@
 
                 <div id="home-headline">
                     <div style="color: #666666; font-size: 0.8vw;">time</div>
-                    <div style="font-size: 1vw; font-weight: 700; margin-left: 0.7vw; margin-right: 0.8vw;">name</div>
+                    <div style="font-size: 1vw; font-weight: 700; margin-left: 0.7vw; margin-right: 0.6vw;">name</div>
                 </div>
 
                 <div id="home-content">
