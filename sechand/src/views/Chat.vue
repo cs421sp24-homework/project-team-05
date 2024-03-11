@@ -264,8 +264,8 @@ export default {
 
 #text-input{
     margin-top: 1.5vh;
-    margin-left: 3vw;
-    margin-right: 3vw;
+    margin-left: 2vw;
+    margin-right: 2vw;
     display: flex;
     flex-direction: row;
 }
@@ -274,7 +274,7 @@ export default {
     height: 5vh;
     font-size: 2vh;
     width: 35vw;
-    border-radius: 2vh;
+    border-radius: 2.5vh;
 }
 
 #btn {
@@ -282,7 +282,7 @@ export default {
     height: 5vh; 
     border-radius: 1vh;
     font-size: 2vh;
-    border-radius: 2vh;
+    border-radius: 2.5vh;
 }
 
 </style>
