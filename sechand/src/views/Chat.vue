@@ -264,25 +264,25 @@ export default {
 
 #text-input{
     margin-top: 1.5vh;
-    margin-left: 2vw;
-    margin-right: 2vw;
+    margin-left: 1vw;
+    margin-right: 1vw;
     display: flex;
     flex-direction: row;
 }
 
 #input-box{
-    height: 5vh;
+    height: 4vh;
     font-size: 2vh;
-    width: 35vw;
-    border-radius: 2.5vh;
+    width: 39vw;
+    border-radius: 2vh;
 }
 
 #btn {
     margin-left: 1vw; 
-    height: 5vh; 
+    height: 4vh; 
     border-radius: 1vh;
     font-size: 2vh;
-    border-radius: 2.5vh;
+    border-radius: 2vh;
 }
 
 </style>
