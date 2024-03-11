@@ -44,7 +44,6 @@ def custom_login(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-    print("111")
     username = request.data.get('username')
     password = request.data.get('password')
     email = request.data.get('email')
@@ -54,7 +53,6 @@ def register(request):
     address = Address.objects.get(name=address_name)
     image = request.data.get('image')
     is_visible = request.data.get('is_visible') == 'true'
-    print(image)
     try:
         user = UserModel.objects.get(username=username)
         if not user.is_verified:

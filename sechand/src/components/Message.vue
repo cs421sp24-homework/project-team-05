@@ -1,15 +1,16 @@
 <template>
     <div id="msg-main">
-        <div v-if="message.id" id="msg-guest">
+        <div v-if="message.sender.id != user.id" id="msg-guest">
             <div id="guest-img">
-                <img :src="user.image" style="height: 5vh; width: 5vh; border-radius: 50%; object-fit: cover;"/>
+                <img :src="message.sender.image" style="height: 5vh; width: 5vh; border-radius: 50%; object-fit: cover;"/>
             </div>
 
             <div id="guest-text">
 
                 <div id="guest-headline">
-                    <div style="font-size: 1vw; font-weight: 700;  margin-left: 0.5vw; margin-right: 0.7vw;">name</div>
-                    <div style="color: #666666; font-size: 0.8vw;">time</div>
+                    <div style="font-size: 1vw; font-weight: 700;  margin-left: 0.5vw; margin-right: 0.7vw;">
+                        {{ message.sender.displayname }}</div>
+                    <div style="color: #666666; font-size: 0.8vw;">{{ message.timestamp }}</div>
                 </div>
 
                 <div id="guest-content">
@@ -22,8 +23,9 @@
             <div id="home-text">
 
                 <div id="home-headline">
-                    <div style="color: #666666; font-size: 0.8vw;">time</div>
-                    <div style="font-size: 1vw; font-weight: 700; margin-left: 0.7vw; margin-right: 0.8vw;">name</div>
+                    <div style="color: #666666; font-size: 0.8vw;">{{ message.timestamp }}</div>
+                    <div style="font-size: 1vw; font-weight: 700; margin-left: 0.7vw; margin-right: 0.8vw;">
+                        {{ message.sender.displayname }}</div>
                 </div>
 
                 <div id="home-content">
@@ -33,7 +35,7 @@
             </div>
 
             <div id="home-img">
-                <img :src="user.image" style="height: 5vh; width: 5vh; border-radius: 50%; object-fit: cover;"/>
+                <img :src="message.sender.image" style="height: 5vh; width: 5vh; border-radius: 50%; object-fit: cover;"/>
             </div>
         </div>
     </div>

@@ -18,9 +18,9 @@
                                 <h5 style="margin-right: 0; font-weight: 700; font-size: 2vh;">{{ item.name }}</h5>
                                 <!-- tag -->
                             </div>
-                        <small>{{ "time" }}</small>
+                        <small v-if="item.last_message">{{ item.last_message.timestamp }}</small>
                         </div>
-                        <p class="mb-1">{{ "discription" }}</p>
+                        <p class="mb-1" v-if="item.last_message">{{ item.last_message.content }}</p>
                         <small style="font-weight: bold;">{{ "additional info" }} </small>
                     </a>
                 </div>
@@ -34,7 +34,7 @@
                 </div>
 
                 <div id="msg">
-                    <div v-for="(item, index) of chat_list[active_chat].msg">
+                    <div v-for="(item, index) of chat_list[active_chat].messages">
                         <Message :user="home_user" :message="item"/>
                     </div>
                 </div>
@@ -58,6 +58,7 @@
 <script>
 import UserNavbar from '@/components/UserNavbar.vue';
 import Message from '@/components/Message.vue';
+import axios from "axios";
 
 
 export default {
@@ -181,11 +182,24 @@ export default {
         UserNavbar,
         Message
     },
-    created(){
+    async created(){
         this.home_user = JSON.parse(localStorage.getItem('user'));
         console.log(this.home_user);
+        const HTTP_PREFIX = import.meta.env.VITE_HOST;
+
+        try {
+            const accessToken = localStorage.getItem('access_token');
+            const response = await axios.get(HTTP_PREFIX + 'api/v1/chat/Conversation/list', {
+                headers: {
+                'Authorization': `Bearer ${accessToken}`
+                },
+            });
+            this.chat_list = response.data;
+        } catch (error) {
+            console.error(error);
+        }
+        
     },
-    
 }
 </script>
 
