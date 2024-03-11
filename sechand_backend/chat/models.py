@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 class Room(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     users = ArrayField(models.CharField(max_length=200), default=list)
+    created_at = models.DateTimeField(auto_now_add=True)
     
 class Message(models.Model):
     room = models.ForeignKey(Room, related_name='messages', on_delete=models.CASCADE)

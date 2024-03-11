@@ -26,7 +26,7 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'name', 'messages', 'last_message')
+        fields = ('id', 'created_at', 'name', 'messages', 'last_message')
     
     # def get_user(self, obj):
     #     user = self.context['request'].user
@@ -45,8 +45,8 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
         return MessageSerializer(messages, many=True).data
     
     def get_last_message(self, obj):
-        messages = obj.messages.all()
-        if messages.exists():
-            return MessageSerializer(messages.last()).data
+        last_message = obj.messages.last()
+        if last_message:
+            return MessageSerializer(last_message).data
         else:
             return None

@@ -35,7 +35,8 @@ def GetOrCreateRoom(request):
 def GetChatList(request):
     rooms = Room.objects.filter(users__contains=[request.user.id])
     serializer = RoomSerializerWithMessages(rooms, many=True, context={'request': request})
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    sorted_data = sorted(serializer.data, key=lambda x: x['last_message']['timestamp'] if x['last_message'] is not None else x['created_at'], reverse=True)
+    return Response(sorted_data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
