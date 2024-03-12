@@ -128,6 +128,7 @@ export default {
             else if (this.state == 5) return "Incorrect password!";
             else if (this.state == 6) return "Fill in the JHED and suffix to reset the password!";
             else if (this.state == 7) return "Unxpected error. Please retry later.";
+            else if (this.state == 8) return "You are trying to log in to a new account. Please log out from current account first.";
             return "no msg";
         },
         toast_err_text() {
@@ -146,6 +147,7 @@ export default {
         async tryLogin() {
             if (this.jhed.length == 0) this.state = 1;
             else if (this.password.length == 0) this.state = 2;
+            else if (JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username != this.jhed.toLowerCase()) this.state = 8;
             else {
                 var userInfo = null;
                 const HTTP_PREFIX = import.meta.env.VITE_HOST;
