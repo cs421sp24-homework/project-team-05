@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync, sync_to_async
 import json
 from .models import Message, Room
+from .serializers import MessageSerializer
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
@@ -36,16 +37,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json.get('message', '')
         sender_web = text_data_json.get('sender', '')
 
-        await self.SaveMessage(self.room_id, sender_web, message)
-        print("receive ", sender_web)
+        message = await self.SaveMessage(self.room_id, sender_web, message)
+        print("receive ", message)
         
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message,
-                'sender': sender_web
+                'content': message['content'],
+                'sender': message['sender'],
+                'timestamp': message['timestamp']
             }
         )
 
@@ -54,23 +56,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
         try:
             room = await sync_to_async(Room.objects.get)(id=room_id)
             user = await sync_to_async(UserModel.objects.get)(id=sender_id)
-            await sync_to_async(Message.objects.create)(
+            message = await sync_to_async(Message.objects.create)(
                 room=room,
                 sender=user,
                 content=message_text
             )
             print(f"Message saved successfully: {message_text}")
+            # Serialize the message
+            serialized_message = await sync_to_async(MessageSerializer)(message)
+            return serialized_message.data
         except Exception as e:
             print(f"Error saving message: {e}")
 
     # Receive message from room group
     async def chat_message(self, event):
-        message = event['message']
-        sender_web = event['sender']
-        print(f"Broadcasting message: {message} from sender: {sender_web}")
+        message = event['content']
+        sender = event['sender']
+        timestamp = event['timestamp']
+        print(f"Broadcasting message: {message} from sender: {sender}")
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'message': message,
-            'sender': sender_web
+            'content': message,
+            'sender': sender,
+            'timestamp': timestamp
         }))

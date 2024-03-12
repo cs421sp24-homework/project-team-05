@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Room, Message
 from user.models import CustomUser
-from user.serializers import CustomUserSerializer
+from user.serializers import CustomUserSerializerSimple
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,7 +10,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = CustomUserSerializer(read_only=True)
+    sender = CustomUserSerializerSimple(read_only=True)
     timestamp = serializers.DateTimeField(format='%m/%d/%Y %H:%M')
 
     class Meta:
@@ -26,7 +26,7 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'created_at', 'name', 'messages', 'last_message')
+        fields = ('id', 'name', 'messages', 'last_message')
     
     # def get_user(self, obj):
     #     user = self.context['request'].user
@@ -34,10 +34,11 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
 
     def get_name(self, obj):
         user = self.context['request'].user
-        if user.id == obj.users[0]:
+        if str(user.id) == obj.users[0]:
             other_user = CustomUser.objects.get(id=obj.users[1])
         else:
             other_user = CustomUser.objects.get(id=obj.users[0])
+        print("users", obj.users)
         return other_user.displayname
     
     def get_messages(self, obj):

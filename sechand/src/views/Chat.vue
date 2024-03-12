@@ -9,6 +9,7 @@
             <div id="content-left">
                 <div class="list-group" id="scroll" v-if="chat_list">
                     <a v-for="(item, index) in chat_list" 
+
                     @click="setActive(index)" 
                     :class="['list-group-item', 'list-group-item-action', {'active':index===active_chat }, 'w-100']" 
                     aria-current="true"
@@ -49,7 +50,7 @@
                     </div>
 
                     <div id="text-input">
-                        <input id="input-box" type="text" v-model="cur_input" class="form-control" :placeholder="'Send a message to '+ chat_list[active_chat].name + '...'">
+                        <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to '+ chat_list[active_chat].name + '...'">
                         <button id="btn" @click="sendMessage" class="btn btn-primary">Send</button>
                     </div>
                 </div>
@@ -70,14 +71,51 @@ export default {
         return {
             chat_list: null,
             active_chat: null,
-            cur_input: "",
-            home_user: null,
+            active_roomId: null,
+            newMessage: "",
+            home_user: null
         }
     },
     methods: {
-        setActive(index) {
+        setActive(item, index) {
             this.active_chat = index;
+            this.active_roomId = item.id;
             this.scrollToBottom();
+            this.connect();
+        },
+        connect() {
+            const wsPath = `ws://127.0.0.1:8000/ws/chat/${this.active_roomId}/`; // Use roomId in the path
+            console.log('using wsPath ', wsPath)
+            if (this.ws) {
+                this.ws.close();  // Close the existing connection if it exists
+            }
+            this.ws = new WebSocket(wsPath);
+            this.ws.onmessage = this.receiveMessage;
+            this.ws.onclose = () => {
+                console.log('WebSocket closed. Attempting to reconnect...');
+                setTimeout(this.connect, 1000);
+            };
+        },
+        receiveMessage(e) {
+            const message = JSON.parse(e.data);
+            console.log('received message', message);
+            const room = this.chat_list.find(room => room.id === this.active_roomId);
+            console.log('room', room);
+            room.messages.push(message);
+            room.last_message = message;
+        },
+        sendMessage() {
+            if (this.newMessage.trim() !== '') {
+                // senderUser = JSON.parse(localStorage.getItem('user'))
+                const message = {
+                    "message": this.newMessage, // Adjust according to your backend expectations
+                    "sender": JSON.parse(localStorage.getItem('user')).id
+                    // The sender should be determined by the backend.
+                };
+                this.ws.send(JSON.stringify(message)); // Send the message content
+                console.log(message)
+                this.newMessage = '';
+            }
         },
         scrollToBottom() {
             var container = this.$refs.messageContainer;
@@ -90,17 +128,28 @@ export default {
     },
     async created(){
         this.home_user = JSON.parse(localStorage.getItem('user'));
-        console.log(this.home_user);
+        // console.log(this.home_user);
+        this.receiver = this.$route.params.receiver;
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
 
         try {
             const accessToken = localStorage.getItem('access_token');
-            const response = await axios.get(HTTP_PREFIX + 'api/v1/chat/Conversation/list', {
-                headers: {
-                'Authorization': `Bearer ${accessToken}`
-                },
-            });
-            this.chat_list = response.data;
+            if (this.receiver) {
+                const response = await axios.get(HTTP_PREFIX + `api/v1/chat/Conversation/list/${this.receiver}`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                this.chat_list = response.data.chat_list;
+                this.active_chat = response.data.active_chat;
+            } else {
+                const response = await axios.get(HTTP_PREFIX + 'api/v1/chat/Conversation/list', {
+                    headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                    },
+                });
+                this.chat_list = response.data;
+            }
         } catch (error) {
             console.error(error);
         }
