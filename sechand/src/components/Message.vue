@@ -67,6 +67,7 @@ export default {
 
 #msg-guest{
     margin-top: 1vh;
+    margin-bottom: 1vh;
     margin-left: 1vw;
     flex-direction: row;
     display: flex;
@@ -92,7 +93,7 @@ export default {
     background-color: white;
     border-radius: 1vh;
     font-size: 0.9vw;
-    max-width: 24vw;
+    max-width: 20vw;
     width: fit-content;
     padding-left: 0.5vw;
     padding-right: 0.5vw;
@@ -103,6 +104,7 @@ export default {
 
 #msg-home{
     margin-top: 1vh;
+    margin-bottom: 1vh;
     margin-right: 1vw;
     flex-direction: row;
     display: flex;
@@ -132,7 +134,7 @@ export default {
     color: white;
     border-radius: 1vh;
     font-size: 0.9vw;
-    max-width: 24vw;
+    max-width: 20vw;
     width: fit-content;
     padding-left: 0.5vw;
     padding-right: 0.5vw;

@@ -7,33 +7,38 @@
     <div id="main">
         <div id="content">
             <div id="content-left">
-                <div class="list-group" id="scroll" v-if="chat_list.length">
+                <div class="list-group" id="scroll" v-if="chat_list">
                     <a v-for="(item, index) in chat_list" 
-                    @click="setActive(item, index)" 
-                    :class="['list-group-item', 'list-group-item-action', {'active':index===active_chat }]" 
+
+                    @click="setActive(index)" 
+                    :class="['list-group-item', 'list-group-item-action', {'active':index===active_chat }, 'w-100']" 
                     aria-current="true"
                     id="list_item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <div style="display: flex;">
-                                <h5 style="margin-right: 0; font-weight: 700; font-size: 2vh;">{{ item.name }}</h5>
-                                <!-- tag -->
-                            </div>
-                        <small v-if="item.last_message">{{ item.last_message.timestamp }}</small>
+                        <div class="avatar-wrapper">
+                            <img :src="item.messages[0].sender.image" style="height: 3vw; width: 3vw; border-radius: 50%; object-fit: cover;"/>
                         </div>
-                        <p class="mb-1" v-if="item.last_message">{{ item.last_message.content }}</p>
-                        <small style="font-weight: bold;">{{ "additional info" }} </small>
+                        <div class="left-info">
+                            <div class="d-flex">
+                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.4vw;">{{ item.name }}</h5>
+                                <small style="font-size: 0.7vw;" id="time" v-if="item.last_message">{{ item.last_message.timestamp }}</small>
+                            </div>
+                            <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw;" v-if="item.last_message">{{item.last_message.content.length>35? (item.last_message.content).slice(0, 35) + '...' : item.last_message.content}}</p>
+                            <!-- <small style="font-weight: bold;">{{ "additional info" }} </small> -->
+                        </div>
                     </a>
                 </div>
             </div>
 
-            <div id="no-select" v-if="active_chat == null">---</div>
+            <div id="no-select" v-if="active_chat == null">
+                {{ chat_list? "No conversation selected." : "No conversation exists." }}
+            </div>
 
             <div id="content-right" v-else>
                 <div id="head_line">
                     <p style="margin-left: 2vw; margin-top: 1vh;" v-if="active_chat != null">{{ chat_list[active_chat].name }}</p>
                 </div>
 
-                <div id="msg">
+                <div id="msg" ref="messageContainer">
                     <div v-for="(item, index) of chat_list[active_chat].messages">
                         <Message :user="home_user" :message="item"/>
                     </div>
@@ -64,7 +69,7 @@ import axios from "axios";
 export default {
     data () {
         return {
-            chat_list: [],
+            chat_list: null,
             active_chat: null,
             active_roomId: null,
             newMessage: "",
@@ -75,6 +80,7 @@ export default {
         setActive(item, index) {
             this.active_chat = index;
             this.active_roomId = item.id;
+            this.scrollToBottom();
             this.connect();
         },
         connect() {
@@ -111,6 +117,10 @@ export default {
                 this.newMessage = '';
             }
         },
+        scrollToBottom() {
+            var container = this.$refs.messageContainer;
+            container.scrollTop = container.scrollHeight;
+        }
     },
     components: {
         UserNavbar,
@@ -145,6 +155,7 @@ export default {
         }
         
     },
+
 }
 </script>
 
@@ -152,14 +163,14 @@ export default {
 <style scoped>
 #left {
     float: left;
-    width: 15vw;
+    width: 14vw;
     height: 100vh;
     background-color: #d8e8fa;
 }
 
 #right {
     float: right;
-    width: 15vw;
+    width: 14vw;
     height: 100vh;
     background-color: #d8e8fa;
 }
@@ -180,8 +191,10 @@ export default {
     flex-direction: row;
 }
 
+
+
 #content-left{
-    width: 15vw;
+    width:20vw;
     border-right: solid rgb(134, 134, 134) 1px;
 }
 
@@ -189,11 +202,41 @@ export default {
     height: 73vh;
     overflow-y: auto;
     overflow-x: hidden;
+    border-top-left-radius: 1vh;
+    border-bottom-left-radius: 1vh;
 }
 
+.avatar-wrapper {
+    align-items: center;
+    float: left;
+    margin-right: 0.7vw;
+}
+
+#left-info {
+    
+    flex-direction: 1;
+}
+
+#time{
+    width: fit-content;
+    margin-left: auto;
+}
+
+.small-text{
+    font-size: 0.9vw;
+}
 
 #content-right{
-    width: 45vw;
+    width: 40vw;
+}
+
+#no-select{
+    font-size: 1vw;
+    color: rgb(100, 100, 100);
+    margin-top: 5vh;
+    margin-left: auto;
+    margin-right: auto;
+
 }
 
 #head_line{
@@ -217,12 +260,12 @@ export default {
 }
 
 #toolbox{
-    height: 2vh;
+    height: 1vh;
     /* border-bottom: solid rgb(134, 134, 134) 1px; */
 }
 
 #text-input{
-    margin-top: 1.5vh;
+    margin-top: 3.5vh;
     margin-left: 1vw;
     margin-right: 1vw;
     display: flex;
@@ -230,18 +273,18 @@ export default {
 }
 
 #input-box{
-    height: 4vh;
-    font-size: 2vh;
-    width: 39vw;
-    border-radius: 2vh;
+    height: 3vh;
+    font-size: 1.5vh;
+    width: 33vw;
+    border-radius: 1.5vh;
 }
 
 #btn {
     margin-left: 1vw; 
-    height: 4vh; 
-    border-radius: 1vh;
-    font-size: 2vh;
-    border-radius: 2vh;
+    height: 3vh; 
+    font-size: 1.5vh;
+    border-radius: 1.5vh;
+    width: 4vw;
 }
 
 </style>
