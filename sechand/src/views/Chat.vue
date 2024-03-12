@@ -10,16 +10,16 @@
                 <div class="list-group" id="scroll" v-if="chat_list">
                     <a v-for="(item, index) in chat_list" 
 
-                    @click="setActive(index)" 
+                    @click="setActive(item, index)" 
                     :class="['list-group-item', 'list-group-item-action', {'active':index===active_chat }, 'w-100']" 
                     aria-current="true"
                     id="list_item">
                         <div class="avatar-wrapper">
-                            <img :src="item.messages[0].sender.image" style="height: 3vw; width: 3vw; border-radius: 50%; object-fit: cover;"/>
+                            <img :src="item.user.image" style="height: 3vw; width: 3vw; border-radius: 50%; object-fit: cover;"/>
                         </div>
                         <div class="left-info">
                             <div class="d-flex">
-                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.4vw;">{{ item.name }}</h5>
+                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.4vw;">{{ item.user.displayname }}</h5>
                                 <small style="font-size: 0.7vw;" id="time" v-if="item.last_message">{{ item.last_message.timestamp }}</small>
                             </div>
                             <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw;" v-if="item.last_message">{{item.last_message.content.length>35? (item.last_message.content).slice(0, 35) + '...' : item.last_message.content}}</p>
@@ -35,7 +35,7 @@
 
             <div id="content-right" v-else>
                 <div id="head_line">
-                    <p style="margin-left: 2vw; margin-top: 1vh;" v-if="active_chat != null">{{ chat_list[active_chat].name }}</p>
+                    <p style="margin-left: 2vw; margin-top: 1vh;" v-if="active_chat != null">{{ chat_list[active_chat].user.displayname }}</p>
                 </div>
 
                 <div id="msg" ref="messageContainer">
@@ -80,6 +80,7 @@ export default {
         setActive(item, index) {
             this.active_chat = index;
             this.active_roomId = item.id;
+            console.log('active_roomId', this.active_roomId);
             this.scrollToBottom();
             this.connect();
         },
@@ -103,6 +104,7 @@ export default {
             console.log('room', room);
             room.messages.push(message);
             room.last_message = message;
+            this.scrollToBottom();
         },
         sendMessage() {
             if (this.newMessage.trim() !== '') {
@@ -118,8 +120,10 @@ export default {
             }
         },
         scrollToBottom() {
-            var container = this.$refs.messageContainer;
-            container.scrollTop = container.scrollHeight;
+            this.$nextTick(() => {
+                var container = this.$refs.messageContainer;
+                if (container) container.scrollTop = container.scrollHeight;
+            });
         }
     },
     components: {

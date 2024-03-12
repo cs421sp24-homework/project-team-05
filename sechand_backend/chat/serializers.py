@@ -19,27 +19,30 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class RoomSerializerWithMessages(serializers.ModelSerializer):
-    # user = serializers.SerializerMethodField()
-    name = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
+    # name = serializers.SerializerMethodField()
     messages = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
-        fields = ('id', 'name', 'messages', 'last_message')
+        fields = ('id', 'user', 'messages', 'last_message')
     
-    # def get_user(self, obj):
-    #     user = self.context['request'].user
-    #     return CustomUserSerializer(user).data
-
-    def get_name(self, obj):
+    def get_user(self, obj):
         user = self.context['request'].user
         if str(user.id) == obj.users[0]:
             other_user = CustomUser.objects.get(id=obj.users[1])
         else:
             other_user = CustomUser.objects.get(id=obj.users[0])
-        print("users", obj.users)
-        return other_user.displayname
+        return CustomUserSerializerSimple(other_user).data
+
+    # def get_name(self, obj):
+    #     user = self.context['request'].user
+    #     if str(user.id) == obj.users[0]:
+    #         other_user = CustomUser.objects.get(id=obj.users[1])
+    #     else:
+    #         other_user = CustomUser.objects.get(id=obj.users[0])
+    #     return other_user.displayname
     
     def get_messages(self, obj):
         messages = Message.objects.filter(room=obj.id).order_by('timestamp')

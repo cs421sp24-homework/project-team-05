@@ -45,13 +45,16 @@ def GetChatList(request):
 
 @api_view(['GET'])
 def GetChatListWithReceiver(request, receiver_id):
-    prior_room = Room.objects.filter(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
+    try:
+        prior_room = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
+    except Room.DoesNotExist:
+        prior_room = Room.objects.create(users=[request.user.id, receiver_id])
     other_rooms = Room.objects.filter(users__contains=[request.user.id]).exclude(
         users__contains=[receiver_id]).annotate(
             has_message=Exists(Message.objects.filter(room=OuterRef('pk')))
         ).filter(has_message=True)
     # print(prior_room.users)
-    serializer_prior = RoomSerializerWithMessages(prior_room, many=True,  context={'request': request})
+    serializer_prior = RoomSerializerWithMessages([prior_room], many=True,  context={'request': request})
     serializer_other = RoomSerializerWithMessages(other_rooms, many=True, context={'request': request})
     sorted_data = sorted(serializer_other.data, key=lambda x: x['last_message']['timestamp'], reverse=True)
     return Response({'chat_list': serializer_prior.data + sorted_data, 'active_chat': 0}, status=status.HTTP_200_OK)
