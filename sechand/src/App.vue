@@ -44,7 +44,6 @@ export default {
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
         await axios.get(HTTP_PREFIX + 'user/init-info/')
             .then(response => {
-                console.log(response.data);
                 this.addrList = response.data.addrList;
             })
             .catch(error => {
