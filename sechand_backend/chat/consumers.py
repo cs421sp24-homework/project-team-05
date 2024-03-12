@@ -10,44 +10,56 @@ UserModel = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = 'chat_%s' % self.room_id
+        self.user_id = self.scope['url_route']['kwargs']['user_id']
+        print("connect user, ", self.user_id)
 
-        print("connect room id, ", self.room_id)
-        print("connect group name, ", self.room_group_name)
+        # if self.user.is_active:
+        #     self.rooms = await self.get_user_rooms(self.user)
+        
+        self.rooms = await self.get_user_rooms(self.user_id)
 
-        # Join room group
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
+        for room in self.rooms:
+            room_group_name = 'chat_%s' % room.id
+            print("connect room id, ", room.id)
+            print("connect group name, ", room_group_name)
+
+            # Join room group
+            await self.channel_layer.group_add(
+                room_group_name,
+                self.channel_name
+            )
 
         await self.accept()
 
     async def disconnect(self, close_code):
         # Leave room group
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
+        for room in self.rooms:
+            room_group_name = 'chat_%s' % room.id
+            await self.channel_layer.group_discard(
+                room_group_name,
+                self.channel_name
+            )
 
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json.get('message', '')
         sender_web = text_data_json.get('sender', '')
+        room_id = text_data_json.get('room_id', '')
+        room_group_name = 'chat_%s' % room_id
 
-        message = await self.SaveMessage(self.room_id, sender_web, message)
+        message = await self.SaveMessage(room_id, sender_web, message)
         print("receive ", message)
         
         # Send message to room group
         await self.channel_layer.group_send(
-            self.room_group_name,
+            room_group_name,
             {
                 'type': 'chat_message',
                 'content': message['content'],
                 'sender': message['sender'],
-                'timestamp': message['timestamp']
+                'timestamp': message['timestamp'],
+                'room_id': room_id,
             }
         )
 
@@ -73,11 +85,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['content']
         sender = event['sender']
         timestamp = event['timestamp']
+        room_id = event['room_id']
         print(f"Broadcasting message: {message} from sender: {sender}")
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'content': message,
             'sender': sender,
-            'timestamp': timestamp
+            'timestamp': timestamp,
+            'room_id': room_id,
         }))
+    
+
+    async def get_user_rooms(self, user_id):
+        rooms = await sync_to_async(list)(Room.objects.filter(users__contains=[user_id]))
+        return rooms

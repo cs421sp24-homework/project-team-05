@@ -82,10 +82,9 @@ export default {
             this.active_roomId = item.id;
             console.log('active_roomId', this.active_roomId);
             this.scrollToBottom();
-            this.connect();
         },
         connect() {
-            const wsPath = `ws://127.0.0.1:8000/ws/chat/${this.active_roomId}/`; // Use roomId in the path
+            const wsPath = `ws://127.0.0.1:8000/ws/chat/${this.home_user.id}/`; // Use roomId in the path
             console.log('using wsPath ', wsPath)
             if (this.ws) {
                 this.ws.close();  // Close the existing connection if it exists
@@ -100,7 +99,7 @@ export default {
         receiveMessage(e) {
             const message = JSON.parse(e.data);
             console.log('received message', message);
-            const room = this.chat_list.find(room => room.id === this.active_roomId);
+            const room = this.chat_list.find(room => room.id === message.room_id);
             console.log('room', room);
             room.messages.push(message);
             room.last_message = message;
@@ -111,7 +110,8 @@ export default {
                 // senderUser = JSON.parse(localStorage.getItem('user'))
                 const message = {
                     "message": this.newMessage, // Adjust according to your backend expectations
-                    "sender": JSON.parse(localStorage.getItem('user')).id
+                    "sender": JSON.parse(localStorage.getItem('user')).id,
+                    "room_id": this.active_roomId
                     // The sender should be determined by the backend.
                 };
                 this.ws.send(JSON.stringify(message)); // Send the message content
@@ -157,7 +157,7 @@ export default {
         } catch (error) {
             console.error(error);
         }
-        
+        this.connect();
     },
 
 }
