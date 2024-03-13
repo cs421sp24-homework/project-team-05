@@ -5,18 +5,24 @@
       type="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
-      @click="onClick()"
     >
       {{ text }}
     </button>
     <ul class="dropdown-menu dropdown-menu-dark">
-      <li v-for="item in dropdownData" :key="item.id">
-        <a
-          class="dropdown-item"
-          :href="item.link"
-          @click="handleItemClick(item)"
-          >{{ item.label }}</a
-        >
+      <li v-for="(value, index) in dropdownData" :key="index">
+        <a class="dropdown-item">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              :id="'checkbox' + index"
+            />
+            <label class="form-check-label" :for="'checkbox' + index">
+              {{ value }}
+            </label>
+          </div>
+        </a>
       </li>
     </ul>
   </div>
@@ -29,21 +35,9 @@ export default {
       type: String,
       required: true,
     },
-    emitMethod: {
-      type: String,
-      required: true,
-    },
     dropdownData: {
       type: Array,
       default: () => [],
-    },
-  },
-  methods: {
-    handleItemClick(item) {
-      this.$emit(this.emitMethod, item);
-    },
-    onClick() {
-      this.$emit("dropdown-click");
     },
   },
 };

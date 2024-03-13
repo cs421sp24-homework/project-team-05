@@ -52,12 +52,13 @@
                 v-model="category"
                 required
               >
-                <option selected>Choose...</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Clothing">Clothing</option>
-                <option value="3">Furniture</option>
-                <option value="4">Books</option>
-                <option value="5">Others</option>
+                <option
+                  v-for="(value, index) in this.categories"
+                  :key="index"
+                  :value="value"
+                >
+                  {{ value }}
+                </option>
               </select>
             </div>
             <!-- Description -->
@@ -136,6 +137,9 @@ import Card from "@/components/Card.vue";
 import axios from "axios";
 export default {
   name: "NewPost",
+  props: {
+    categories: Array,
+  },
   components: {
     UserNavbar,
     Card,
