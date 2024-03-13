@@ -2,18 +2,39 @@
   <div class="price-range-container">
     <div class="input-with-dollar">
       <span>$</span>
-      <input type="number" id="min" placeholder="MIN" />
+      <input
+        type="number"
+        v-model="this.min"
+        placeholder="MIN"
+        @input="emitValues"
+      />
     </div>
     <span class="dash">-</span>
     <div class="input-with-dollar">
       <span>$</span>
-      <input type="number" id="max" placeholder="MAX" />
+      <input
+        type="number"
+        v-model="this.max"
+        placeholder="MAX"
+        @input="emitValues"
+      />
     </div>
   </div>
 </template>
 <script>
 export default {
   name: "PriceRange",
+  data() {
+    return {
+      min: "",
+      max: "",
+    };
+  },
+  methods: {
+    emitValues() {
+      this.$emit("update:min-max", { min: this.min, max: this.max });
+    },
+  },
 };
 </script>
 <style>

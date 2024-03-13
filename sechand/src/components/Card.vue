@@ -27,7 +27,7 @@ export default {
 
 <style scoped>
 .card {
-  background: rgb(146, 146, 157);
+  background: #98a497;
   border: 3px solid #33332b35;
   margin: 10px;
   width: 250px;
@@ -51,7 +51,7 @@ export default {
 }
 
 .card-body {
-  background: grey;
+  background: #5f725d;
   padding: 1rem;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
@@ -74,7 +74,7 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.5);
+  /* background-color: rgba(255, 255, 255, 0.5); */
   color: rgb(0, 0, 0);
   padding: 5px;
   border-radius: 10px;

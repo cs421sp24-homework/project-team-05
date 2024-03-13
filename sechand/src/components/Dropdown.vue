@@ -17,6 +17,7 @@
               type="checkbox"
               value=""
               :id="'checkbox' + index"
+              @change="toggleSelection(value)"
             />
             <label class="form-check-label" :for="'checkbox' + index">
               {{ value }}
@@ -38,6 +39,21 @@ export default {
     dropdownData: {
       type: Array,
       default: () => [],
+    },
+  },
+  data() {
+    return {
+      selected: [],
+    };
+  },
+  methods: {
+    toggleSelection(value) {
+      if (this.selected.includes(value)) {
+        this.selected = this.selected.filter((item) => item !== value);
+      } else {
+        this.selected.push(value);
+      }
+      this.$emit("update:selected", this.selected);
     },
   },
 };
