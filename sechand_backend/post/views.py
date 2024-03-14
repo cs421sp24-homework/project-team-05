@@ -139,12 +139,12 @@ def CreateNewItem(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def SearchItems(request):
-    desc_text = request.GET.get('desc_text', '')
-    lowest_price = request.GET.get('lowest_price', '')
-    highest_price = request.GET.get('highest_price', '')
-    category = request.GET.get('category', '')
-    location = request.GET.get('location', '')
-    distance = float(request.GET.get('distance', ''))  # should be in miles
+    desc_text = request.POST.get('desc_text', '')
+    lowest_price = request.POST.get('lowest_price', -1)
+    highest_price = request.POST.get('highest_price', -1)
+    category = request.POST.get('category', '')  
+    location = request.POST.getlist('location', [])  # location could be list
+    distance = float(request.POST.get('distance', -1))  # should be in miles  
 
     print(desc_text, "low", lowest_price, "high", highest_price, "cat", category)
 
@@ -164,9 +164,9 @@ def SearchItems(request):
         query &= Q(category__exact=category)
     
     if location:
-        query &= Q(seller__address__name__exact=location)
+        query &= Q(seller__address__name__in=location)
     
-    if distance:
+    if distance >= 0:
         user_addr = request.user.address
         all_addresses = Address.objects.all()
         addrLst = [addr for addr in all_addresses if get_distance(user_addr, addr) <= distance]
@@ -179,4 +179,15 @@ def SearchItems(request):
     # Execute the query
     results = Item.objects.filter(query)
     serializer = ItemSerializerWithSellerName(results, many=True)
+    return JsonResponse(serializer.data, safe=False, status=200)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def BrowseOneKindItems(request):
+    category_value = request.POST.get('category', '')
+    if(category_value == ''):
+        # Empty cateogry but accessed this API, consider 404 or 400 bad request.
+        return JsonResponse({'error': 'Failed as no category data passed.'}, status=status.HTTP_400_BAD_REQUEST)
+    items = Item.objects.filter(category=category_value)
+    serializer = ItemSerializerWithSellerName(items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)

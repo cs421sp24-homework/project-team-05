@@ -44,7 +44,6 @@ def custom_login(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-    print("111")
     username = request.data.get('username')
     password = request.data.get('password')
     email = request.data.get('email')
@@ -54,7 +53,6 @@ def register(request):
     address = Address.objects.get(name=address_name)
     image = request.data.get('image')
     is_visible = request.data.get('is_visible') == 'true'
-    print(image)
     try:
         user = UserModel.objects.get(username=username)
         if not user.is_verified:
@@ -71,11 +69,25 @@ def register(request):
             # Send verification email with the code
             try:
                 send_verify_email(user)
+            except Exception as e:
+                return JsonResponse(
+                    {
+                        'message': 'Verification Email Service is Currently Unavailable.',
+                        'type': 'Service',
+                        'error': str(e)
+                    }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+            
+            try:
                 serializer = CustomUserSerializer(user)
                 # registered, not verified
                 return JsonResponse({"new_user": True, "user": serializer.data})
             except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
+                return JsonResponse(
+                    {
+                        'message': 'Internal Server Error',
+                        'type': 'Internal',
+                        'error': str(e)
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             # registered and verified
             return JsonResponse({"new_user": False, "user": None})
@@ -86,11 +98,24 @@ def register(request):
         # Send verification email with the code
         try:
             send_verify_email(user)
+        except Exception as e:
+            return JsonResponse(
+                    {
+                        'message': 'Verification Email Service is Currently Unavailable.',
+                        'type': 'Service',
+                        'error': str(e)
+                    }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        try:
             serializer = CustomUserSerializer(user)
             # not registered, not verified
             return JsonResponse({"new_user": True, "user": serializer.data})
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return JsonResponse(
+                    {
+                        'message': 'Internal Server Error',
+                        'type': 'Internal',
+                        'error': str(e)
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
@@ -117,13 +142,13 @@ def verify_email(request, uid):
                 return JsonResponse({'expired': False, 'correct': True})
             except VerifyEmailCode.DoesNotExist:
                 # code has never been sent
-                return JsonResponse({'message': 'Invalid verification code.'}, status=404)
+                return JsonResponse({'message': 'Invalid verification code.'}, status=status.HTTP_404_NOT_FOUND)
         else:
             # email has been verified
             return JsonResponse({'message': 'Email already verified.'}, status=400)
     except UserModel.DoesNotExist:
         # user does not exist
-        return JsonResponse({'message': 'Invalid user.'}, status=404)
+        return JsonResponse({'message': 'Invalid user.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -167,7 +192,7 @@ def reset_password(request, jhed):
         return JsonResponse({'expired': False, 'correct': True})
     except UserModel.DoesNotExist:
         # new user
-        return JsonResponse({'message': 'Invalid user.'}, status=404)
+        return JsonResponse({'message': 'Invalid user.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
@@ -175,9 +200,9 @@ def get_user_profile(request):
     try:
         user = request.user
         serializer = CustomUserSerializer(user)
-        return JsonResponse(serializer.data, status=200)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
     except:
-        return JsonResponse(serializer.errors, status=400)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PATCH'])
@@ -199,10 +224,10 @@ def update_user_profile(request):
         user.save()
 
         serializer = CustomUserSerializer(user)
-        return JsonResponse(serializer.data, status=200)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         # print(e)
-        return JsonResponse({'message': 'Unable to edit profile.'}, status=404)
+        return JsonResponse({'message': 'Unable to edit profile.'}, status=status.HTTP_404_NOT_FOUND)
     
 
 @api_view(['GET'])
@@ -221,11 +246,11 @@ def get_order_history(request):
         history = UserPurchase.objects.filter(user = request.user.id)
         if history.exists():
             serializer = PurchaseHistoryDeserializer(history, many=True)
-            return JsonResponse(serializer.data, safe=False, status=200)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         else:
-            return JsonResponse({}, status=200)
+            return JsonResponse({}, status=status.HTTP_200_OK)
     else:
-       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+       return JsonResponse({'error': 'User need to login to browse their collection'}, status=status.HTTP_401_UNAUTHORIZED) 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
