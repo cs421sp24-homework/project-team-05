@@ -15,7 +15,7 @@
               :src="currentUser.image"
               alt="User Icon"
               class="me-3 profile-image"
-              style="width: 150px; height: 150px; border-radius: 50%"
+              style="width: 8vw; height: 8vw; border-radius: 50%; object-fit: cover;"
             />
             <div>
               <p class="mb-1 font-large-vh font-large-vw profile-name">
@@ -50,6 +50,7 @@
           </div>
           <div class="col-6 text-end">
             <Button
+              id="toPost"
               class="new-post-btn"
               text="New Post"
               color="green"

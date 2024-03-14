@@ -126,7 +126,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .left {
   width: 15%;
   height: 100vh;

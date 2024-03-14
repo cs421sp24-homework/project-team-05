@@ -22,13 +22,6 @@ const router = createRouter({
       name: 'Home',
       component: Home,
     },
-    // Chat DEV
-    {
-      path: '/chattest/:roomId/',
-      name: 'chattest',
-      component: ChatTest,
-      props: true,
-    },
     {
       path: '/userhome',
       name: 'UserHome',

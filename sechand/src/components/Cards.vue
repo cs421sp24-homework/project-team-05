@@ -1,7 +1,7 @@
 <template>
   <div class="cards-container">
-    <div :key="card.id" v-for="card in cards" class="card-wrapper">
-      <Card :card="card" />
+    <div :key="card.id" v-for="(card, index) in cards" class="card-wrapper">
+      <Card :card="card" :idx="index" />
     </div>
   </div>
 </template>

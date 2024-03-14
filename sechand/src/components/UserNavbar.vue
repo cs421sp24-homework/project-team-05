@@ -6,13 +6,13 @@
         Sechand</a>
       <div class="navbar-nav ml-auto">
         <div class="nav-item">
-          <img :src="currentUser.image" class="user-icon" @click="profile" />
+          <img :src="currentUser.image" id="avt" class="user-icon" @click="profile" />
         </div>
         <div class="nav-item">
           <Button @btn-click="profile" :text="currentUser.displayname" color="transparent"></Button>
         </div>
         <div class="nav-item">
-          <Button class="logout-btn" @btn-click="logout" text="Logout" color="danger"></Button>
+          <Button class="logout-btn" id="logoutBtn" @btn-click="logout" text="Logout" color="danger"></Button>
         </div>
       </div>
     </div>

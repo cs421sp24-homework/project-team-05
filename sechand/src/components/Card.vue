@@ -1,5 +1,5 @@
 <template>
-  <div class="card" @click="cardDetail(card)">
+  <div class="card" @click="cardDetail(card)" :id="'card' + idx">
     <img :src="card.image" class="card-img-top" :alt="card.name" />
     <div class="card-body">
       <h5 class="card-name ellipsis">{{ card.name }}</h5>
@@ -15,6 +15,7 @@ export default {
   name: "Card",
   props: {
     card: Object,
+    idx: Number
   },
   methods: {
     cardDetail(card) {
