@@ -192,6 +192,12 @@ def BrowseOneKindItems(request):
     if(category_value == ''):
         # Empty cateogry but accessed this API, consider 404 or 400 bad request.
         return JsonResponse({'error': 'Failed as no category data passed.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if(category_value == 'all'):
+        # Return all items
+        all_items = Item.objects.all()
+        serializer = ItemSerializerWithSellerName(all_items, many=True)
+        return JsonResponse(serializer.data, safe=False, status=200)
     items = Item.objects.filter(category=category_value)
     serializer = ItemSerializerWithSellerName(items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)

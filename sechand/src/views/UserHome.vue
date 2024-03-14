@@ -5,6 +5,9 @@
       <div class="left">
         <!-- category buttons -->
         <ul class="list-group">
+          <li class="list-group-item" @click="UpdateCategory(this.All)">
+            All Category
+          </li>
           <li v-for="(value, index) in categories" :key="index" class="list-group-item" @click="UpdateCategory(value)">
             {{ value }}
           </li>
@@ -60,6 +63,7 @@ export default {
   },
   data() {
     return {
+      All: "all",
       distanceList: ["< 1mile", "< 3mile", "< 5miles", "< 10miles"],
       isLoading: false,
       cardsData: [],
@@ -138,7 +142,7 @@ export default {
         const formData = new FormData();
         formData.append("category", category);
         const response = await axios.post(
-          HTTP_PREFIX + "api/v1/post/Items/Search",
+          HTTP_PREFIX + "api/v1/post/Items/Browse",
           formData,
           {
             headers: {
