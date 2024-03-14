@@ -139,6 +139,7 @@ def CreateNewItem(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def SearchItems(request):
+
     desc_text = request.POST.get('desc_text','')
     lowest_price = request.POST.get('lowest_price',-1)
     highest_price = request.POST.get('highest_price',-1)
@@ -148,6 +149,7 @@ def SearchItems(request):
     distance = float(request.POST.get('distance', -1))  # should be in miles
     
     # print(desc_text, "low", lowest_price, "high", highest_price, "cat", category, "loc", location, "dist", distance)
+
 
     query = Q()
 
@@ -181,4 +183,15 @@ def SearchItems(request):
     # Execute the query
     results = Item.objects.filter(query)
     serializer = ItemSerializerWithSellerName(results, many=True)
+    return JsonResponse(serializer.data, safe=False, status=200)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def BrowseOneKindItems(request):
+    category_value = request.POST.get('category', '')
+    if(category_value == ''):
+        # Empty cateogry but accessed this API, consider 404 or 400 bad request.
+        return JsonResponse({'error': 'Failed as no category data passed.'}, status=status.HTTP_400_BAD_REQUEST)
+    items = Item.objects.filter(category=category_value)
+    serializer = ItemSerializerWithSellerName(items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)

@@ -22,6 +22,12 @@ class CustomUserSerializer(serializers.ModelSerializer):
         }
 
 
+class CustomUserSerializerSimple(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ['id', 'displayname', 'image']
+
+
 class VerifyEmailCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = VerifyEmailCode

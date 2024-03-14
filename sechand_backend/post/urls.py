@@ -20,6 +20,8 @@ urlpatterns = [
     # GET PATCH DELETE
     path("Item/<uuid:item_id>", views.ProcessSingleItem, name="ProcessSingleItem"),
 
-    path("Items/Search", views.SearchItems, name="SearchItems")
+    path("Items/Search", views.SearchItems, name="SearchItems"),
+
+    path("Items/Browse", views.BrowseOneKindItems, name="BrowseOneKindItems")
 
 ]

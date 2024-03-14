@@ -40,6 +40,10 @@ export default {
     };
   },
   async created() {
+    const currUser = JSON.parse(localStorage.getItem('user'));
+    if (currUser) {
+        this.$router.push('/userhome');
+    }
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
     try {
       const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/all");
