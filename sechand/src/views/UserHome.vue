@@ -5,38 +5,21 @@
       <div class="left">
         <!-- category buttons -->
         <ul class="list-group">
-          <li
-            v-for="(value, index) in categories"
-            :key="index"
-            class="list-group-item"
-            @click="UpdateCategory(value)"
-          >
+          <li v-for="(value, index) in categories" :key="index" class="list-group-item" @click="UpdateCategory(value)">
             {{ value }}
           </li>
         </ul>
       </div>
       <div class="right">
-        <Seach :categories="this.categories" />
+        <Seach :categories="this.categories" @onClick="search" />
         <div class="dropdowns-container">
-          <Dropdown
-            class="buttons"
-            text="Location"
-            :dropdownData="this.addrList"
-            @update:selected="UpdateLocation"
-          ></Dropdown>
-          <Dropdown
-            class="buttons"
-            text="Distance"
-            :dropdownData="this.distanceList"
-            @update:selected="UpdateDistance"
-          ></Dropdown>
+          <Dropdown class="buttons" text="Location" :dropdownData="this.addrList" @update:selected="UpdateLocation">
+          </Dropdown>
+          <Dropdown class="buttons" text="Distance" :dropdownData="this.distanceList" @update:selected="UpdateDistance">
+          </Dropdown>
           <div class="dropdown-center buttons">
-            <button
-              class="btn btn-secondary dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
               Price
             </button>
             <div class="dropdown-menu dropdown-menu-dark">
@@ -45,13 +28,8 @@
               </div>
             </div>
           </div>
-          <Button
-            @btn-click="applyFilter"
-            text="Apply"
-            color="lightblue"
-          ></Button>
+          <Button @btn-click="applyFilter" text="Apply" color="lightblue"></Button>
         </div>
-
         <Cards :cards="cardsData" />
       </div>
     </div>
@@ -87,6 +65,7 @@ export default {
       cardsData: [],
       currentUser: JSON.parse(localStorage.getItem("user")),
       filters: { locations: [], distance: [], min: "", max: "" },
+
     };
   },
   async created() {
@@ -104,11 +83,74 @@ export default {
     }
   },
   methods: {
-    applyFilter() {
-      console.log("apply filter", this.filters);
+    async search(payload) {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      try {
+        // console.log(payload.cate)
+        const formData = new FormData();
+        formData.append("desc_text", payload.input);
+        formData.append("category", payload.cate);
+        const response = await axios.post(
+          HTTP_PREFIX + "api/v1/post/Items/Search",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Form submitted successfully:", response.data);
+        this.cardsData = response.data;
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
     },
-    UpdateCategory(category) {
+    async applyFilter() {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      try {
+        const formData = new FormData();
+        formData.append("desc_text", "");
+        formData.append("lowest_price", this.filters.min);
+        formData.append("highest_price", this.filters.max);
+        const loc_array = this.filters.locations
+        loc_array.forEach((item, index) => {
+          formData.append("locations", item);
+        });
+        const response = await axios.post(
+          HTTP_PREFIX + "api/v1/post/Items/Search",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Form submitted successfully:", response.data);
+        this.cardsData = response.data;
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+    },
+    async UpdateCategory(category) {
       console.log("update category", category);
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      try {
+        const formData = new FormData();
+        formData.append("category", category);
+        const response = await axios.post(
+          HTTP_PREFIX + "api/v1/post/Items/Search",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Form submitted successfully:", response.data);
+        this.cardsData = response.data;
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
     },
     UpdateLocation(locations) {
       this.filters.locations = locations;
@@ -133,11 +175,13 @@ export default {
   float: left;
   margin-right: 1vw;
 }
+
 .right {
   width: 80%;
   height: 100vh;
   float: right;
 }
+
 .container {
   margin-top: 12vh;
   margin-left: 5vw;
@@ -150,10 +194,12 @@ export default {
 .buttons {
   margin-top: 20px;
 }
+
 .dropdowns-container {
   display: flex;
   justify-content: space-between;
 }
+
 .list-group-item {
   background: #333435;
   color: white;
@@ -161,6 +207,7 @@ export default {
   justify-content: center;
   height: 100%;
 }
+
 .list-group-item:hover {
   background: #f9f9f9;
   color: black;

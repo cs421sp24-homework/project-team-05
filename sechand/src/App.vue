@@ -4,14 +4,8 @@
                  :currentUser="user"
                  :addrList="addrList"
                  :token="token"></router-view> -->
-  <router-view
-    @userLogin="userLogin"
-    @userLogout="logout"
-    :addrList="addrList"
-    :logined="login"
-    :categories="categories"
-    @updateUser="updateUser"
-  ></router-view>
+  <router-view @userLogin="userLogin" @userLogout="logout" :addrList="addrList" :logined="login"
+    :categories="categories" @updateUser="updateUser"></router-view>
 </template>
 
 <script>
@@ -23,7 +17,7 @@ export default {
       login: false,
       user: null,
       token: null,
-      addrList: ["nine east", "Social"],
+      addrList: [],
       categories: [
         "Electronics",
         "Clothing",
