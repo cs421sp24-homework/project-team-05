@@ -5,7 +5,7 @@
         <div class="item-detail container">
             <!-- Left side: Image -->
             <div class="left-side">
-                <img :src="item.image" alt="Item Image" style="width: 350px; height: 350px; border-radius: 50%" />
+                <img :src="item.image" alt="Item Image" id="item-img" />
             </div>
 
             <!-- Right side: Details -->
@@ -15,6 +15,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
+                    <img src="/comment.png" id="chat" @click="chat" />
                 </p>
 
                 <!-- Description -->
@@ -127,6 +128,7 @@ export default {
     flex: 1;
     width: 50vw;
     margin-right: 20px;
+    float: left;
 }
 
 .right-side {
@@ -142,5 +144,11 @@ export default {
     margin-top: 20px;
     font-size: 20px;
     font-weight: bold;
+}
+
+#item-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 </style>

@@ -9,11 +9,10 @@
         {{ value }}
       </option>
     </select>
-    <Button @btn-click="onClick()" text="Search"></Button>
+    <Button @btn-click="onClick()" text="Search" id="search"></Button>
   </form>
 </template>
 <script>
-import axios from "axios";
 import Button from "@/components/Button.vue";
 export default {
   name: "Seach",
@@ -40,5 +39,16 @@ export default {
 #Category {
   width: 30%;
   margin-left: 0px;
+}
+
+#search {
+  border: 1px solid #00cc66;
+  margin-left: 10px;
+  height: 5vh;
+}
+
+#search:hover {
+  background-color: #09562f;
+  color: white;
 }
 </style>

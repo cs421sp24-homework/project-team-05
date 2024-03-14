@@ -6,6 +6,9 @@
         Sechand</a>
       <div class="navbar-nav ml-auto">
         <div class="nav-item">
+          <img src="/comment.png" id="chat" @click="chat" />
+        </div>
+        <div class="nav-item">
           <img :src="currentUser.image" class="user-icon" @click="profile" />
         </div>
         <div class="nav-item">
@@ -106,5 +109,12 @@ export default {
   padding: 5px 10px;
   border-radius: 5px;
   /* cursor: pointer; */
+}
+
+#chat {
+  width: 30px;
+  height: 30px;
+
+  cursor: pointer;
 }
 </style>
