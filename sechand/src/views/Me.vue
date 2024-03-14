@@ -11,23 +11,36 @@
       <div class="row mb-3">
         <div class="col-12">
           <div class="d-flex align-items-center">
-            <img :src="currentUser.image" alt="User Icon" class="me-3 profile-image"
-              style="width: 150px; height: 150px; border-radius: 50%" />
+            <img
+              :src="currentUser.image"
+              alt="User Icon"
+              class="me-3 profile-image"
+              style="width: 150px; height: 150px; border-radius: 50%"
+            />
             <div>
-              <p class="mb-1 font-large-vh font-large-vw profile-name">{{ this.currentUser.displayname }}</p>
+              <p class="mb-1 font-large-vh font-large-vw profile-name">
+                {{ this.currentUser.displayname }}
+              </p>
               <!-- Increase font size -->
-              <p class="mb-0 font-large-vh font-large-vw profile-address">{{ this.currentUser.address.name }}</p>
+              <p class="mb-0 font-large-vh font-large-vw profile-address">
+                {{ this.currentUser.address.name }}
+              </p>
               <!-- Increase font size -->
             </div>
           </div>
-          <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
+          <Button
+            class="edit-profile-btn"
+            text="My Profile"
+            color="transparent"
+            @click="editProfile"
+          >
           </Button>
         </div>
       </div>
       <!-- Segment -->
       <div class="row">
         <div class="col-12">
-          <hr class="segment">
+          <hr class="segment" />
         </div>
       </div>
       <div class="row">
@@ -36,7 +49,12 @@
             <h2>My Items</h2>
           </div>
           <div class="col-6 text-end">
-            <Button class="new-post-btn" text="New Post" color="green" @click="newPost"></Button>
+            <Button
+              class="new-post-btn"
+              text="New Post"
+              color="green"
+              @click="newPost"
+            ></Button>
           </div>
         </div>
 
@@ -48,7 +66,7 @@
       <!-- Segment -->
       <div class="row">
         <div class="col-12">
-          <hr class="segment">
+          <hr class="segment" />
         </div>
       </div>
       <div class="row">
@@ -84,7 +102,7 @@ export default {
       componentKey: 0,
       postCardsData: [],
       historyCardsData: [],
-      currentUser: JSON.parse(localStorage.getItem('user')),
+      currentUser: JSON.parse(localStorage.getItem("user")),
       // imageUrl: ''
     };
   },
@@ -96,24 +114,30 @@ export default {
     this.componentKey += 1; // Change key value to trigger rerender
     console.log("Me page created", this.componentKey);
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/UserItems/all', {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-      });
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + "api/v1/post/UserItems/all",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       this.postCardsData = response.data;
     } catch (error) {
       console.error(error);
     }
     // history card data
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/UserItems/all', {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-      });
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + "api/v1/post/UserItems/all",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       this.historyCardsData = response.data;
     } catch (error) {
       console.error(error);

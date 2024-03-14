@@ -1,10 +1,11 @@
 // import './assets/main.css'
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.css'
 import { createApp, ref } from 'vue'
 import App from './App.vue'
 import router from './router'
-import 'bootstrap/dist/css/bootstrap.css'
 import axios from 'axios'
+import '@popperjs/core'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 const HTTP_PREFIX = import.meta.env.VITE_HOST;

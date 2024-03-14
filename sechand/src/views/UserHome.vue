@@ -2,55 +2,101 @@
   <div>
     <UserNavbar />
     <div class="container">
-      <Seach />
-      <Dropdown class="buttons" text="Location" @dropdown-click="$emit('showLocation')" emitMethod="Updatelocation"
-        :dropdownData="locations"></Dropdown>
-      <Cards :cards="cardsData" />
-    </div>
+      <div class="left">
+        <!-- category buttons -->
+        <ul class="list-group">
+          <li
+            v-for="(value, index) in categories"
+            :key="index"
+            class="list-group-item"
+            @click="UpdateCategory(value)"
+          >
+            {{ value }}
+          </li>
+        </ul>
+      </div>
+      <div class="right">
+        <Seach :categories="this.categories" />
+        <div class="dropdowns-container">
+          <Dropdown
+            class="buttons"
+            text="Location"
+            :dropdownData="this.addrList"
+            @update:selected="UpdateLocation"
+          ></Dropdown>
+          <Dropdown
+            class="buttons"
+            text="Distance"
+            :dropdownData="this.distanceList"
+            @update:selected="UpdateDistance"
+          ></Dropdown>
+          <div class="dropdown-center buttons">
+            <button
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Price
+            </button>
+            <div class="dropdown-menu dropdown-menu-dark">
+              <div class="dropdown-item">
+                <PriceRange @update:min-max="UpdateMinMax"></PriceRange>
+              </div>
+            </div>
+          </div>
+          <Button
+            @btn-click="applyFilter"
+            text="Apply"
+            color="lightblue"
+          ></Button>
+        </div>
 
+        <Cards :cards="cardsData" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import UserNavbar from "../components/UserNavbar.vue";
 import Seach from "../components/Seach.vue";
+import Button from "@/components/Button.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
+import PriceRange from "../components/PriceRange.vue";
 import axios from "axios";
 export default {
   name: "UserHome",
-
+  props: {
+    addrList: Array,
+    categories: Array,
+  },
   components: {
     UserNavbar,
     Seach,
     Dropdown,
     Cards,
+    Button,
+    PriceRange,
   },
   data() {
     return {
-      locations: [
-        { id: 1, label: "Location 1", link: "#" },
-        { id: 2, label: "Location 2", link: "#" },
-        { id: 3, label: "Location 3", link: "#" },
-      ],
+      distanceList: ["< 1mile", "< 3mile", "< 5miles", "< 10miles"],
       isLoading: false,
       cardsData: [],
-      currentUser: JSON.parse(localStorage.getItem('user'))
+      currentUser: JSON.parse(localStorage.getItem("user")),
+      filters: { locations: [], distance: [], min: "", max: "" },
     };
   },
   async created() {
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
-
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/Items/all', {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/all", {
         headers: {
-          'Authorization': `Bearer ${accessToken}`
+          Authorization: `Bearer ${accessToken}`,
         },
-        // params: {
-        //   count: 20
-        //   // Add other data parameters here if needed
-        // }
       });
       this.cardsData = response.data;
     } catch (error) {
@@ -58,35 +104,40 @@ export default {
     }
   },
   methods: {
-
-    showLocation() {
-      console.log("showLocation");
+    applyFilter() {
+      console.log("apply filter", this.filters);
     },
-    // async showLocation() {
-    //   try {
-    //     // Simulating an asynchronous fetch
-    //     const response = await fetch('/api/locations');
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     const data = await response.json();
-    //     this.locations = data;
-    //   } catch (error) {
-    //     console.error('Error fetching locations:', error);
-    //   }
-    // },
-    UpdateLocation(item) {
-      console.log(item);
+    UpdateCategory(category) {
+      console.log("update category", category);
     },
-    handleItemDetail(cardId) {
-      console.log("Detail for card:", cardId);
-      // Handle the detail view for the clicked card
+    UpdateLocation(locations) {
+      this.filters.locations = locations;
+      console.log("update location", locations);
+    },
+    UpdateDistance(distance) {
+      this.filters.distance = distance;
+      console.log("update distance", distance);
+    },
+    UpdateMinMax({ min, max }) {
+      this.filters.min = min;
+      this.filters.max = max;
     },
   },
 };
 </script>
 
 <style>
+.left {
+  width: 15%;
+  height: 100vh;
+  float: left;
+  margin-right: 1vw;
+}
+.right {
+  width: 80%;
+  height: 100vh;
+  float: right;
+}
 .container {
   margin-top: 12vh;
   margin-left: 5vw;
@@ -98,5 +149,21 @@ export default {
 
 .buttons {
   margin-top: 20px;
+}
+.dropdowns-container {
+  display: flex;
+  justify-content: space-between;
+}
+.list-group-item {
+  background: #333435;
+  color: white;
+  text-align: center;
+  justify-content: center;
+  height: 100%;
+}
+.list-group-item:hover {
+  background: #f9f9f9;
+  color: black;
+  cursor: pointer;
 }
 </style>
