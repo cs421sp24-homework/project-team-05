@@ -66,12 +66,47 @@ def GetUserCollection(request):
     if(request.user):
         #TODO: validate user token again
         user_id = request.user.id
+        # user_id = request.data['id']      # enable this disable above for postman
         collections = UserCollection.objects.filter(user = user_id)
         if collections.exists():
             serializer = CollectionDeserializer(collections, many=True)
             return JsonResponse(serializer.data, safe=False, status=200)
         else:
             return JsonResponse({}, status=200)
+    else:
+       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def DeleteUserCollection(request):
+    if(request.user):
+        #TODO: validate user token again
+        user_id = request.user.id
+        # user_id = request.data['user_id']
+        item_id = request.data['item_id']
+        try:
+            item = UserCollection.objects.get(user = user_id, item=item_id)
+            item.delete()
+            return JsonResponse({'message': 'Item deleted'}, status=status.HTTP_200_OK)
+        except Item.DoesNotExist:
+            return JsonResponse({'error': 'Item not found'}, status=status.HTTP_200_OK)
+    else:
+       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+    
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def IsUserCollected(request):
+    if(request.user):
+        #TODO: validate user token again
+        user_id = request.user.id
+        # user_id = request.data['user_id']      # enable this disable above for postman
+        item_id = request.data['item_id']
+        try:
+            item = UserCollection.objects.get(user = user_id, item=item_id)
+            return JsonResponse({'collected': True}, status=status.HTTP_200_OK)
+        except UserCollection.DoesNotExist:
+            return JsonResponse({'collected': False}, status=status.HTTP_200_OK)
+            
     else:
        return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
 
