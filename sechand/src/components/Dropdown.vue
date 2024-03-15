@@ -1,24 +1,14 @@
 <template>
   <div class="dropdown">
-    <button
-      class="btn btn-secondary dropdown-toggle"
-      type="button"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-    >
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
       {{ text }}
     </button>
     <ul class="dropdown-menu dropdown-menu-dark">
       <li v-for="(value, index) in dropdownData" :key="index">
         <a class="dropdown-item">
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              :id="'checkbox' + index"
-              @change="toggleSelection(value)"
-            />
+            <input class="form-check-input" type="checkbox" value="" :id="'checkbox' + index"
+              @change="toggleSelection(value)" />
             <label class="form-check-label" :for="'checkbox' + index">
               {{ value }}
             </label>
@@ -58,3 +48,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.dropdown {
+  margin-right: 1vw;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar />
+    <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -66,12 +66,12 @@
           <div class="mb-3">
             <label class="form-label">Card Preview</label><br />
             <Card :card="{
-            name: this.itemName,
-            description: this.description,
-            price: this.price,
-            image: this.imageUrl,
-            displayname: this.currentUser.displayname,
-          }"></Card>
+      name: this.itemName,
+      description: this.description,
+      price: this.price,
+      image: this.imageUrl,
+      displayname: this.currentUser.displayname,
+    }"></Card>
           </div>
         </div>
       </div>
@@ -87,6 +87,7 @@ export default {
   name: "NewPost",
   props: {
     categories: Array,
+    currentUser: Object,
   },
   components: {
     UserNavbar,
@@ -111,6 +112,9 @@ export default {
     };
   },
   methods: {
+    userStateChange() {
+      this.$emit("userStateChange", {});
+    },
     handleFileUpload(event) {
       this.picture = event.target.files[0];
       this.imageUrl = URL.createObjectURL(this.picture);
@@ -130,7 +134,9 @@ export default {
         formData.append("category", this.category);
         formData.append("price", this.price);
         formData.append("seller", this.currentUser.id);
-        formData.append("image", this.picture);
+        if (this.picture) {
+          formData.append("image", this.picture);
+        }
         console.log(formData);
         const response = await axios.post(
           HTTP_PREFIX + "api/v1/post/Item/new",
@@ -150,7 +156,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .postForm {
   padding: 20px;
   border: 1px solid #ccc;

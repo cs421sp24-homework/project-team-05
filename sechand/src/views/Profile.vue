@@ -107,6 +107,7 @@ export default {
             show_mobile: "",
             show_visible: null,
             show_image: null,
+            new_image: false,
             state: 0,
             currentUser: JSON.parse(localStorage.getItem('user'))
         }
@@ -145,7 +146,9 @@ export default {
                 formData.append("address", this.show_addr);
                 formData.append("phone", this.show_mobile);
                 formData.append("is_visible", this.show_visible);
-                formData.append("image", this.show_image);
+                // console.log("new image", this.show_image);
+                // console.log("original image", this.image);
+                if (this.new_image) formData.append("image", this.show_image);
                 axios.patch(HTTP_PREFIX + 'user/profile/update', formData)
                     .then(response => {
                         console.log(response.data);
@@ -173,6 +176,7 @@ export default {
         },
 
         changeImage(data) {
+            this.new_image = true;
             this.show_image = data;
         },
 

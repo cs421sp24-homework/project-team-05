@@ -5,7 +5,7 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 import '@popperjs/core'
-// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 const HTTP_PREFIX = import.meta.env.VITE_HOST;

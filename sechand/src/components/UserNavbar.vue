@@ -32,15 +32,13 @@ export default {
   components: {
     Button,
   },
-  // data() {
-  //   return {
-  //     currentUser: JSON.parse(localStorage.getItem('user'))
-  //   };
-  // },
   created() {
     console.log("UserNavbar", this.currentUser);
   },
   methods: {
+    chat() {
+      this.$router.push("/chat");
+    },
     profile() {
       this.$router.push("/me");
     },

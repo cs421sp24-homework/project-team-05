@@ -30,20 +30,15 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
     
     def get_user(self, obj):
         user = self.context['request'].user
-        if str(user.id) == obj.users[0]:
+        # print("user, user0, user1", user.id, obj.users[0], obj.users[1])
+        # print("user = user0", str(user.id) == obj.users[0])
+        # print("user = user1", str(user.id) == obj.users[1])
+        if str(user.id) == str(obj.users[0]):
             other_user = CustomUser.objects.get(id=obj.users[1])
         else:
             other_user = CustomUser.objects.get(id=obj.users[0])
         return CustomUserSerializerSimple(other_user).data
 
-    # def get_name(self, obj):
-    #     user = self.context['request'].user
-    #     if str(user.id) == obj.users[0]:
-    #         other_user = CustomUser.objects.get(id=obj.users[1])
-    #     else:
-    #         other_user = CustomUser.objects.get(id=obj.users[0])
-    #     return other_user.displayname
-    
     def get_messages(self, obj):
         messages = Message.objects.filter(room=obj.id).order_by('timestamp')
         return MessageSerializer(messages, many=True).data

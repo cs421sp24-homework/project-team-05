@@ -15,7 +15,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
-                    <img src="/comment.png" id="chat" @click="chat" />
+                    <img v-if="!isCurrentUserSeller" src="/comment.png" id="chat" @click="chat" />
                 </p>
 
                 <!-- Description -->
@@ -24,7 +24,8 @@
                     <p>{{ item.description }}</p>
                 </div>
                 <Button id="editBtn" v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
-                <Button id="cllBtn" v-if="!isitemCollected" @click="collectItem" text="Collect" color="lightgreen"></Button>
+                <Button id="cllBtn" v-if="!isitemCollected" @click="collectItem" text="Collect"
+                    color="lightgreen"></Button>
                 <Button v-if="isitemCollected" @click="unCollectItem" text="Collected" color="orange"></Button>
             </div>
         </div>
@@ -58,6 +59,10 @@ export default {
         Navbar
     },
     methods: {
+        chat() {
+            // console.log("Chatting with seller", this.item.seller);
+            this.$router.push({ name: 'DirectChat', params: { receiver: this.item.seller } });
+        },
         userStateChange() {
             this.$emit("userStateChange", {});
         },
@@ -100,11 +105,12 @@ export default {
         } catch (error) {
             console.error(error);
         }
-        // console.log(this.id);
-        // console.log(this.currentUser.id);
-        // if (this.currentUser) {
-        //         this.isCurrentUserSeller = this.currentUser.id === this.item.seller;
-        // }
+
+        if (this.currentUser) {
+            if (this.currentUser.id === this.item.seller) {
+                this.isCurrentUserSeller = true;
+            }
+        }
         // get if item in collection
         // try {
         //     const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
@@ -114,8 +120,8 @@ export default {
         //     console.error(error);
         // }
     },
-    computed:{
-        isCurrentUserSeller(){
+    computed: {
+        isCurrentUserSeller() {
             return this.currentUser.id === this.item.seller;
         }
     }
@@ -123,6 +129,11 @@ export default {
 </script>
 
 <style scoped>
+.container {
+    margin-top: 12vh;
+    margin-left: 5vw;
+}
+
 .item-detail {
     display: flex;
     justify-content: space-between;
