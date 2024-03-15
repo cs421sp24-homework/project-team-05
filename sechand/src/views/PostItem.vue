@@ -157,6 +157,10 @@ export default {
 };
 </script>
 <style scoped>
+.container {
+  padding-top: 12vh;
+}
+
 .postForm {
   padding: 20px;
   border: 1px solid #ccc;

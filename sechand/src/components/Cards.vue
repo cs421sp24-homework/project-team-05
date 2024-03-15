@@ -23,7 +23,7 @@ export default {
       if (number === undefined)
         return this.cards;
       if (number <= this.cards.length)
-        return this.cards.slice(0, number);
+        return this.cards.slice(-number,);
       else
         return this.cards;
     },

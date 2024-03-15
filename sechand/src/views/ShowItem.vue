@@ -130,7 +130,6 @@ export default {
                     Authorization: `Bearer ${accessToken}`,
                 },
             });
-            console.log("collect", response.data.collected);
             this.isitemCollected = response.data.collected;
         } catch (error) {
             console.error(error);
