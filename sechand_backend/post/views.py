@@ -140,27 +140,27 @@ def CreateNewItem(request):
 @permission_classes([AllowAny])
 def SearchItems(request):
     desc_text = request.POST.get('desc_text', '')
-    lowest_price = request.POST.get('lowest_price', -1)
-    highest_price = request.POST.get('highest_price', -1)
-    category = request.POST.get('category', '')  
-    location = request.POST.getlist('location', [])  # location could be list
+    lowest_price = float(request.POST.get('lowest_price', -1))
+    highest_price = float(request.POST.get('highest_price', -1))
+    category = request.data['category']
+    location = request.POST.getlist('location')  # location could be list
     distance = float(request.POST.get('distance', -1))  # should be in miles  
 
-    print(desc_text, "low", lowest_price, "high", highest_price, "cat", category)
+    print("Search items based on desc: ", desc_text, ",low price: ", lowest_price, ", high price: ", highest_price, ", catgory: ", category)
 
     query = Q()
 
     if desc_text:
         query &= (Q(name__icontains=desc_text) | Q(description__icontains=desc_text))
     
-    if lowest_price:
-        print("filter", lowest_price)
+    if lowest_price >= 0:
+        # print("filter", lowest_price)
         query &= Q(price__gte=lowest_price)
     
-    if highest_price:
+    if highest_price >= 0:
         query &= Q(price__lte=highest_price)
     
-    if category:
+    if category != 'all':
         query &= Q(category__exact=category)
     
     if location:
