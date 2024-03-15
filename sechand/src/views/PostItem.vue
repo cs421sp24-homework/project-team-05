@@ -9,7 +9,7 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <form class="postForm" @submit.prevent="submitForm">
+          <form class="postForm" id="form" @submit.prevent="submitForm">
             <!-- Item Name -->
             <div class="mb-3">
               <label for="itemName" class="form-label">Item Name</label>
@@ -57,7 +57,7 @@
               <button type="button" class="btn btn-secondary me-2" @click="cancel">
                 Cancel
               </button>
-              <button type="submit" class="btn btn-primary">Post</button>
+              <button id="postBtn" type="submit" class="btn btn-primary">Post</button>
             </div>
           </form>
         </div>

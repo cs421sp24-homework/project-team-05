@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar v-if="currentUser" />
+        <UserNavbar v-if="currentUser" :currentUser="this.currentUser" @userLogout="userStateChange" />
         <Navbar v-else />
         <div class="item-detail container">
             <!-- Left side: Image -->
@@ -15,7 +15,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
-                    <img src="/comment.png" id="chat" @click="chat" />
+                    <img v-if="!isCurrentUserSeller" src="/comment.png" id="chat" @click="chat" />
                 </p>
 
                 <!-- Description -->
@@ -23,8 +23,9 @@
                     <h5>Description:</h5>
                     <p>{{ item.description }}</p>
                 </div>
-                <Button v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
-                <Button v-if="!isitemCollected" @click="collectItem" text="Collect" color="lightgreen"></Button>
+                <Button id="editBtn" v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
+                <Button id="cllBtn" v-if="!isitemCollected" @click="collectItem" text="Collect"
+                    color="lightgreen"></Button>
                 <Button v-if="isitemCollected" @click="unCollectItem" text="Collected" color="orange"></Button>
             </div>
         </div>
@@ -40,16 +41,16 @@ export default {
 
     name: "ShowItem",
     props: {
-        logined: Boolean
+        currentUser: Object,
     },
     data() {
         return {
-            isCurrentUserSeller: false,
+            // isCurrentUserSeller: true,
             isitemCollected: false,
             isLoading: false,
             item: {},
             id: null,
-            currentUser: JSON.parse(localStorage.getItem('user'))
+            // currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     components: {
@@ -58,7 +59,9 @@ export default {
         Navbar
     },
     methods: {
-
+        userStateChange() {
+            this.$emit("userStateChange", {});
+        },
         editItem() {
             this.$router.push({ name: 'EditItem', params: { id: this.id } });
         },
@@ -98,8 +101,7 @@ export default {
         } catch (error) {
             console.error(error);
         }
-        // console.log(this.id);
-        // console.log(this.currentUser.id);
+
         if (this.currentUser) {
             if (this.currentUser.id === this.item.seller) {
                 this.isCurrentUserSeller = true;
@@ -114,6 +116,11 @@ export default {
         //     console.error(error);
         // }
     },
+    computed: {
+        isCurrentUserSeller() {
+            return this.currentUser.id === this.item.seller;
+        }
+    }
 };
 </script>
 
@@ -150,5 +157,19 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#chat {
+    width: 30px;
+    height: 30px;
+    float: right;
+    cursor: pointer;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 </style>

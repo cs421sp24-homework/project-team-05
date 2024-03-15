@@ -3,13 +3,13 @@
     <input class="form-control me-2" type="search" placeholder="Search for anything" aria-label="Search"
       v-model="searchinput" />
     <select class="form-select" id="Category" v-model="category">
-      <option value="" disabled selected hidden>Category</option>
-      <option value="">All Category</option>
+      <option value="all" selected>All Category</option>
+      <!-- <option value="all">All Category</option> -->
       <option v-for="(value, index) in this.categories" :key="index" :value="value">
         {{ value }}
       </option>
     </select>
-    <Button @btn-click="onClick()" text="Search" id="search"></Button>
+    <Button @btn-click="onClick()" text="Search" id="searchbtn"></Button>
   </form>
 </template>
 <script>
@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      category: "",
+      category: "all",
       searchinput: "",
     };
   },
@@ -41,14 +41,15 @@ export default {
   margin-left: 0px;
 }
 
-#search {
+#searchbtn {
   border: 1px solid #00cc66;
   margin-left: 10px;
   height: 5vh;
 }
 
-#search:hover {
-  background-color: #09562f;
+#searchbtn:hover {
+  background-color: #01361b;
   color: white;
+  opacity: 1;
 }
 </style>

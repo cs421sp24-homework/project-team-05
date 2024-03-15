@@ -9,13 +9,13 @@
           <img src="/comment.png" id="chat" @click="chat" />
         </div>
         <div class="nav-item">
-          <img :src="currentUser.image" class="user-icon" @click="profile" />
+          <img :src="this.currentUser.image" class="user-icon" @click="profile" />
         </div>
         <div class="nav-item">
           <Button @btn-click="profile" :text="currentUser.displayname" color="transparent"></Button>
         </div>
         <div class="nav-item">
-          <Button class="logout-btn" @btn-click="logout" text="Logout" color="danger"></Button>
+          <Button class="logout-btn" id="logoutBtn" @btn-click="logout" text="Logout" color="danger"></Button>
         </div>
       </div>
     </div>
@@ -26,40 +26,40 @@
 import Button from "./Button.vue";
 export default {
   name: "UserNavbar",
-  // props: {
-  //   currentUser: Object,
-  // },
+  props: {
+    currentUser: Object,
+  },
   components: {
     Button,
   },
-  data() {
-    return {
-      currentUser: JSON.parse(localStorage.getItem('user'))
-    };
+  // data() {
+  //   return {
+  //     currentUser: JSON.parse(localStorage.getItem('user'))
+  //   };
+  // },
+  created() {
+    console.log("UserNavbar", this.currentUser);
   },
   methods: {
     profile() {
       this.$router.push("/me");
     },
     goToHome() {
-      this.$router.push("/userhome");
+      this.$router.push("/");
     },
     logout() {
       localStorage.clear(); // Clear all storage
       this.$emit("userLogout", {});
-      this.$router.replace({ name: 'Home' });
+      console.log("logout", this.currentUser);
+      this.$router.push("/");
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
 .navbar {
   background-color: #98a497;
-  /* padding-top: 15px; */
-  /* Increase top padding */
-  /* padding-bottom: 20px; */
-  /* Increase bottom padding */
 }
 
 .navbar-elements {
@@ -114,7 +114,6 @@ export default {
 #chat {
   width: 30px;
   height: 30px;
-
   cursor: pointer;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar />
+        <UserNavbar :currentUser="this.currentUser" @userLogout="userStateChange" />
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -9,7 +9,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <form @submit.prevent="submitForm">
+                    <form id="form" @submit.prevent="submitForm">
                         <!-- Item Name -->
                         <div class="mb-3">
                             <label for="itemName" class="form-label">Item Name</label>
@@ -71,12 +71,15 @@
         </div>
     </div>
 </template>
-    
+
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 export default {
     name: "EditItem",
+    props: {
+        currentUser: Object,
+    },
     components: {
         UserNavbar,
     },
@@ -102,6 +105,9 @@ export default {
         }
     },
     methods: {
+        userStateChange() {
+            this.$emit("userStateChange", {});
+        },
         handleFileUpload(event) {
             this.picture = event.target.files[0];
             this.pictureUrl = URL.createObjectURL(this.picture);
@@ -171,4 +177,3 @@ export default {
     cursor: pointer;
 }
 </style>
-    
