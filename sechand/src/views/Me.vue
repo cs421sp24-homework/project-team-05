@@ -2,67 +2,67 @@
   <div>
     <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
     <div class="contain">
-      <div class="row">
-        <div class="col-12">
-          <h1>My Profile</h1>
-        </div>
-      </div>
-      <!-- User profile information -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="d-flex align-items-center">
-            <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
-              style="width: 150px; height: 150px; border-radius: 50%" />
-            <div>
-              <p class="mb-1 font-large-vh font-large-vw profile-name">
-                {{ this.currentUser.displayname }}
-              </p>
-              <!-- Increase font size -->
-              <p class="mb-0 font-large-vh font-large-vw profile-address">
-                {{ this.currentUser.address.name }}
-              </p>
-              <!-- Increase font size -->
+      <div class="left">
+        <div class="row">
+          <div class="row">
+            <div class="col-6">
+              <h2>My Items</h2>
+            </div>
+            <div class="col-6 text-end">
+              <Button class="new-post-btn" text="New Post" color="green" @click="newPost"></Button>
             </div>
           </div>
-          <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
-          </Button>
-        </div>
-      </div>
-      <!-- Segment -->
-      <div class="row">
-        <div class="col-12">
-          <hr class="segment" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="row">
-          <div class="col-6">
-            <h2>My Items</h2>
-          </div>
-          <div class="col-6 text-end">
-            <Button class="new-post-btn" text="New Post" color="green" @click="newPost"></Button>
-          </div>
-        </div>
 
-        <div class="card-container">
-          <Cards :cards="postCardsData" @item-detail="handleItemDetail" />
-        </div>
-      </div>
-
-      <!-- Segment -->
-      <div class="row">
-        <div class="col-12">
-          <hr class="segment" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <h2>Order History</h2>
           <div class="card-container">
-            <Cards :cards="historyCardsData" @item-detail="handleItemDetail" />
+            <Cards :cards="postCardsData" @item-detail="handleItemDetail" />
+          </div>
+        </div>
+
+        <!-- Segment -->
+        <div class="row">
+          <div class="col-12">
+            <hr class="segment" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h2>Order History</h2>
+            <div class="card-container">
+              <Cards :cards="historyCardsData" @item-detail="handleItemDetail" />
+            </div>
           </div>
         </div>
       </div>
+      <div class="line"></div>
+      <div class="right">
+        <div class="row">
+          <div class="col-12">
+            <h1>My Profile</h1>
+          </div>
+        </div>
+        <!-- User profile information -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="d-flex align-items-center">
+              <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
+                style="width: 150px; height: 150px; border-radius: 50%" />
+              <div>
+                <p class="mb-1 font-large-vh font-large-vw profile-name">
+                  {{ this.currentUser.displayname }}
+                </p>
+                <!-- Increase font size -->
+                <p class="mb-0 font-large-vh font-large-vw profile-address">
+                  {{ this.currentUser.address.name }}
+                </p>
+                <!-- Increase font size -->
+              </div>
+            </div>
+            <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
+            </Button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -144,6 +144,18 @@ export default {
   margin-left: 5vw;
 }
 
+.left {
+  width: 80%;
+  height: 100vh;
+  float: left;
+}
+
+.right {
+  width: 20%;
+  height: 100vh;
+  float: right;
+}
+
 .profile-image {
   width: 100px;
   height: 100px;
@@ -201,5 +213,13 @@ export default {
 .card {
   display: inline-block;
   margin-right: 10px;
+}
+
+.line {
+  width: 1px;
+  height: 100px;
+  /* Adjust height as needed */
+  background-color: #000;
+  /* Adjust color as needed */
 }
 </style>
