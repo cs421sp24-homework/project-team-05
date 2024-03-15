@@ -147,7 +147,7 @@ def SearchItems(request):
     distance = float(request.POST.get('distance', -1))  # should be in miles  
 
     print("Search items based on desc: ", desc_text, ",low price: ", lowest_price, ", high price: ", highest_price, ", catgory: ", category)
-
+    print("location: ", location, ", distance: ", distance)
     query = Q()
 
     if desc_text:

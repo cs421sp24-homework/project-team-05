@@ -3,8 +3,8 @@
     <input class="form-control me-2" type="search" placeholder="Search for anything" aria-label="Search"
       v-model="searchinput" />
     <select class="form-select" id="Category" v-model="category">
-      <option value="" disabled selected hidden>Category</option>
-      <option value="all">All Category</option>
+      <option value="all" selected>All Category</option>
+      <!-- <option value="all">All Category</option> -->
       <option v-for="(value, index) in this.categories" :key="index" :value="value">
         {{ value }}
       </option>
@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      category: "",
+      category: "all",
       searchinput: "",
     };
   },

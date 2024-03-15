@@ -33,9 +33,9 @@
               </div>
             </div>
           </div>
-          <div class="col-9 text-end">
-            <Button @btn-click="applyFilter" text="Apply" color="lightblue" id="apply"></Button>
-          </div>
+          <!-- <div class="col-9 text-end">
+            <Button @btn-click="search" text="Apply" color="lightblue" id="apply"></Button>
+          </div> -->
         </div>
         <Cards :cards="cardsData" />
       </div>
@@ -74,11 +74,13 @@ export default {
       distanceList: ["< 1mile", "< 3mile", "< 5miles", "< 10miles"],
       isLoading: false,
       cardsData: [],
+      input: "",
+      cate: "",
       filters: { locations: [], distance: [], min: "-1", max: "-1" },
     };
   },
   async created() {
-    console.log("logined", this.currentUser);
+    console.log("logined", this.addrList);
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
     try {
       if (this.currentUser) {
@@ -112,7 +114,7 @@ export default {
         formData.append("highest_price", this.filters.max);
         const loc_array = this.filters.locations
         loc_array.forEach((item, index) => {
-          formData.append("locations", item);
+          formData.append("location", item);
         });
         const response = await axios.post(
           HTTP_PREFIX + "api/v1/post/Items/Search",
