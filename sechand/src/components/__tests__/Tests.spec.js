@@ -264,7 +264,7 @@ describe("End-to-end Test", () => {
     });
 
     it("Click Send Button", async () => {
-        wrapper.find("#chat").trigger("click");
+        wrapper.find("#sendBtn").trigger("click");
         await new Promise((resolve) => setTimeout(resolve, 200));
         const msgin = wrapper.find("#input-box");
         expect(msgin.element.value).not.toContain("E2E msg");
