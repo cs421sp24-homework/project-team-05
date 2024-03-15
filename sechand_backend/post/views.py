@@ -139,16 +139,14 @@ def CreateNewItem(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def SearchItems(request):
-
-    desc_text = request.POST.get('desc_text','')
-    lowest_price = request.POST.get('lowest_price',-1)
-    highest_price = request.POST.get('highest_price',-1)
+    desc_text = request.POST.get('desc_text', '')
+    lowest_price = float(request.POST.get('lowest_price', -1))
+    highest_price = float(request.POST.get('highest_price', -1))
     category = request.data['category']
-    location = request.POST.getlist('locations')
-    print(category)
-    distance = float(request.POST.get('distance', -1))  # should be in miles
-    
+    location = request.POST.getlist('location')  # location could be list
+    distance = float(request.POST.get('distance', -1))  # should be in miles  
 
+    print("Search items based on desc: ", desc_text, ",low price: ", lowest_price, ", high price: ", highest_price, ", catgory: ", category)
 
     query = Q()
 
@@ -156,14 +154,13 @@ def SearchItems(request):
         query &= (Q(name__icontains=desc_text) | Q(description__icontains=desc_text))
     
     if lowest_price >= 0:
-        print("filter", lowest_price)
+        # print("filter", lowest_price)
         query &= Q(price__gte=lowest_price)
     
     if highest_price >= 0:
         query &= Q(price__lte=highest_price)
     
-    if category:
-        print("category", category)
+    if category != 'all':
         query &= Q(category__exact=category)
     
     if location:
