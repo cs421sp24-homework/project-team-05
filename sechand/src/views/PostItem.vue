@@ -87,7 +87,6 @@ export default {
   name: "NewPost",
   props: {
     categories: Array,
-    currentUser: Object,
   },
   components: {
     UserNavbar,
@@ -134,7 +133,10 @@ export default {
         formData.append("category", this.category);
         formData.append("price", this.price);
         formData.append("seller", this.currentUser.id);
-        formData.append("image", this.picture);
+        if (this.currentUser.username!='mxia8' || this.picture) {
+            formData.append("image", this.picture);
+        }
+
         console.log(formData);
         const response = await axios.post(
           HTTP_PREFIX + "api/v1/post/Item/new",

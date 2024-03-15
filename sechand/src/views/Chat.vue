@@ -17,7 +17,7 @@
                         </div>
                         <div class="left-info">
                             <div class="d-flex">
-                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.4vw;">{{
+                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.2vw;">{{
         item.user.displayname }}</h5>
                                 <small style="font-size: 0.7vw;" id="time" v-if="item.last_message">{{
         item.last_message.timestamp }}</small>

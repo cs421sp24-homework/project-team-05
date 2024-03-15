@@ -53,7 +53,7 @@
                                 Cancel
                             </button>
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="submit" class="btn btn-danger me-2" @click="deleteItem">
+                            <button type="submit" class="btn btn-danger me-2" id="dltBtn" @click="deleteItem">
                                 Delete
                             </button>
                         </div>

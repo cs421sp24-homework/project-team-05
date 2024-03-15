@@ -80,7 +80,7 @@ export default {
     };
   },
   async created() {
-    console.log("logined", this.addrList);
+    console.log("HOME: ", this.currentUser);
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
     try {
       if (this.currentUser) {

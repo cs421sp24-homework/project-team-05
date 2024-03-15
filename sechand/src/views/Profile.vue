@@ -1,5 +1,5 @@
 <template>
-    <UserNavbar :currentUser="this.currentUser" @userLogout="userStateChange" />
+    <UserNavbar :currentUser="this.currentUser" @userLogout="userStateChange" :id="this.uname"/>
     <div class="contain">
 
 
@@ -22,7 +22,7 @@
                     <div class="mb-3">
                         <label class="form-label" style="text-align: left; margin-top: 3.5vh">Nick Name</label>
                         <input type="text" class="form-control" placeholder="Enter your nick name" @input="initState"
-                            :disabled="!isEditting" v-model="show_uname" />
+                            :disabled="!isEditting" v-model="show_uname" id="nickname"/>
                         <div class="form-text" style="font-size: 0.7vw;"
                             :style="{ visibility: isEditting ? 'visible' : 'hidden' }">
                             Your nick name must be 4-16 characters long.
@@ -69,16 +69,16 @@
 
 
             <div style="color: red; font-size: 0.9vw; text-align: center;">
-                <div :style="{ visibility: state > 0 ? 'visible' : 'hidden' }">{{ err_text }}</div>
+                <div :style="{ visibility: state > 0 ? 'visible' : 'hidden' }">{{ err_text[state] }}</div>
             </div>
 
             <div style="text-align: center; margin-top: 3%;">
                 <button v-if="!isEditting" class="btn btn-secondary" style="margin-right:15%; width: 20%;"
-                    @click="goBack">Back</button>
-                <button v-if="!isEditting" class="btn btn-primary" style="width: 20%;" @click="toEdit">Edit</button>
+                    @click="goBack" id="backBtn">Back</button>
+                <button v-if="!isEditting" class="btn btn-primary" style="width: 20%;" @click="toEdit" id="editBtn">Edit</button>
                 <button v-if="isEditting" class="btn btn-secondary" style="margin-right:15%; width: 20%;"
                     @click="exitCancel">Cancel</button>
-                <button v-if="isEditting" class="btn btn-primary" style="width: 20%;" @click="toSave">Save</button>
+                <button v-if="isEditting" class="btn btn-primary" style="width: 20%;" @click="toSave" id="saveBtn">Save</button>
             </div>
         </div>
     </div>
@@ -109,17 +109,9 @@ export default {
             show_image: null,
             new_image: false,
             state: 0,
-            currentUser: JSON.parse(localStorage.getItem('user'))
+            currentUser: JSON.parse(localStorage.getItem('user')),
+            err_text: ["no msg", "Invalid length of nick name!", "Invalid US mobile number!","Unexpected error. Please try again later."]
         }
-    },
-
-    computed: {
-        err_text() {
-            if (this.state == 1) return "Invalid length of nick name!";
-            else if (this.state == 2) return "Invalid US mobile number!";
-            else if (this.state == 3) return "Unexpected error. Please try again later.";
-            return "no msg";
-        },
     },
 
     methods: {
@@ -153,12 +145,14 @@ export default {
                     .then(response => {
                         console.log(response.data);
                         localStorage.setItem('user', JSON.stringify(response.data));
+                        this.currentUser = JSON.parse(localStorage.getItem('user'));
                         this.visible = this.show_visible;
                         this.mobile = this.show_mobile;
                         this.uname = this.show_uname;
                         this.addr = this.show_addr;
                         this.image = this.show_image;
                         this.isEditting = false;
+                        this.$emit("updateUser", {});
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
@@ -188,7 +182,7 @@ export default {
             this.state = 0;
         },
         goBack() {
-            this.$router.go(-1);
+            this.$router.push('/me');
         }
     },
 

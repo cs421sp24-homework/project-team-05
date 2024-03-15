@@ -14,7 +14,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      currentUser: JSON.parse(localStorage.getItem("user")),
+      currentUser: null,
       user: null,
       token: null,
       addrList: [],
@@ -40,16 +40,17 @@ export default {
 
   methods: {
     updateUser(data) {
-      this.user = data;
       this.currentUser = JSON.parse(localStorage.getItem("user"));
       console.log("updatedUser", this.user);
     },
     userStateChange() {
       this.currentUser = JSON.parse(localStorage.getItem("user"));
+      console.log("APP",this.currentUser);
     },
   },
 
   async mounted() {
+    this.currentUser = JSON.parse(localStorage.getItem("user"));
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
     await axios
       // another get to get category
