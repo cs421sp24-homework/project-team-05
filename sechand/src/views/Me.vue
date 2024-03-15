@@ -35,32 +35,19 @@
       </div>
       <div class="line"></div>
       <div class="right">
-        <div class="row">
-          <div class="col-12">
-            <h1>My Profile</h1>
-          </div>
-        </div>
         <!-- User profile information -->
-        <div class="row mb-3">
-          <div class="col-12">
-            <div class="d-flex align-items-center">
-              <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
-                style="width: 150px; height: 150px; border-radius: 50%" />
-              <div>
-                <p class="mb-1 font-large-vh font-large-vw profile-name">
-                  {{ this.currentUser.displayname }}
-                </p>
-                <!-- Increase font size -->
-                <p class="mb-0 font-large-vh font-large-vw profile-address">
-                  {{ this.currentUser.address.name }}
-                </p>
-                <!-- Increase font size -->
-              </div>
-            </div>
-            <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
-            </Button>
-          </div>
-        </div>
+        <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
+          style="width: 150px; height: 150px; border-radius: 50%" />
+        <p class="mb-1 font-large-vh font-large-vw profile-name">
+          {{ this.currentUser.displayname }}
+        </p>
+        <!-- Increase font size -->
+        <p class="mb-0 font-large-vh font-large-vw profile-address">
+          {{ this.currentUser.address.name }}
+        </p>
+        <!-- Increase font size -->
+        <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
+        </Button>
       </div>
 
     </div>
@@ -145,21 +132,27 @@ export default {
 }
 
 .left {
-  width: 80%;
+  width: 74vw;
   height: 100vh;
   float: left;
 }
 
 .right {
-  width: 20%;
+  width: 19vw;
   height: 100vh;
   float: right;
+  /* justify-content: center; */
+  flex-direction: column;
+  align-items: center;
+  display: flex;
 }
 
 .profile-image {
+
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  margin-bottom: 2vh;
 }
 
 .profile-name {
@@ -217,9 +210,14 @@ export default {
 
 .line {
   width: 1px;
-  height: 100px;
+  height: 100vh;
   /* Adjust height as needed */
-  background-color: #000;
+  background-color: #bdbdbd;
+  position: absolute;
+  /* Position the line */
+  top: 0;
+  bottom: 0;
+  margin-left: 75vw;
   /* Adjust color as needed */
 }
 </style>

@@ -35,7 +35,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 #Category {
   width: 30%;
   margin-left: 0px;

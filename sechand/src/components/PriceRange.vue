@@ -2,22 +2,12 @@
   <div class="price-range-container">
     <div class="input-with-dollar">
       <span>$</span>
-      <input
-        type="number"
-        v-model="this.min"
-        placeholder="MIN"
-        @input="emitValues"
-      />
+      <input type="number" v-model="this.min" placeholder="MIN" @input="emitValues" />
     </div>
     <span class="dash">-</span>
     <div class="input-with-dollar">
       <span>$</span>
-      <input
-        type="number"
-        v-model="this.max"
-        placeholder="MAX"
-        @input="emitValues"
-      />
+      <input type="number" v-model="this.max" placeholder="MAX" @input="emitValues" />
     </div>
   </div>
 </template>
@@ -37,7 +27,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .price-range-container {
   display: flex;
   align-items: center;
@@ -45,6 +35,7 @@ export default {
   padding: 10px;
   border-radius: 8px;
 }
+
 .input-with-dollar {
   position: relative;
   margin-right: 10px;
@@ -60,11 +51,15 @@ export default {
 
 .input-with-dollar input {
   width: 100px;
-  padding-left: 20px; /* Adjust as needed */
+  padding-left: 20px;
+  /* Adjust as needed */
   border-radius: 4px;
 }
+
 .dash {
-  color: rgb(247, 247, 247); /* Change the color of the dash */
-  margin-right: 5px; /* Add some margin for spacing */
+  color: rgb(247, 247, 247);
+  /* Change the color of the dash */
+  margin-right: 5px;
+  /* Add some margin for spacing */
 }
 </style>

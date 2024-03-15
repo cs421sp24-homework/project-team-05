@@ -59,6 +59,10 @@ export default {
         Navbar
     },
     methods: {
+        chat() {
+            console.log("Chatting with seller", this.item.seller);
+            this.$router.push({ name: 'Chat', params: { receiver: this.item.seller } });
+        },
         userStateChange() {
             this.$emit("userStateChange", {});
         },
@@ -125,6 +129,11 @@ export default {
 </script>
 
 <style scoped>
+.container {
+    margin-top: 12vh;
+    margin-left: 5vw;
+}
+
 .item-detail {
     display: flex;
     justify-content: space-between;

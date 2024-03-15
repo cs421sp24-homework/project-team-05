@@ -154,7 +154,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .postForm {
   padding: 20px;
   border: 1px solid #ccc;

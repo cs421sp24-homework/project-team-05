@@ -30,7 +30,7 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
     
     def get_user(self, obj):
         user = self.context['request'].user
-        if str(user.id) == obj.users[0]:
+        if user.id == obj.users[0]:
             other_user = CustomUser.objects.get(id=obj.users[1])
         else:
             other_user = CustomUser.objects.get(id=obj.users[0])

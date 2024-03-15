@@ -78,7 +78,8 @@ export default {
             active_chat: null,
             active_roomId: null,
             newMessage: "",
-            home_user: null
+            home_user: null,
+            // receiver: null,
         }
     },
     props: {
@@ -144,13 +145,15 @@ export default {
     async created() {
         this.home_user = JSON.parse(localStorage.getItem('user'));
         // console.log(this.home_user);
-        this.receiver = this.$route.params.receiver;
+        console.log('receiver', this.$route.params);
+        const receiver = this.$route.params.receiver;
+
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
 
         try {
             const accessToken = localStorage.getItem('access_token');
-            if (this.receiver) {
-                const response = await axios.get(HTTP_PREFIX + `api/v1/chat/Conversation/list/${this.receiver}`, {
+            if (receiver) {
+                const response = await axios.get(HTTP_PREFIX + `api/v1/chat/Conversation/list/${receiver}`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
