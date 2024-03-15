@@ -48,10 +48,11 @@ def GetAllItems(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def AddNewCollection(request):
+def AddNewCollection(request,item_id):
     if(request.user):
         #TODO: validate user token again
-        serializer = CollectionSerializer(data=request.data)
+        collection_data = {"user": request.user.id, "item": item_id}
+        serializer = CollectionSerializer(data=collection_data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
@@ -65,25 +66,25 @@ def AddNewCollection(request):
 def GetUserCollection(request):
     if(request.user):
         #TODO: validate user token again
-        user_id = request.user.id
-        # user_id = request.data['id']      # enable this disable above for postman
-        collections = UserCollection.objects.filter(user = user_id)
-        if collections.exists():
-            serializer = CollectionDeserializer(collections, many=True)
-            return JsonResponse(serializer.data, safe=False, status=200)
-        else:
-            return JsonResponse({}, status=200)
+        try:
+            user_id = request.user.id
+            collections = UserCollection.objects.filter(user = user_id)
+            item_ids =[collection.item for collection in collections]
+            items = Item.objects.filter(id__in=item_ids)
+            serializer = ItemSerializerWithSellerName(items, many=True)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        except Exception as e:
+            return JsonResponse({},status=status.HTTP_200_OK)
     else:
        return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
 
 @api_view(['DELETE'])
 @permission_classes([AllowAny])
-def DeleteUserCollection(request):
+def DeleteUserCollection(request,item_id):
     if(request.user):
         #TODO: validate user token again
         user_id = request.user.id
         # user_id = request.data['user_id']
-        item_id = request.data['item_id']
         try:
             item = UserCollection.objects.get(user = user_id, item=item_id)
             item.delete()
@@ -95,12 +96,11 @@ def DeleteUserCollection(request):
     
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def IsUserCollected(request):
+def IsUserCollected(request, item_id):
     if(request.user):
         #TODO: validate user token again
         user_id = request.user.id
         # user_id = request.data['user_id']      # enable this disable above for postman
-        item_id = request.data['item_id']
         try:
             item = UserCollection.objects.get(user = user_id, item=item_id)
             return JsonResponse({'collected': True}, status=status.HTTP_200_OK)

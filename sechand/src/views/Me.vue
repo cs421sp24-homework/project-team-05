@@ -116,6 +116,7 @@ export default {
           },
         }
       );
+      console.log("postCardsData", response.data);
       this.postCardsData = response.data;
     } catch (error) {
       console.error(error);
@@ -143,6 +144,7 @@ export default {
         },
       });
       this.collectionCardsData = response.data;
+      console.log("collectionCardsData", response.data);
     } catch (error) {
       console.error(error);
     }
