@@ -2,7 +2,7 @@
     <div :class="{ 'blurred': isResetting }" style="user-select: none;">
         <div id="left">
             <h1 id="title" @click="toHome">SecHand</h1>
-            <img id="logo" src="../assets/logo_temp.svg" />
+            <img id="logo" src="\icon.png" />
             <h2 id="slogan"> {This is a slogan This is a slogan This is a slogan This is a slogan} </h2>
         </div>
 
