@@ -63,17 +63,17 @@ def AddNewCollection(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def GetUserCollection(request):
-    # if(request.user):
+    if(request.user):
         #TODO: validate user token again
-        user_id = request.data['id']
+        user_id = request.user.id
         collections = UserCollection.objects.filter(user = user_id)
         if collections.exists():
             serializer = CollectionDeserializer(collections, many=True)
             return JsonResponse(serializer.data, safe=False, status=200)
         else:
             return JsonResponse({}, status=200)
-    # else:
-    #    return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+    else:
+       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([AllowAny])

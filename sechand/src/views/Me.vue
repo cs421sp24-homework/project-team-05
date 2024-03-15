@@ -56,7 +56,7 @@
           </div>
 
           <div class="card-container">
-            <Cards :cards="historyCardsData" :number="3" />
+            <Cards :cards="collectionCardsData" :number="3" />
           </div>
         </div>
       </div>
@@ -101,8 +101,7 @@ export default {
     return {
       postCardsData: [],
       historyCardsData: [],
-      // currentUser: JSON.parse(localStorage.getItem("user")),
-      // imageUrl: ''
+      collectionCardsData: [],
     };
   },
   async created() {
@@ -133,6 +132,17 @@ export default {
         }
       );
       this.historyCardsData = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/Collection", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      this.collectionCardsData = response.data;
     } catch (error) {
       console.error(error);
     }
@@ -237,6 +247,7 @@ export default {
 .card-container {
   overflow-x: auto;
   white-space: wrap;
+  height: 50vh;
 }
 
 .card {
@@ -246,15 +257,12 @@ export default {
 
 .line {
   width: 1px;
-  height: 100vh;
-  /* Adjust height as needed */
+  height: 100%;
   background-color: #bdbdbd;
-  position: absolute;
-  /* Position the line */
+  position: fixed;
   top: 0;
   bottom: 0;
   margin-left: 75vw;
-  /* Adjust color as needed */
 }
 
 .showall {

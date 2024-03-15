@@ -20,7 +20,7 @@
             <div class="mb-3 d-flex align-items-center">
               <label for="uploadPicture" class="form-label me-2">Upload Picture</label>
               <input type="file" id="uploadPicture" accept="image/*" style="display: none" ref="fileInput"
-                @change="handleFileUpload" required />
+                @change="handleFileUpload" />
               <button type="button" class="btn btn-primary" @click="$refs.fileInput.click()">
                 Choose File
               </button>
@@ -134,7 +134,9 @@ export default {
         formData.append("category", this.category);
         formData.append("price", this.price);
         formData.append("seller", this.currentUser.id);
-        formData.append("image", this.picture);
+        if (this.picture) {
+          formData.append("image", this.picture);
+        }
         console.log(formData);
         const response = await axios.post(
           HTTP_PREFIX + "api/v1/post/Item/new",

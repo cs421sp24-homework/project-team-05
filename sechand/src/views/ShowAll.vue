@@ -73,7 +73,7 @@ export default {
             const HTTP_PREFIX = import.meta.env.VITE_HOST;
             try {
                 const accessToken = localStorage.getItem("access_token");
-                const response = await axios.get(HTTP_PREFIX + "api/v1/post/UserItems/all", {
+                const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/Collection", {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
