@@ -124,10 +124,10 @@ export default {
             room.messages.push(message);
             room.last_message = message;
             this.scrollToBottom();
-            if (this.active_chat) {
-                this.active_chat++;
-                this.active_roomId = this.chat_list[this.active_chat].id;
-            }
+            // if (this.active_chat) {
+            //     this.active_chat++;
+            //     this.active_roomId = this.chat_list[this.active_chat].id;
+            // }
         },
         sendMessage() {
             if (this.newMessage.trim() !== '') {

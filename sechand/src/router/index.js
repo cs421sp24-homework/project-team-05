@@ -9,6 +9,7 @@ import Signup from '.././views/Signup.vue'
 import Profile from '.././views/Profile.vue'
 import Empty from '@/views/Empty.vue'
 import Chat from '@/views/Chat.vue'
+import ShowAll from '@/views/ShowAll.vue'
 
 import ChatTest from '../views/ChatTest.vue'; // Import your chat component
 
@@ -84,7 +85,13 @@ const router = createRouter({
       component: Chat,
       name: 'DirectChat',
       meta: { requiresAuth: true }
-    },
+  },
+  {
+    path: '/Me/Showall/:data',
+    component: ShowAll,
+    name: 'ShowAll',
+    meta: { requiresAuth: true }
+},
   ]
 })
 

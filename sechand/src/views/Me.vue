@@ -9,12 +9,14 @@
               <h2>My Items</h2>
             </div>
             <div class="col-6 text-end">
+
               <Button class="new-post-btn" text="New Post" color="green" @click="newPost" id="toPost"></Button>
+              <Button class="showall" text="All Posts" color="transparent" @click="myitems"></Button>
             </div>
           </div>
 
           <div class="card-container">
-            <Cards :cards="postCardsData" @item-detail="handleItemDetail" />
+            <Cards :cards="postCardsData" :number="3" />
           </div>
         </div>
 
@@ -25,11 +27,37 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
-            <h2>Order History</h2>
-            <div class="card-container">
-              <Cards :cards="historyCardsData" @item-detail="handleItemDetail" />
+          <div class="row">
+            <div class="col-6">
+              <h2>Order History</h2>
             </div>
+            <div class="col-6 text-end">
+              <Button class="showall" text="All Order" color="transparent" @click="historys"></Button>
+            </div>
+          </div>
+
+          <div class="card-container">
+            <Cards :cards="historyCardsData" :number="3" />
+          </div>
+        </div>
+        <!-- Segment -->
+        <div class="row">
+          <div class="col-12">
+            <hr class="segment" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="row">
+            <div class="col-6">
+              <h2>Wishlist</h2>
+            </div>
+            <div class="col-6 text-end">
+              <Button class="showall" text="All Wishlist" color="transparent" @click="wishlist"></Button>
+            </div>
+          </div>
+
+          <div class="card-container">
+            <Cards :cards="collectionCardsData" :number="3" />
           </div>
         </div>
       </div>
@@ -74,8 +102,7 @@ export default {
     return {
       postCardsData: [],
       historyCardsData: [],
-      // currentUser: JSON.parse(localStorage.getItem("user")),
-      // imageUrl: ''
+      collectionCardsData: [],
     };
   },
   async created() {
@@ -90,6 +117,7 @@ export default {
           },
         }
       );
+      console.log("postCardsData", response.data);
       this.postCardsData = response.data;
     } catch (error) {
       console.error(error);
@@ -109,8 +137,29 @@ export default {
     } catch (error) {
       console.error(error);
     }
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/Collection", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      this.collectionCardsData = response.data;
+      console.log("collectionCardsData", response.data);
+    } catch (error) {
+      console.error(error);
+    }
   },
   methods: {
+    myitems() {
+      this.$router.push({ name: 'ShowAll', params: { data: "myItems" } });
+    },
+    historys() {
+      this.$router.push({ name: 'ShowAll', params: { data: "history" } });
+    },
+    wishlist() {
+      this.$router.push({ name: 'ShowAll', params: { data: "Wishlist" } });
+    },
     userStateChange() {
       this.$emit("userStateChange", {});
     },
@@ -201,6 +250,7 @@ export default {
 .card-container {
   overflow-x: auto;
   white-space: wrap;
+  height: 50vh;
 }
 
 .card {
@@ -210,14 +260,15 @@ export default {
 
 .line {
   width: 1px;
-  height: 100vh;
-  /* Adjust height as needed */
+  height: 100%;
   background-color: #bdbdbd;
-  position: absolute;
-  /* Position the line */
+  position: fixed;
   top: 0;
   bottom: 0;
   margin-left: 75vw;
-  /* Adjust color as needed */
+}
+
+.showall {
+  text-decoration: underline grey;
 }
 </style>

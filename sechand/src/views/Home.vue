@@ -19,9 +19,11 @@
         <div class="dropdowns-container">
           <Dropdown class="buttons" text="Location" :dropdownData="this.addrList" @update:selected="UpdateLocation">
           </Dropdown>
-          <Dropdown v-if="currentUser" class="buttons" text="Distance" :dropdownData="this.distanceList"
-            @update:selected="UpdateDistance">
-          </Dropdown>
+          <select v-if="currentUser" class="form-select buttons" id="distance" v-model="this.filters.distance">
+            <option value="-1" selected>Distance</option>
+            <option v-for="(value, index) in this.distanceList" :key="index" :value="value">
+              {{ "< " + value + " miles" }} </option>
+          </select>
           <div class="dropdown-center buttons">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
               aria-expanded="false">
@@ -71,12 +73,12 @@ export default {
   data() {
     return {
       All: "all",
-      distanceList: ["< 1mile", "< 3mile", "< 5miles", "< 10miles"],
+      distanceList: ["1", "3", "5", "10"],
       isLoading: false,
       cardsData: [],
       input: "",
       cate: "",
-      filters: { locations: [], distance: [], min: "-1", max: "-1" },
+      filters: { locations: [], distance: "-1", min: "-1", max: "-1" },
     };
   },
   async created() {
@@ -112,6 +114,8 @@ export default {
         formData.append("category", payload.cate);
         formData.append("lowest_price", this.filters.min);
         formData.append("highest_price", this.filters.max);
+        formData.append("distance", this.filters.distance);
+        console.log("search", this.filters.distance)
         const loc_array = this.filters.locations
         loc_array.forEach((item, index) => {
           formData.append("location", item);
@@ -182,10 +186,6 @@ export default {
       this.filters.locations = locations;
       console.log("update location", locations);
     },
-    UpdateDistance(distance) {
-      this.filters.distance = distance;
-      console.log("update distance", distance);
-    },
     UpdateMinMax({ min, max }) {
       this.filters.min = min.toString();
       this.filters.max = max.toString();
@@ -246,5 +246,12 @@ export default {
   margin-left: 10px;
   height: 4.6vh;
   width: 7.5vw;
+}
+
+#distance {
+  width: fit-content;
+  margin-right: 7px;
+  background-color: #6c757d;
+  color: white;
 }
 </style>

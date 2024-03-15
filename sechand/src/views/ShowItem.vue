@@ -46,7 +46,7 @@ export default {
     data() {
         return {
             // isCurrentUserSeller: true,
-            isitemCollected: false,
+            isitemCollected: Boolean,
             isLoading: false,
             item: {},
             id: null,
@@ -70,26 +70,36 @@ export default {
             this.$router.push({ name: 'EditItem', params: { id: this.id } });
         },
         async collectItem() {
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
             console.log("Collecting item");
-            // try {
-            //     const response = await axios.post(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
-            //     console.log(response.data);
-            // } catch (error) {
-            //     console.error(error);
-            // }
-            this.isitemCollected = true;
-            console.log("collect", this.isitemCollected);
+            try {
+                const accessToken = localStorage.getItem("access_token");
+                const response = await axios.post(HTTP_PREFIX + `api/v1/post/Items/Collection/new/${this.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+                this.isitemCollected = true;
+                console.log("collect", this.isitemCollected);
+            } catch (error) {
+                console.error(error);
+            }
         },
-        unCollectItem() {
+        async unCollectItem() {
             console.log("UnCollecting item");
-            // try {
-            //     const response = await axios.delete(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
-            //     console.log(response.data);
-            // } catch (error) {
-            //     console.error(error);
-            // }
-            this.isitemCollected = false;
-            console.log("uncollect", this.isitemCollected);
+            const HTTP_PREFIX = import.meta.env.VITE_HOST;
+            try {
+                const accessToken = localStorage.getItem("access_token");
+                const response = await axios.delete(HTTP_PREFIX + `api/v1/post/Items/Collection/delete/${this.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+                this.isitemCollected = false;
+                console.log("uncollect", this.isitemCollected);
+            } catch (error) {
+                console.error(error);
+            }
         }
     },
     async created() {
@@ -112,13 +122,18 @@ export default {
             }
         }
         // get if item in collection
-        // try {
-        //     const response = await axios.get(`http://127.0.0.1:8000/api/v1/post/Item/${this.id}`);
-        //     console.log(response.data);
-        //     this.isitemCollected = response.data;
-        // } catch (error) {
-        //     console.error(error);
-        // }
+        try {
+            const accessToken = localStorage.getItem("access_token");
+            console.log("collect", this.id);
+            const response = await axios.post(HTTP_PREFIX + `api/v1/post/Items/Collection/item/${this.id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            this.isitemCollected = response.data.collected;
+        } catch (error) {
+            console.error(error);
+        }
     },
     computed: {
         isCurrentUserSeller() {
