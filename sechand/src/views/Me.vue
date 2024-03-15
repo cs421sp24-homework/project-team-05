@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.currentUser">
     <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
     <div class="contain">
       <div class="left">

@@ -9,7 +9,7 @@
           <img src="/comment.png" id="chat" @click="chat" />
         </div>
         <div class="nav-item">
-          <img :src="this.currentUser.image" class="user-icon" @click="profile" id="avt"/>
+          <img :src="this.currentUser.image" class="user-icon" @click="profile" id="avt" />
         </div>
         <div class="nav-item">
           <Button @btn-click="profile" :text="currentUser.displayname" color="transparent"></Button>
@@ -46,10 +46,11 @@ export default {
       this.$router.push("/");
     },
     logout() {
-        localStorage.clear(); // Clear all storage
-        this.$emit("userLogout", {});
-        console.log("logout", this.currentUser);
-        this.$router.replace("/");
+      this.$router.replace("/");
+      localStorage.clear(); // Clear all storage
+      this.$emit("userLogout", {});
+      console.log("logout", this.currentUser);
+
     }
   }
 };
