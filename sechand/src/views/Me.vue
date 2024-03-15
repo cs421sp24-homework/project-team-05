@@ -1,7 +1,7 @@
 <template>
   <div>
-    <UserNavbar />
-    <div class="contain" :key="componentKey">
+    <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
+    <div class="contain">
       <div class="row">
         <div class="col-12">
           <h1>My Profile</h1>
@@ -11,12 +11,8 @@
       <div class="row mb-3">
         <div class="col-12">
           <div class="d-flex align-items-center">
-            <img
-              :src="currentUser.image"
-              alt="User Icon"
-              class="me-3 profile-image"
-              style="width: 150px; height: 150px; border-radius: 50%"
-            />
+            <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
+              style="width: 150px; height: 150px; border-radius: 50%" />
             <div>
               <p class="mb-1 font-large-vh font-large-vw profile-name">
                 {{ this.currentUser.displayname }}
@@ -28,12 +24,7 @@
               <!-- Increase font size -->
             </div>
           </div>
-          <Button
-            class="edit-profile-btn"
-            text="My Profile"
-            color="transparent"
-            @click="editProfile"
-          >
+          <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
           </Button>
         </div>
       </div>
@@ -49,12 +40,7 @@
             <h2>My Items</h2>
           </div>
           <div class="col-6 text-end">
-            <Button
-              class="new-post-btn"
-              text="New Post"
-              color="green"
-              @click="newPost"
-            ></Button>
+            <Button class="new-post-btn" text="New Post" color="green" @click="newPost"></Button>
           </div>
         </div>
 
@@ -89,9 +75,9 @@ import axios from "axios";
 
 export default {
   name: "Me",
-  // props: {
-  //   currentUser: Object,
-  // },
+  props: {
+    currentUser: Object,
+  },
   components: {
     UserNavbar,
     Cards,
@@ -99,20 +85,14 @@ export default {
   },
   data() {
     return {
-      componentKey: 0,
       postCardsData: [],
       historyCardsData: [],
-      currentUser: JSON.parse(localStorage.getItem("user")),
+      // currentUser: JSON.parse(localStorage.getItem("user")),
       // imageUrl: ''
     };
   },
   async created() {
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    // console.log("11111", import.meta.env.VITE_LOCAL_HOST);
-    // this.imageUrl = HTTP_PREFIX + this.currentUser.image;
-    // console.log("image url", this.imageUrl);
-    this.componentKey += 1; // Change key value to trigger rerender
-    console.log("Me page created", this.componentKey);
     try {
       const accessToken = localStorage.getItem("access_token");
       const response = await axios.get(
@@ -144,11 +124,8 @@ export default {
     }
   },
   methods: {
-    forceRerender() {
-      this.$forceUpdate(); // Call forceUpdate to trigger rerender
-    },
-    handleItemDetail(id) {
-      console.log("Item detail", id);
+    userStateChange() {
+      this.$emit("userStateChange", {});
     },
     editProfile() {
       this.$router.push("/profile");

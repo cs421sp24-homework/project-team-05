@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar v-if="currentUser" />
+        <UserNavbar v-if="currentUser" :currentUser="this.currentUser" @userLogout="userStateChange" />
         <Navbar v-else />
         <div class="item-detail container">
             <!-- Left side: Image -->
@@ -40,7 +40,7 @@ export default {
 
     name: "ShowItem",
     props: {
-        logined: Boolean
+        currentUser: Object,
     },
     data() {
         return {
@@ -49,7 +49,7 @@ export default {
             isLoading: false,
             item: {},
             id: null,
-            currentUser: JSON.parse(localStorage.getItem('user'))
+            // currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     components: {
@@ -58,7 +58,9 @@ export default {
         Navbar
     },
     methods: {
-
+        userStateChange() {
+            this.$emit("userStateChange", {});
+        },
         editItem() {
             this.$router.push({ name: 'EditItem', params: { id: this.id } });
         },
@@ -150,5 +152,19 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#chat {
+    width: 30px;
+    height: 30px;
+    float: right;
+    cursor: pointer;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 </style>

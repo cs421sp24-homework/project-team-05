@@ -4,7 +4,7 @@
       v-model="searchinput" />
     <select class="form-select" id="Category" v-model="category">
       <option value="" disabled selected hidden>Category</option>
-      <option value="">All Category</option>
+      <option value="all">All Category</option>
       <option v-for="(value, index) in this.categories" :key="index" :value="value">
         {{ value }}
       </option>

@@ -38,18 +38,9 @@ export default {
   },
 };
 </script>
-<style>
-.space {
-  margin-left: 10px;
-  /* Adjust the margin to create space between buttons */
-}
-
+<style scoped>
 .navbar {
   background-color: #98a497;
-  padding-top: 20px;
-  /* Increase top padding */
-  padding-bottom: 20px;
-  /* Increase bottom padding */
 }
 
 .navbar-elements {
@@ -69,7 +60,6 @@ export default {
 
   line-height: 1;
 }
-
 
 .icon {
   width: 40px;

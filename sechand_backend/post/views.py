@@ -148,7 +148,6 @@ def SearchItems(request):
     print(category)
     distance = float(request.POST.get('distance', -1))  # should be in miles
     
-    # print(desc_text, "low", lowest_price, "high", highest_price, "cat", category, "loc", location, "dist", distance)
 
 
     query = Q()

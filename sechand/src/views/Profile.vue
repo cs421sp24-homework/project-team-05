@@ -1,5 +1,5 @@
 <template>
-    <UserNavbar />
+    <UserNavbar :currentUser="this.currentUser" @userLogout="userStateChange" />
     <div class="contain">
 
 
@@ -18,48 +18,50 @@
                         <label class="form-label" style="text-align: left;">JHU Email</label>
                         <input type="text" class="form-control" @input="initState" disabled v-model="email" />
                     </div>
-        
+
                     <div class="mb-3">
                         <label class="form-label" style="text-align: left; margin-top: 3.5vh">Nick Name</label>
                         <input type="text" class="form-control" placeholder="Enter your nick name" @input="initState"
                             :disabled="!isEditting" v-model="show_uname" />
-                        <div class="form-text" style="font-size: 0.7vw;" :style="{ visibility: isEditting ? 'visible' : 'hidden' }">
+                        <div class="form-text" style="font-size: 0.7vw;"
+                            :style="{ visibility: isEditting ? 'visible' : 'hidden' }">
                             Your nick name must be 4-16 characters long.
                         </div>
                     </div>
-        
+
                     <div class="mb-3">
                         <label class="form-label" style="text-align: left; margin-top: 0.7vh;">Closest Address</label>
-                        <select v-model="show_addr" class="form-select form-control" :disabled="!isEditting" @input="initState">
+                        <select v-model="show_addr" class="form-select form-control" :disabled="!isEditting"
+                            @input="initState">
                             <option disabled>Select the closest address to you...</option>
                             <option v-for="(item, index) of addrList">{{ item }}</option>
                         </select>
                     </div>
-        
-                    <label class="form-label" style="text-align: left; margin-top: 3.5vh;">USA Mobile Phone Number</label>
+
+                    <label class="form-label" style="text-align: left; margin-top: 3.5vh;">USA Mobile Phone
+                        Number</label>
                     <div class="input-group mb-3">
                         <select v-model="prefix" class="form-select form-control" disabled>
                             <option disabled>+1</option>
                         </select>
                         <input type="text" class="form-control" placeholder="Enter your number" style="width: 8vw;"
                             @input="initState" :disabled="!isEditting" v-model="show_mobile" />
-                        <input type="text" class="form-control" placeholder="Visible to all users" style="width: 9.5vw;" disabled />
+                        <input type="text" class="form-control" placeholder="Visible to all users" style="width: 9.5vw;"
+                            disabled />
                         <div class="input-group-text">
                             <input class="form-check-input mt-0" type="checkbox" v-model="show_visible"
                                 aria-label="Checkbox for following text input" :disabled="!isEditting">
                         </div>
                     </div>
                 </div>
-    
+
                 <div id="avatar">
-                    <label class="form-label" style="margin-top: 5vh; margin-bottom: 3vh; font-size: 1.8vw;">Avatar</label>
-                    <ImageUploader 
-                        size="30"
-                        :default_src="show_image_url"
-                        :edittable="isEditting"
-                        @upload="changeImage"
-                        style="margin-left: auto; margin-right: auto;"/>
-                    <div class="form-text" style="font-size: 0.7vw; margin-top: 2vh;" :style="{ visibility: isEditting ? 'visible' : 'hidden' }">
+                    <label class="form-label"
+                        style="margin-top: 5vh; margin-bottom: 3vh; font-size: 1.8vw;">Avatar</label>
+                    <ImageUploader size="30" :default_src="show_image_url" :edittable="isEditting" @upload="changeImage"
+                        style="margin-left: auto; margin-right: auto;" />
+                    <div class="form-text" style="font-size: 0.7vw; margin-top: 2vh;"
+                        :style="{ visibility: isEditting ? 'visible' : 'hidden' }">
                         Click your avatar to upload a new one
                     </div>
                 </div>
@@ -87,6 +89,9 @@ import axios from 'axios';
 import UserNavbar from '@/components/UserNavbar.vue';
 import ImageUploader from '@/components/ImageUploader.vue';
 export default {
+    props: {
+        currentUser: Object,
+    },
     data() {
         return {
             email: "",
@@ -117,6 +122,9 @@ export default {
     },
 
     methods: {
+        userStateChange() {
+            this.$emit("userStateChange", {});
+        },
         exitCancel() {
             this.show_visible = this.visible;
             this.show_mobile = this.mobile;
@@ -185,12 +193,12 @@ export default {
         addrList: Array
     },
 
-    computed:{
+    computed: {
         show_image_url() {
             try {
                 return URL.createObjectURL(this.show_image);
             }
-            catch{
+            catch {
                 return this.show_image;
             }
         }
@@ -256,17 +264,17 @@ export default {
     user-select: none;
 }
 
-#content{
+#content {
     height: 57vh;
 }
 
-#inputs{
+#inputs {
     margin-left: 5vw;
     float: left;
     width: 29vw;
 }
 
-#avatar{
+#avatar {
     text-align: center;
     float: inline-start;
     width: 25vw;
@@ -280,17 +288,19 @@ export default {
     margin-left: 5vw;
 }
 
-label{
+label {
     font-size: 1.3vw;
 }
 
-input{
+input {
     font-size: 1vw
 }
-select{
+
+select {
     font-size: 1vw
 }
-.btn{
+
+.btn {
     font-size: 1vw;
 }
 </style>
