@@ -20,7 +20,7 @@
             <div class="mb-3 d-flex align-items-center">
               <label for="uploadPicture" class="form-label me-2">Upload Picture</label>
               <input type="file" id="uploadPicture" accept="image/*" style="display: none" ref="fileInput"
-                @change="handleFileUpload" />
+                @change="handleFileUpload" required />
               <button type="button" class="btn btn-primary" @click="$refs.fileInput.click()">
                 Choose File
               </button>

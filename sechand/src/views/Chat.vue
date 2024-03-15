@@ -113,9 +113,21 @@ export default {
             console.log('received message', message);
             const room = this.chat_list.find(room => room.id === message.room_id);
             console.log('room', room);
+            if (!room) {
+                this.chat_list.unshift({
+                    id: message.room_id,
+                    user: message.sender,
+                    messages: [message],
+                    last_message: message
+                });
+            }
             room.messages.push(message);
             room.last_message = message;
             this.scrollToBottom();
+            if (this.active_chat) {
+                this.active_chat++;
+                this.active_roomId = this.chat_list[this.active_chat].id;
+            }
         },
         sendMessage() {
             if (this.newMessage.trim() !== '') {
@@ -145,7 +157,7 @@ export default {
     async created() {
         this.home_user = JSON.parse(localStorage.getItem('user'));
         // console.log(this.home_user);
-        console.log('receiver', this.$route.params);
+        // console.log('receiver', this.$route.params);
         const receiver = this.$route.params.receiver;
 
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
@@ -160,6 +172,7 @@ export default {
                 });
                 this.chat_list = response.data.chat_list;
                 this.active_chat = response.data.active_chat;
+                this.active_roomId = this.chat_list[this.active_chat].id;
             } else {
                 const response = await axios.get(HTTP_PREFIX + 'api/v1/chat/Conversation/list', {
                     headers: {

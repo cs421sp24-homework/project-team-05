@@ -77,13 +77,13 @@ const router = createRouter({
     {
         path: '/chat',
         component: Chat,
-        name: 'Chat',
+        name: 'GeneralChat',
         meta: { requiresAuth: true }
     },
     {
       path: '/chat:receiver',
       component: Chat,
-      name: 'Chat',
+      name: 'DirectChat',
       meta: { requiresAuth: true }
   },
   {

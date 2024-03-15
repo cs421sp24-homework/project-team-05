@@ -9,6 +9,7 @@ from .models import Item, UserCollection
 from user.models import Address
 from .utils import get_distance
 from django.db.models import Q
+from django.contrib.postgres.search import SearchVector
 import uuid
 
 # Model(Item): id name description tags price user_id
@@ -149,9 +150,13 @@ def SearchItems(request):
     print("Search items based on desc: ", desc_text, ",low price: ", lowest_price, ", high price: ", highest_price, ", catgory: ", category)
     print("location: ", location, ", distance: ", distance)
     query = Q()
+    items = Item.objects.annotate(
+        search=SearchVector('name', 'description')
+    )
 
     if desc_text:
-        query &= (Q(name__icontains=desc_text) | Q(description__icontains=desc_text))
+        # query &= (Q(name__icontains=desc_text) | Q(description__icontains=desc_text))
+        items = items.filter(search=desc_text)
     
     if lowest_price >= 0:
         # print("filter", lowest_price)
@@ -177,7 +182,7 @@ def SearchItems(request):
         query &= Q(seller__address__in=addrLst)
 
     # Execute the query
-    results = Item.objects.filter(query)
+    results = items.filter(query)
     serializer = ItemSerializerWithSellerName(results, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 

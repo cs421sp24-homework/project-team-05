@@ -220,7 +220,8 @@ def update_user_profile(request):
         user.address = address
         user.phone = phone
         user.is_visible = is_visible
-        user.image = image
+        if image:
+            user.image = image
         user.save()
 
         serializer = CustomUserSerializer(user)
