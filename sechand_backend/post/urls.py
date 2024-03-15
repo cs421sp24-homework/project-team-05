@@ -14,8 +14,13 @@ urlpatterns = [
 
     path("Items/Collection", views.GetUserCollection, name="GetUserCollection"),
 
+    path("Items/Collection/delete", views.DeleteUserCollection, name="DeleteUserCollection"),
+
+    path("Items/Collection/item", views.IsUserCollected, name="IsUserCollected"),
+
     # POST
     path("Item/new", views.CreateNewItem, name="CreateNewItem"),
+
 
     # GET PATCH DELETE
     path("Item/<uuid:item_id>", views.ProcessSingleItem, name="ProcessSingleItem"),
