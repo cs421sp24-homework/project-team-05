@@ -1,11 +1,11 @@
 <template>
     <div>
-        <UserNavbar v-if="currentUser" />
+        <UserNavbar v-if="currentUser" :currentUser="this.currentUser" @userLogout="userStateChange" />
         <Navbar v-else />
         <div class="item-detail container">
             <!-- Left side: Image -->
             <div class="left-side">
-                <img :src="item.image" alt="Item Image" style="width: 350px; height: 350px; border-radius: 50%; object-fit: cover;" />
+                <img :src="item.image" alt="Item Image" id="item-img" />
             </div>
 
             <!-- Right side: Details -->
@@ -15,6 +15,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
+                    <img src="/comment.png" id="chat" @click="chat" />
                 </p>
 
                 <!-- Description -->
@@ -39,7 +40,7 @@ export default {
 
     name: "ShowItem",
     props: {
-        logined: Boolean
+        currentUser: Object,
     },
     data() {
         return {
@@ -48,7 +49,7 @@ export default {
             isLoading: false,
             item: {},
             id: null,
-            currentUser: JSON.parse(localStorage.getItem('user'))
+            // currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     components: {
@@ -57,7 +58,9 @@ export default {
         Navbar
     },
     methods: {
-
+        userStateChange() {
+            this.$emit("userStateChange", {});
+        },
         editItem() {
             this.$router.push({ name: 'EditItem', params: { id: this.id } });
         },
@@ -130,6 +133,7 @@ export default {
     flex: 1;
     width: 50vw;
     margin-right: 20px;
+    float: left;
 }
 
 .right-side {
@@ -145,5 +149,25 @@ export default {
     margin-top: 20px;
     font-size: 20px;
     font-weight: bold;
+}
+
+#item-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#chat {
+    width: 30px;
+    height: 30px;
+    float: right;
+    cursor: pointer;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 </style>

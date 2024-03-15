@@ -38,24 +38,26 @@ export default {
   cursor: pointer;
   position: relative;
   /* Add relative positioning to the card */
-  border-radius: 30px;
+  border-radius: 15px;
 }
 
 .card-img-top {
-  padding: 1rem;
+  padding: 2px;
   width: 100%;
   height: 200px;
   /* Adjust the image height as needed */
   object-fit: cover;
-  border-radius: 30px;
+  /* border-radius: 15px; */
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
   /* Ensure the image covers the entire space */
 }
 
 .card-body {
   background: #5f725d;
   padding: 1rem;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 13px;
+  border-bottom-right-radius: 13px;
 }
 
 .card-name {
@@ -80,12 +82,14 @@ export default {
   padding: 5px;
   border-radius: 10px;
 }
+
 .ellipsis {
   display: block;
   /* max-height: 10em; Adjust to the desired number of lines */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 200px; /* Define a width to trigger text overflow */
+  width: 200px;
+  /* Define a width to trigger text overflow */
 }
 </style>

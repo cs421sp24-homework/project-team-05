@@ -4,14 +4,8 @@
                  :currentUser="user"
                  :addrList="addrList"
                  :token="token"></router-view> -->
-  <router-view
-    @userLogin="userLogin"
-    @userLogout="logout"
-    :addrList="addrList"
-    :logined="login"
-    :categories="categories"
-    @updateUser="updateUser"
-  ></router-view>
+  <router-view @userStateChange="userStateChange" :currentUser="currentUser" :addrList="addrList"
+    :categories="categories" @updateUser="updateUser"></router-view>
 </template>
 
 <script>
@@ -20,10 +14,10 @@ import axios from "axios";
 export default {
   data() {
     return {
-      login: false,
+      currentUser: JSON.parse(localStorage.getItem("user")),
       user: null,
       token: null,
-      addrList: ["nine east", "Social"],
+      addrList: [],
       categories: [
         "Electronics",
         "Clothing",
@@ -45,21 +39,13 @@ export default {
   },
 
   methods: {
-    userLogin(data) {
-      this.login = true;
-      console.log("userLogin", this.login);
-      // this.user = data.user;
-      // this.token = data.token;
-    },
-
-    logout() {
-      this.login = false;
-      // this.user = null;
-      // this.token = null;
-    },
     updateUser(data) {
       this.user = data;
+      this.currentUser = JSON.parse(localStorage.getItem("user"));
       console.log("updatedUser", this.user);
+    },
+    userStateChange() {
+      this.currentUser = JSON.parse(localStorage.getItem("user"));
     },
   },
 

@@ -13,50 +13,23 @@
             <!-- Item Name -->
             <div class="mb-3">
               <label for="itemName" class="form-label">Item Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="itemName"
-                v-model="itemName"
-                required
-              />
+              <input type="text" class="form-control" id="itemName" v-model="itemName" required />
             </div>
 
             <!-- Upload Picture -->
             <div class="mb-3 d-flex align-items-center">
-              <label for="uploadPicture" class="form-label me-2"
-                >Upload Picture</label
-              >
-              <input
-                type="file"
-                id="uploadPicture"
-                accept="image/*"
-                style="display: none"
-                ref="fileInput"
-                @change="handleFileUpload"
-              />
-              <button
-                type="button"
-                class="btn btn-primary"
-                @click="$refs.fileInput.click()"
-              >
+              <label for="uploadPicture" class="form-label me-2">Upload Picture</label>
+              <input type="file" id="uploadPicture" accept="image/*" style="display: none" ref="fileInput"
+                @change="handleFileUpload" />
+              <button type="button" class="btn btn-primary" @click="$refs.fileInput.click()">
                 Choose File
               </button>
             </div>
             <!-- Choose Category -->
             <div class="mb-3">
               <label for="Category" class="form-label">Category</label>
-              <select
-                class="form-select"
-                id="Category"
-                v-model="category"
-                required
-              >
-                <option
-                  v-for="(value, index) in this.categories"
-                  :key="index"
-                  :value="value"
-                >
+              <select class="form-select" id="Category" v-model="category" required>
+                <option v-for="(value, index) in this.categories" :key="index" :value="value">
                   {{ value }}
                 </option>
               </select>
@@ -64,47 +37,24 @@
             <!-- Description -->
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
-              <textarea
-                class="form-control"
-                id="description"
-                v-model="description"
-                rows="3"
-                required
-              ></textarea>
+              <textarea class="form-control" id="description" v-model="description" rows="3" required></textarea>
             </div>
 
             <!-- Price -->
             <div class="mb-3">
               <label for="price" class="form-label">Price</label>
-              <input
-                type="number"
-                step="0.01"
-                class="form-control"
-                id="price"
-                v-model="price"
-                required
-              />
+              <input type="number" step="0.01" class="form-control" id="price" v-model="price" required />
             </div>
 
             <!-- Address -->
             <div class="mb-3">
               <label for="address" class="form-label">Address</label>
-              <input
-                type="text"
-                class="form-control"
-                id="address"
-                :value="this.currentUser.address.name"
-                readonly
-              />
+              <input type="text" class="form-control" id="address" :value="this.currentUser.address.name" readonly />
             </div>
 
             <!-- Buttons -->
             <div class="d-flex justify-content-end">
-              <button
-                type="button"
-                class="btn btn-secondary me-2"
-                @click="cancel"
-              >
+              <button type="button" class="btn btn-secondary me-2" @click="cancel">
                 Cancel
               </button>
               <button id="postBtn" type="submit" class="btn btn-primary">Post</button>
@@ -115,22 +65,20 @@
           <!-- Image Preview -->
           <div class="mb-3">
             <label class="form-label">Card Preview</label><br />
-            <Card
-              :card="{
-                name: this.itemName,
-                description: this.description,
-                price: this.price,
-                image: this.imageUrl,
-                displayname: this.currentUser.displayname,
-              }"
-            ></Card>
+            <Card :card="{
+            name: this.itemName,
+            description: this.description,
+            price: this.price,
+            image: this.imageUrl,
+            displayname: this.currentUser.displayname,
+          }"></Card>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import Card from "@/components/Card.vue";
@@ -182,7 +130,7 @@ export default {
         formData.append("category", this.category);
         formData.append("price", this.price);
         formData.append("seller", this.currentUser.id);
-        formData.append("image", this.imageUrl);
+        formData.append("image", this.picture);
         console.log(formData);
         const response = await axios.post(
           HTTP_PREFIX + "api/v1/post/Item/new",
@@ -266,4 +214,3 @@ export default {
   color: #6c757d;
 }
 </style>
-  
