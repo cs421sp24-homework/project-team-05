@@ -9,7 +9,7 @@
         {{ value }}
       </option>
     </select>
-    <Button @btn-click="onClick()" text="Search" id="search"></Button>
+    <Button @btn-click="onClick()" text="Search" id="searchbtn"></Button>
   </form>
 </template>
 <script>
@@ -41,14 +41,15 @@ export default {
   margin-left: 0px;
 }
 
-#search {
+#searchbtn {
   border: 1px solid #00cc66;
   margin-left: 10px;
   height: 5vh;
 }
 
-#search:hover {
-  background-color: #09562f;
+#searchbtn:hover {
+  background-color: #01361b;
   color: white;
+  opacity: 1;
 }
 </style>

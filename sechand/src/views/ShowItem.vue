@@ -15,7 +15,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
-                    <img src="/comment.png" id="chat" @click="chat" />
+                    <img v-if="!isCurrentUserSeller" src="/comment.png" id="chat" @click="chat" />
                 </p>
 
                 <!-- Description -->
@@ -100,8 +100,7 @@ export default {
         } catch (error) {
             console.error(error);
         }
-        // console.log(this.id);
-        // console.log(this.currentUser.id);
+
         if (this.currentUser) {
             if (this.currentUser.id === this.item.seller) {
                 this.isCurrentUserSeller = true;

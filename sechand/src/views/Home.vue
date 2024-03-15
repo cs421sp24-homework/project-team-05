@@ -33,7 +33,9 @@
               </div>
             </div>
           </div>
-          <Button @btn-click="applyFilter" text="Apply" color="lightblue"></Button>
+          <div class="col-9 text-end">
+            <Button @btn-click="applyFilter" text="Apply" color="lightblue" id="apply"></Button>
+          </div>
         </div>
         <Cards :cards="cardsData" />
       </div>
@@ -219,7 +221,7 @@ export default {
 
 .dropdowns-container {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .list-group-item {
@@ -234,5 +236,13 @@ export default {
   background: #f9f9f9;
   color: black;
   cursor: pointer;
+}
+
+#apply {
+  border: 1px solid #00cc66;
+  margin-top: 2.5vh;
+  margin-left: 10px;
+  height: 4.6vh;
+  width: 7.5vw;
 }
 </style>
