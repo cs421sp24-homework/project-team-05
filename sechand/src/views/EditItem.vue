@@ -9,7 +9,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <form @submit.prevent="submitForm">
+                    <form id="form" @submit.prevent="submitForm">
                         <!-- Item Name -->
                         <div class="mb-3">
                             <label for="itemName" class="form-label">Item Name</label>

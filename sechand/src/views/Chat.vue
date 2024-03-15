@@ -50,7 +50,7 @@
                     </div>
 
                     <div id="text-input">
-                        <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to '+ chat_list[active_chat].name + '...'">
+                        <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to '+ chat_list[active_chat].user.displayname + '...'">
                         <button id="btn" @click="sendMessage" class="btn btn-primary">Send</button>
                     </div>
                 </div>
@@ -110,7 +110,7 @@ export default {
                 // senderUser = JSON.parse(localStorage.getItem('user'))
                 const message = {
                     "message": this.newMessage, // Adjust according to your backend expectations
-                    "sender": JSON.parse(localStorage.getItem('user')).id,
+                    "sender": this.home_user.id,
                     "room_id": this.active_roomId
                     // The sender should be determined by the backend.
                 };
@@ -149,7 +149,7 @@ export default {
             } else {
                 const response = await axios.get(HTTP_PREFIX + 'api/v1/chat/Conversation/list', {
                     headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                        'Authorization': `Bearer ${accessToken}`
                     },
                 });
                 this.chat_list = response.data;

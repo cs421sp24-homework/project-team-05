@@ -23,8 +23,9 @@
                     <h5>Description:</h5>
                     <p>{{ item.description }}</p>
                 </div>
-                <Button v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
-                <Button v-if="!isitemCollected" @click="collectItem" text="Collect" color="lightgreen"></Button>
+                <Button id="editBtn" v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
+                <Button id="cllBtn" v-if="!isitemCollected" @click="collectItem" text="Collect"
+                    color="lightgreen"></Button>
                 <Button v-if="isitemCollected" @click="unCollectItem" text="Collected" color="orange"></Button>
             </div>
         </div>
@@ -44,7 +45,7 @@ export default {
     },
     data() {
         return {
-            isCurrentUserSeller: false,
+            // isCurrentUserSeller: true,
             isitemCollected: false,
             isLoading: false,
             item: {},
@@ -115,6 +116,11 @@ export default {
         //     console.error(error);
         // }
     },
+    computed: {
+        isCurrentUserSeller() {
+            return this.currentUser.id === this.item.seller;
+        }
+    }
 };
 </script>
 

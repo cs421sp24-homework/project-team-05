@@ -2,11 +2,13 @@
 <template>
     <div class="image-uploader" :style="'width: '+size+'vh; height: '+size+'vh;'">
       <label class="upload-label">
-        <input type="file" @change="handleImageUpload" class="file-input" :disabled="!edittable">
+        <input accept="image/*" type="file" @change="handleImageUpload" class="file-input" :disabled="!edittable">
         <div class="upload-placeholder" v-if="!imageUrl && !default_src" :style="'font-size: '+size/2+'vh;'"></div>
         <img :src="default_src? default_src : imageUrl" v-else 
+              style="object-fit: cover;"
              :style="{ borderRadius: circular ? '50%' : '0%', 
-                       border: edittable ? '5px dashed #00cc66' : '5px dashed #A0A0A0'}" 
+                       border: edittable ? '5px dashed #00cc66' : '5px dashed #A0A0A0',
+                       }" 
                        class="uploaded-image">
       </label>
     </div>
