@@ -137,7 +137,10 @@ export default {
     },
     computed: {
         isCurrentUserSeller() {
-            return this.currentUser.id === this.item.seller;
+            if(this.currentUser){
+                return this.currentUser.id === this.item.seller;
+            }
+            return false;
         }
     }
 };

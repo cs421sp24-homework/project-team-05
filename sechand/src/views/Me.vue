@@ -9,7 +9,8 @@
               <h2>My Items</h2>
             </div>
             <div class="col-6 text-end">
-              <Button class="new-post-btn" text="New Post" color="green" @click="newPost"></Button>
+
+              <Button class="new-post-btn" text="New Post" color="green" @click="newPost" id="toPost"></Button>
               <Button class="showall" text="All Posts" color="transparent" @click="myitems"></Button>
             </div>
           </div>
@@ -73,7 +74,7 @@
           {{ this.currentUser.address.name }}
         </p>
         <!-- Increase font size -->
-        <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
+        <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile" id="profile">
         </Button>
       </div>
 
