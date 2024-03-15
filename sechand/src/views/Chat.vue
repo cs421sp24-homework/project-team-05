@@ -1,5 +1,5 @@
 <template>
-    <UserNavbar/>
+    <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
 
     <div id="left"></div>
     <div id="right"></div>
@@ -8,21 +8,24 @@
         <div id="content">
             <div id="content-left">
                 <div class="list-group" id="scroll" v-if="chat_list">
-                    <a v-for="(item, index) in chat_list" 
-
-                    @click="setActive(item, index)" 
-                    :class="['list-group-item', 'list-group-item-action', {'active':index===active_chat }, 'w-100']" 
-                    aria-current="true"
-                    id="list_item">
+                    <a v-for="(item, index) in chat_list" @click="setActive(item, index)"
+                        :class="['list-group-item', 'list-group-item-action', { 'active': index === active_chat }, 'w-100']"
+                        aria-current="true" id="list_item">
                         <div class="avatar-wrapper">
-                            <img :src="item.user.image" style="height: 3vw; width: 3vw; border-radius: 50%; object-fit: cover;"/>
+                            <img :src="item.user.image"
+                                style="height: 3vw; width: 3vw; border-radius: 50%; object-fit: cover;" />
                         </div>
                         <div class="left-info">
                             <div class="d-flex">
-                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.4vw;">{{ item.user.displayname }}</h5>
-                                <small style="font-size: 0.7vw;" id="time" v-if="item.last_message">{{ item.last_message.timestamp }}</small>
+                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.4vw;">{{
+        item.user.displayname }}</h5>
+                                <small style="font-size: 0.7vw;" id="time" v-if="item.last_message">{{
+        item.last_message.timestamp }}</small>
                             </div>
-                            <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw;" v-if="item.last_message">{{item.last_message.content.length>35? (item.last_message.content).slice(0, 35) + '...' : item.last_message.content}}</p>
+                            <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw;" v-if="item.last_message">
+                                {{ item.last_message.content.length > 35 ? (item.last_message.content).slice(0, 35) +
+        '...'
+        : item.last_message.content }}</p>
                             <!-- <small style="font-weight: bold;">{{ "additional info" }} </small> -->
                         </div>
                     </a>
@@ -30,17 +33,18 @@
             </div>
 
             <div id="no-select" v-if="active_chat == null">
-                {{ chat_list? "No conversation selected." : "No conversation exists." }}
+                {{ chat_list ? "No conversation selected." : "No conversation exists." }}
             </div>
 
             <div id="content-right" v-else>
                 <div id="head_line">
-                    <p style="margin-left: 2vw; margin-top: 1vh;" v-if="active_chat != null">{{ chat_list[active_chat].user.displayname }}</p>
+                    <p style="margin-left: 2vw; margin-top: 1vh;" v-if="active_chat != null">{{
+        chat_list[active_chat].user.displayname }}</p>
                 </div>
 
                 <div id="msg" ref="messageContainer">
                     <div v-for="(item, index) of chat_list[active_chat].messages">
-                        <Message :user="home_user" :message="item"/>
+                        <Message :user="home_user" :message="item" />
                     </div>
                 </div>
 
@@ -50,7 +54,8 @@
                     </div>
 
                     <div id="text-input">
-                        <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to '+ chat_list[active_chat].user.displayname + '...'">
+                        <input id="input-box" type="text" v-model="newMessage" class="form-control"
+                            :placeholder="'Send a message to '+ chat_list[active_chat].user.displayname + '...'">
                         <button id="btn" @click="sendMessage" class="btn btn-primary">Send</button>
                     </div>
                 </div>
@@ -67,7 +72,7 @@ import axios from "axios";
 
 
 export default {
-    data () {
+    data() {
         return {
             chat_list: null,
             active_chat: null,
@@ -76,7 +81,13 @@ export default {
             home_user: null
         }
     },
+    props: {
+        currentUser: Object
+    },
     methods: {
+        userStateChange() {
+            this.$emit("userStateChange", {});
+        },
         setActive(item, index) {
             this.active_chat = index;
             this.active_roomId = item.id;
@@ -130,7 +141,7 @@ export default {
         UserNavbar,
         Message
     },
-    async created(){
+    async created() {
         this.home_user = JSON.parse(localStorage.getItem('user'));
         // console.log(this.home_user);
         this.receiver = this.$route.params.receiver;
@@ -185,7 +196,7 @@ export default {
     width: 70vw;
 }
 
-#content{
+#content {
     width: 60vw;
     margin-left: auto;
     margin-right: auto;
@@ -197,12 +208,12 @@ export default {
 
 
 
-#content-left{
-    width:20vw;
+#content-left {
+    width: 20vw;
     border-right: solid rgb(134, 134, 134) 1px;
 }
 
-#scroll{
+#scroll {
     height: 73vh;
     overflow-y: auto;
     overflow-x: hidden;
@@ -217,24 +228,24 @@ export default {
 }
 
 #left-info {
-    
+
     flex-direction: 1;
 }
 
-#time{
+#time {
     width: fit-content;
     margin-left: auto;
 }
 
-.small-text{
+.small-text {
     font-size: 0.9vw;
 }
 
-#content-right{
+#content-right {
     width: 40vw;
 }
 
-#no-select{
+#no-select {
     font-size: 1vw;
     color: rgb(100, 100, 100);
     margin-top: 5vh;
@@ -243,14 +254,14 @@ export default {
 
 }
 
-#head_line{
+#head_line {
     font-size: 3vh;
     height: 5vh;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     border-bottom: solid rgb(134, 134, 134) 1px;
 }
 
-#msg{
+#msg {
     height: 55vh;
     border-bottom: solid rgb(134, 134, 134) 1px;
     overflow-y: auto;
@@ -259,16 +270,16 @@ export default {
 }
 
 
-#input{
+#input {
     height: calc(100% - 45vh - 5vh);
 }
 
-#toolbox{
+#toolbox {
     height: 1vh;
     /* border-bottom: solid rgb(134, 134, 134) 1px; */
 }
 
-#text-input{
+#text-input {
     margin-top: 3.5vh;
     margin-left: 1vw;
     margin-right: 1vw;
@@ -276,7 +287,7 @@ export default {
     flex-direction: row;
 }
 
-#input-box{
+#input-box {
     height: 3vh;
     font-size: 1.5vh;
     width: 33vw;
@@ -284,11 +295,10 @@ export default {
 }
 
 #btn {
-    margin-left: 1vw; 
-    height: 3vh; 
+    margin-left: 1vw;
+    height: 3vh;
     font-size: 1.5vh;
     border-radius: 1.5vh;
     width: 4vw;
 }
-
 </style>
