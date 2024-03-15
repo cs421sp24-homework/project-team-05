@@ -50,7 +50,7 @@
                     </div>
 
                     <div id="text-input">
-                        <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to '+ chat_list[active_chat].name + '...'">
+                        <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to '+ chat_list[active_chat].user.displayname + '...'">
                         <button id="btn" @click="sendMessage" class="btn btn-primary">Send</button>
                     </div>
                 </div>
