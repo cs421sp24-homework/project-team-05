@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-sm fixed-top">
     <div class="navbar-elements">
       <a class="navbar-brand" href="#" @click="goToHome">
-        <img src="../assets/logo_temp.svg" alt="Icon" class="icon" />
+        <img src="../assets/logo_temp.svg" alt="Icon" class="icon" id="sechand-icon" />
         Sechand</a>
       <div class="navbar-nav ml-auto">
         <div class="nav-item">

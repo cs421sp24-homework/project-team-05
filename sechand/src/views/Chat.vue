@@ -1,68 +1,70 @@
 <template>
-    <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
+    <div v-if="this.currentUser">
+        <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
 
-    <div id="left"></div>
-    <div id="right"></div>
+        <div id="left"></div>
+        <div id="right"></div>
 
-    <div id="main">
-        <div id="content">
-            <div id="content-left">
-                <div class="list-group" id="scroll" v-if="chat_list">
-                    <a v-for="(item, index) in chat_list" @click="setActive(item, index)"
-                        :class="['list-group-item', 'list-group-item-action', { 'active': index === active_chat }, 'w-100']"
-                        aria-current="true" id="list_item">
-                        <div class="avatar-wrapper">
-                            <img :src="item.user.image"
-                                style="height: 3vw; width: 3vw; border-radius: 50%; object-fit: cover;" />
-                        </div>
-                        <div class="left-info">
-                            <div class="d-flex">
-                                <h5 style="margin-right: 0; font-weight: 700; font-size: 1.2vw;">{{
-        item.user.displayname }}</h5>
-                                <small style="font-size: 0.7vw;" id="time" v-if="item.last_message">{{
-        item.last_message.timestamp }}</small>
+        <div id="main">
+            <div id="content">
+                <div id="content-left">
+                    <div class="list-group" id="scroll" v-if="chat_list">
+                        <a v-for="(item, index) in chat_list" @click="setActive(item, index)"
+                            :class="['list-group-item', 'list-group-item-action', { 'active': index === active_chat }, 'w-100']"
+                            aria-current="true" id="list_item">
+                            <div class="avatar-wrapper">
+                                <img :src="item.user.image"
+                                    style="height: 3vw; width: 3vw; border-radius: 50%; object-fit: cover;" />
                             </div>
-                            <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw;" v-if="item.last_message">
-                                {{ item.last_message.content.length > 35 ? (item.last_message.content).slice(0, 35) +
+                            <div class="left-info">
+                                <div class="d-flex">
+                                    <h5 style="margin-right: 0; font-weight: 700; font-size: 1.2vw;">{{
+        item.user.displayname }}</h5>
+                                    <small style="font-size: 0.7vw;" id="time" v-if="item.last_message">{{
+        item.last_message.timestamp }}</small>
+                                </div>
+                                <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw;" v-if="item.last_message">
+                                    {{ item.last_message.content.length > 35 ? (item.last_message.content).slice(0, 35)
+        +
         '...'
         : item.last_message.content }}</p>
-                            <!-- <small style="font-weight: bold;">{{ "additional info" }} </small> -->
-                        </div>
-                    </a>
+                                <!-- <small style="font-weight: bold;">{{ "additional info" }} </small> -->
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
 
-            <div id="no-select" v-if="active_chat == null">
-                {{ chat_list ? "No conversation selected." : "No conversation exists." }}
-            </div>
+                <div id="no-select" v-if="active_chat == null">
+                    {{ chat_list ? "No conversation selected." : "No conversation exists." }}
+                </div>
 
-            <div id="content-right" v-else>
-                <div id="head_line">
-                    <p style="margin-left: 2vw; margin-top: 1vh;" v-if="active_chat != null">{{
+                <div id="content-right" v-else>
+                    <div id="head_line">
+                        <p style="margin-left: 2vw; margin-top: 1vh;" v-if="active_chat != null">{{
         chat_list[active_chat].user.displayname }}</p>
-                </div>
-
-                <div id="msg" ref="messageContainer">
-                    <div v-for="(item, index) of chat_list[active_chat].messages">
-                        <Message :user="home_user" :message="item" />
-                    </div>
-                </div>
-
-                <div id="input">
-                    <div id="toolbox">
-                        potentially a toolbox?
                     </div>
 
-                    <div id="text-input">
-                        <input id="input-box" type="text" v-model="newMessage" class="form-control"
-                            :placeholder="'Send a message to '+ chat_list[active_chat].user.displayname + '...'">
-                        <button id="btn" @click="sendMessage" class="btn btn-primary">Send</button>
+                    <div id="msg" ref="messageContainer">
+                        <div v-for="(item, index) of chat_list[active_chat].messages">
+                            <Message :user="home_user" :message="item" />
+                        </div>
+                    </div>
+
+                    <div id="input">
+                        <div id="toolbox">
+                            potentially a toolbox?
+                        </div>
+
+                        <div id="text-input">
+                            <input id="input-box" type="text" v-model="newMessage" class="form-control"
+                                :placeholder="'Send a message to '+ chat_list[active_chat].user.displayname + '...'">
+                            <button id="sendBtn" @click="sendMessage" class="btn btn-primary">Send</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -310,7 +312,7 @@ export default {
     border-radius: 1.5vh;
 }
 
-#btn {
+#sendBtn {
     margin-left: 1vw;
     height: 3vh;
     font-size: 1.5vh;

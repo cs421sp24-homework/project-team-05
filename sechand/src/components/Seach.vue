@@ -1,7 +1,7 @@
 <template>
   <form class="d-flex" role="search" @submit.prevent="handleSubmit">
     <input class="form-control me-2" type="search" placeholder="Search for anything" aria-label="Search"
-      v-model="searchinput" />
+      v-model="searchinput" id="searchid" />
     <select class="form-select" id="Category" v-model="category">
       <option value="all" selected>All Category</option>
       <!-- <option value="all">All Category</option> -->
