@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserNavbar />
+    <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -66,12 +66,12 @@
           <div class="mb-3">
             <label class="form-label">Card Preview</label><br />
             <Card :card="{
-            name: this.itemName,
-            description: this.description,
-            price: this.price,
-            image: this.imageUrl,
-            displayname: this.currentUser.displayname,
-          }"></Card>
+      name: this.itemName,
+      description: this.description,
+      price: this.price,
+      image: this.imageUrl,
+      displayname: this.currentUser.displayname,
+    }"></Card>
           </div>
         </div>
       </div>
@@ -87,6 +87,7 @@ export default {
   name: "NewPost",
   props: {
     categories: Array,
+    currentUser: Object,
   },
   components: {
     UserNavbar,
@@ -111,6 +112,9 @@ export default {
     };
   },
   methods: {
+    userStateChange() {
+      this.$emit("userStateChange", {});
+    },
     handleFileUpload(event) {
       this.picture = event.target.files[0];
       this.imageUrl = URL.createObjectURL(this.picture);
