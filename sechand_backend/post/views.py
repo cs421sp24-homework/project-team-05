@@ -158,7 +158,6 @@ def SearchItems(request):
         query &= Q(price__gte=lowest_price)
     
     if highest_price >= 0:
-    if highest_price >= 0:
         query &= Q(price__lte=highest_price)
     
     if category != 'all':
