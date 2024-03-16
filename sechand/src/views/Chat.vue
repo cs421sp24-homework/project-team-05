@@ -141,7 +141,7 @@ export default {
       this.scrollToBottom();
     },
     connect() {
-      const wsPath = `ws://127.0.0.1:8000/ws/chat/${this.home_user.id}/`; // Use roomId in the path
+      const wsPath = `ws://oose-project-65116e9428b0.herokuapp.com/ws/chat/${this.home_user.id}/`; // Use roomId in the path
       console.log("using wsPath ", wsPath);
       if (this.ws) {
         this.ws.close(); // Close the existing connection if it exists
@@ -158,7 +158,7 @@ export default {
       console.log("received message", message);
       const room = this.chat_list.find((room) => room.id === message.room_id);
       console.log("room", room);
-      if (!room) {
+      if (room == undefined) {
         this.chat_list.unshift({
           id: message.room_id,
           user: message.sender,
