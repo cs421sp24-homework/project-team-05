@@ -1,64 +1,83 @@
 <template>
-  <div>
-    <UserNavbar />
-    <div class="contain" :key="componentKey">
-      <div class="row">
-        <div class="col-12">
-          <h1>My Profile</h1>
-        </div>
-      </div>
-      <!-- User profile information -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="d-flex align-items-center">
-            <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
-              style="width: 300px; height: 300px; border-radius: 50%" />
-            <div>
-              <p class="mb-1 font-large-vh font-large-vw profile-name">{{ this.currentUser.displayname }}</p>
-              <!-- Increase font size -->
-              <p class="mb-0 font-large-vh font-large-vw profile-address">{{ this.currentUser.address.name }}</p>
-              <!-- Increase font size -->
+  <div v-if="this.currentUser">
+    <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
+    <div class="contain">
+      <div class="left">
+        <div class="row">
+          <div class="row">
+            <div class="col-6">
+              <h2>My Items</h2>
+            </div>
+            <div class="col-6 text-end">
+
+              <Button class="new-post-btn" text="New Post" color="green" @click="newPost" id="toPost"></Button>
+              <Button class="showall" text="All Posts" color="transparent" @click="myitems"></Button>
             </div>
           </div>
-          <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile">
-          </Button>
-        </div>
-      </div>
-      <!-- Segment -->
-      <div class="row">
-        <div class="col-12">
-          <hr class="segment">
-        </div>
-      </div>
-      <div class="row">
-        <div class="row">
-          <div class="col-6">
-            <h2>My Items</h2>
-          </div>
-          <div class="col-6 text-end">
-            <Button class="new-post-btn" text="New Post" color="green" @click="newPost"></Button>
-          </div>
-        </div>
 
-        <div class="card-container">
-          <Cards :cards="postCardsData" @item-detail="handleItemDetail" />
-        </div>
-      </div>
-
-      <!-- Segment -->
-      <div class="row">
-        <div class="col-12">
-          <hr class="segment">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <h2>Order History</h2>
           <div class="card-container">
-            <Cards :cards="historyCardsData" @item-detail="handleItemDetail" />
+            <Cards :cards="postCardsData" :number="3" />
+          </div>
+        </div>
+
+        <!-- Segment -->
+        <div class="row">
+          <div class="col-12">
+            <hr class="segment" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="row">
+            <div class="col-6">
+              <h2>Order History</h2>
+            </div>
+            <div class="col-6 text-end">
+              <Button class="showall" text="All Order" color="transparent" @click="historys"></Button>
+            </div>
+          </div>
+
+          <div class="card-container">
+            <Cards :cards="historyCardsData" :number="3" />
+          </div>
+        </div>
+        <!-- Segment -->
+        <div class="row">
+          <div class="col-12">
+            <hr class="segment" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="row">
+            <div class="col-6">
+              <h2>Wishlist</h2>
+            </div>
+            <div class="col-6 text-end">
+              <Button class="showall" text="All Wishlist" color="transparent" @click="wishlist"></Button>
+            </div>
+          </div>
+
+          <div class="card-container">
+            <Cards :cards="collectionCardsData" :number="3" />
           </div>
         </div>
       </div>
+      <div class="line"></div>
+      <div class="right">
+        <!-- User profile information -->
+        <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
+          style="width: 150px; height: 150px; border-radius: 50%" />
+        <p class="mb-1 font-large-vh font-large-vw profile-name">
+          {{ this.currentUser.displayname }}
+        </p>
+        <!-- Increase font size -->
+        <p class="mb-0 font-large-vh font-large-vw profile-address">
+          {{ this.currentUser.address.name }}
+        </p>
+        <!-- Increase font size -->
+        <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile" id="profile">
+        </Button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -71,9 +90,9 @@ import axios from "axios";
 
 export default {
   name: "Me",
-  // props: {
-  //   currentUser: Object,
-  // },
+  props: {
+    currentUser: Object,
+  },
   components: {
     UserNavbar,
     Cards,
@@ -81,47 +100,68 @@ export default {
   },
   data() {
     return {
-      componentKey: 0,
       postCardsData: [],
       historyCardsData: [],
-      currentUser: JSON.parse(localStorage.getItem('user'))
+      collectionCardsData: [],
     };
   },
   async created() {
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    console.log("11111", import.meta.env.VITE_LOCAL_HOST);
-    this.componentKey += 1; // Change key value to trigger rerender
-    console.log("Me page created", this.componentKey);
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/UserItems/all', {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-      });
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + "api/v1/post/UserItems/all",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("postCardsData", response.data);
       this.postCardsData = response.data;
     } catch (error) {
       console.error(error);
     }
     // history card data
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get(HTTP_PREFIX + 'api/v1/post/UserItems/all', {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + "api/v1/post/UserItems/all",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      this.historyCardsData = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/Collection", {
         headers: {
-          'Authorization': `Bearer ${accessToken}`
+          Authorization: `Bearer ${accessToken}`,
         },
       });
-      this.historyCardsData = response.data;
+      this.collectionCardsData = response.data;
+      console.log("collectionCardsData", response.data);
     } catch (error) {
       console.error(error);
     }
   },
   methods: {
-    forceRerender() {
-      this.$forceUpdate(); // Call forceUpdate to trigger rerender
+    myitems() {
+      this.$router.push({ name: 'ShowAll', params: { data: "myItems" } });
     },
-    handleItemDetail(id) {
-      console.log("Item detail", id);
+    historys() {
+      this.$router.push({ name: 'ShowAll', params: { data: "history" } });
+    },
+    wishlist() {
+      this.$router.push({ name: 'ShowAll', params: { data: "Wishlist" } });
+    },
+    userStateChange() {
+      this.$emit("userStateChange", {});
     },
     editProfile() {
       this.$router.push("/profile");
@@ -140,10 +180,28 @@ export default {
   margin-left: 5vw;
 }
 
+.left {
+  width: 74vw;
+  height: 100vh;
+  float: left;
+}
+
+.right {
+  width: 19vw;
+  height: 100vh;
+  float: right;
+  /* justify-content: center; */
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
 .profile-image {
+
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  margin-bottom: 2vh;
 }
 
 .profile-name {
@@ -191,11 +249,26 @@ export default {
 
 .card-container {
   overflow-x: auto;
-  white-space: nowrap;
+  white-space: wrap;
+  height: 50vh;
 }
 
 .card {
   display: inline-block;
   margin-right: 10px;
+}
+
+.line {
+  width: 1px;
+  height: 100%;
+  background-color: #bdbdbd;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  margin-left: 75vw;
+}
+
+.showall {
+  text-decoration: underline grey;
 }
 </style>

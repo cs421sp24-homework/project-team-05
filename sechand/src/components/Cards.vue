@@ -1,25 +1,36 @@
 <template>
   <div class="cards-container">
-    <div :key="card.id" v-for="card in cards" class="card-wrapper">
-      <Card @card-detail="$emit('item-detail', card.id)" :card="card" />
+    <div :key="card.id" v-for="(card, index) in getCards(number)" class="card-wrapper">
+      <Card :card="card" :idx="index" />
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import Card from "./Card.vue";
 
 export default {
   name: "Cards",
   props: {
     cards: Array,
+    number: Number,
   },
   components: {
     Card,
   },
-  emits: ["item-detail"],
+  methods: {
+    getCards(number) {
+      if (number === undefined)
+        return this.cards;
+      if (number <= this.cards.length)
+        return this.cards.slice(-number,);
+      else
+        return this.cards;
+    },
+  },
 };
 </script>
+
 <style scoped>
 .cards-container {
   display: flex;

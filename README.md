@@ -23,7 +23,45 @@ SecHand is build based on the following technology:
 
 *For additional informations about the technology stack we used, please refer to Specifications*
 
-## Getting Started
+
+## Use SecHand
+### Access website
+- Use the following link to access SecHand: https://sechand-todd-taos-projects.vercel.app/
+- Or you can run it on your own machine
+
+### Register your account
+- Start using SecHand by registering your account. At the homepage of our website, click the Sign up button at the top right corner.
+- Double check it when you input your message, we will require you to input the verification code we send you.
+- Check the phone number privacy settings. Display your phone number to others? it's up to you.
+- After click "Verify JHED by E-mail", wait for a bit to let the system send your code. If the page does not automatically pop up a window asking for your code, please click the button again.
+
+### Log in to your account
+- Enter your JHED and password to log in.
+- Anytime if you changed your mind and not wish to log in, click the orange title we have at top left, and you will be redirected to home page.
+
+### Post your item out
+- Click your name at the navigation bar to enter your personal homepage, where you can manage the item you posted, your personal information, etc.
+- Now click new post to post your item.
+
+### Edit or Delete your item
+- Sometimes you may find out you want something to be different, like description. So you need to edit some information.
+- Click the item you want to edit inside your personal homepage, then edit or delete the item as you wish.
+
+### Search and Filter
+- You can search objects by name or description and apply filters based on category, location, or price.
+- Click the search button to apply both search queries and filters.
+
+### Chat
+- You can enter your chatbox or directly chat with a seller when you are interested in their item.
+- To enter the general chatbox, click the message icon at the navigation bar.
+- To chat with the seller of an item, go to the item details page and click on the message icon on the right of the seller name.
+
+### Collect items to wishlist
+- You can collect items to wishlist from the item details page.
+- You can view your wihslist in the bottom section of your personal page.
+
+
+## Run Sechand
 
 ### Versions
 
@@ -44,14 +82,14 @@ SecHand is developed using the following version of technologies:
     - Check the following website to install [Python](https://www.python.org/downloads/), and [Node.js](https://nodejs.org/en)
 - You should also make sure that package managers like `pip` and `npm` are also installed.
 
-#### (1) Setup the virtural environment.
+#### (1) Setup the virtual environment.
 
-- ***If you don't want to install and enable virtural environment, Jump to Step 3.***
+- ***If you don't want to install and enable virtual environment, Jump to Step 3.***
     
     ---
 
-- If you have installed either Node/Python/Django on your computer with different versions and don't want to install another version of these due to your personal project dependencies, you can use a virtural environment to install the necessary packages that required by SecHand.
-    - To create a vertural environment, under the root folder of SecHand, uses the following command:
+- If you have installed either Node/Python/Django on your computer with different versions and don't want to install another version of these due to your personal project dependencies, you can use a virtual environment to install the necessary packages that are required by SecHand.
+    - To create a virtual environment, under the root folder of SecHand, use the following command:
         - For Windows
             ```cmd
             python -m venv <virtural env name>
@@ -69,9 +107,9 @@ SecHand is developed using the following version of technologies:
             to represent a virtural environment with python version 3.12.1
     - *We'll use folder name *venv_3_12_1* in the following README file*.
 
-#### (2) Start the virtural environment
+#### (2) Start the virtual environment
 
-- After created a virtural environment for this, you can use the following command to start it:
+- After creating a virtual environment for this, you can use the following command to start it:
     - For Windows
         ```cmd
         .\venv_3_12_1\Scripts\activate
@@ -80,8 +118,8 @@ SecHand is developed using the following version of technologies:
         ```cmd
         source venv_3_12_1/bin/activate
         ```
-- This will start the virtural env and create a virtural env mark, you may find it inside your terminal. 
-- To exit from the virtural environment, use:
+- This will start the virtual env and create a virtual env mark, you may find it inside your terminal. 
+- To exit from the virtual environment, use:
     ```cmd
     deactivate
     ```
@@ -105,12 +143,12 @@ SecHand is developed using the following version of technologies:
     ```cmd
     pip install psycopg2-binary==2.9.9
     ```
-    *We've noticed that this error likely happends on MAC machine, but currently we have no clue what leads to this issue.*
+    *We've noticed that this error likely happens on MAC machine, but currently we have no clue what leads to this issue.*
 
 #### (4) Run the Django backend
 ##### (4.1) Database model migrations
 
-- If any models has been changed since last migration, use the following command to migrate them to the database. 
+- If any models have been changed since the last migration, use the following command to migrate them to the database. 
 - Under the backend directory (\sechand_backend) where manage.py is located. Run the following commands to migrate the database:
 
     ```cmd
@@ -140,14 +178,14 @@ SecHand is developed using the following version of technologies:
 - The server is now running on: http://localhost:8000
 
 #### (5) Install Vue frontend dependencies
-- After the backend has successfully up and running, next step is to start the front end of SecHand.
+- After the backend is successfully up and running, the next step is to start the front end of SecHand.
 - Go to the frontend directory (\sechand). Run the following command to install dependencies used by frontend:
     ```cmd
     npm install
     ```
 - A `node_modules` folder will be created and all dependencies will be installed in there.
 #### (6) Add .env file
-- Create `.env` file at the frontend folder, and fill in following contect:
+- Create `.env` file in the frontend folder, and fill in the following content:
     ```
     VITE_HOST = "http://localhost:8000/"
     ```
@@ -167,31 +205,7 @@ SecHand is developed using the following version of technologies:
     press h + enter to show help
     ```
 
-- The frontend should now running on: http://localhost:5173/
-
-## Use SecHand
-### Access website
-- Use the following link to access SecHand: https://sechand-todd-taos-projects.vercel.app/
-- Or you can run it on your own machine
-
-### Register your account
-- Start using SecHand by registering your account. At the homepage of our website, click the Sign up button at the top right corner.
-- Double check it when you input your message, we will require you to input the verification code we send you.
-- Check the phone number privacy settings. Display your phone number to others? it's up to you.
-- After click "Verify JHED by E-mail", wait for a bit to let the system send your code. If the page does not automatically pop up a window asking for your code, please click the button again.
-
-### Log in to your account
-- Enter your JHED and password to log in.
-- Anytime if you changed your mind and not wish to log in, click the orange title we have at top left, and you will be redirected to home page.
-
-### Post your item out
-- Click your name at the navigation bar to enter your personal homepage, where you can manage the item you posted, your personal information, etc.
-- Now click new post to post your item.
-
-### Edit or Delete your item
-- Sometimes you may find out you want something to be different, like desctiption. So you need to edit some information.
-- Click the item you want to edit inside your personal homepage, then edit or delete the item as you wish.
-
+- The frontend should now be running on: http://localhost:5173/
 
 
 ## Developing
@@ -201,7 +215,7 @@ SecHand is developed using the following version of technologies:
 
 ### Backend Development
 - Use `pip freeze > requirements.txt` to populate requirements file.
-- Note that due to properties of Django, **everytime**, if you make **any changes to the database model**, remember to migrate the model, or you won't see it in the database. Migration commands see ***Section 4.1***.
+- Note that due to properties of Django, **every time** you make **any changes to the database model**, remember to migrate the model, or you won't see it in the database. Migration commands see ***Section 4.1***.
     - If you saw some red warning message related to database model after launching the backend, you should also consider making a migration.
 - When creating and editing models, you might encounter issues like migrations did not work; or after you accidently deleted Database table(but you are not supposed to do that), consider the following solutions:
     - Completely delete all migration files like "0001_initial.py"(don't delete the folder)
@@ -224,10 +238,10 @@ SecHand is developed using the following version of technologies:
         ...
         COMMIT;
         ```
-        Use the SQL command above, to manually create new table inside your database.
+        Use the SQL command above, to manually create a new table inside your database.
 ### Global configuration
 
-*The content of this section will be completed during developing cycle*
+*The content of this section will be completed during the developing cycle*
 
 ### Running tests
 

@@ -15,7 +15,7 @@ def send_verify_email(user):
     # Send email
     send_mail(
         'Sechand Email Verification Code',
-        f'Hi {user.username}, please use this code to verify your email address: {code}',
+        f'Hi {user.username}, please use this code to verify your email address: {code}\n\nThis code will expire in 2 minutes.',
         settings.EMAIL_HOST_USER,
         [user.email],
         fail_silently=False,
@@ -32,7 +32,7 @@ def send_reset_password(user):
     # Send email
     send_mail(
         'Sechand Password Reset Code',
-        f'Hi {user.username}, please use this code to reset your password: {code}',
+        f'Hi {user.username}, please use this code to reset your password: {code}\n\nThis code will expire in 2 minutes.',
         settings.EMAIL_HOST_USER,
         [user.email],
         fail_silently=False,

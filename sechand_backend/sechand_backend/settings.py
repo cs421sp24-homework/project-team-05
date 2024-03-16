@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['oose-project-65116e9428b0.herokuapp.com','localhost:8000/','12
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -39,9 +40,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
-    'rest_framework_simplejwt',
+    "channels",
+    "rest_framework",
+    "rest_framework_simplejwt",
     "post",
-    "user"
+    "user",
+    "chat"
 ]
 
 MIDDLEWARE = [
@@ -97,6 +101,12 @@ DATABASES = {
     }
 }
 
+# Azure Storage configurations
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+AZURE_ACCOUNT_NAME = 'sechand'
+AZURE_ACCOUNT_KEY = 'fMVhL17pFTQ3hxOqIrPaflUyb8pbBkYA5WUOPmd2I4f7tjK54JzfgN3tsU9YE0B9GLtHupM39RSg+AStz7GLnQ=='
+AZURE_CONTAINER = 'media'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -122,7 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 
@@ -165,6 +175,13 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=5),
+}
+
+ASGI_APPLICATION = 'sechand_backend.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
 }

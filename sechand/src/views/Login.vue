@@ -2,7 +2,7 @@
     <div :class="{ 'blurred': isResetting }" style="user-select: none;">
         <div id="left">
             <h1 id="title" @click="toHome">SecHand</h1>
-            <img id="logo" src="../assets/logo_temp.svg" />
+            <img id="logo" src="\icon.png" />
             <h2 id="slogan"> {This is a slogan This is a slogan This is a slogan This is a slogan} </h2>
         </div>
 
@@ -128,6 +128,7 @@ export default {
             else if (this.state == 5) return "Incorrect password!";
             else if (this.state == 6) return "Fill in the JHED and suffix to reset the password!";
             else if (this.state == 7) return "Unxpected error. Please retry later.";
+            else if (this.state == 8) return "You are trying to log in to a new account. Please log out from current account first.";
             return "no msg";
         },
         toast_err_text() {
@@ -144,9 +145,9 @@ export default {
     methods: {
 
         async tryLogin() {
-
             if (this.jhed.length == 0) this.state = 1;
             else if (this.password.length == 0) this.state = 2;
+            else if (localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).username != this.jhed.toLowerCase()) this.state = 8;
             else {
                 var userInfo = null;
                 const HTTP_PREFIX = import.meta.env.VITE_HOST;
@@ -154,46 +155,41 @@ export default {
                     "username": this.jhed.toLowerCase(),
                     "password": this.password
                 })
-                    .then(response => {
+                    .then(async response => {
                         if (!response.data.registered) {
+                            console.log("HHHHHHHHHHHHH");
                             this.state = 4;
-                            return;
                         }
                         else if (!response.data.success) {
                             this.state = 5;
                             this.password = "";
-                            return;
                         }
                         else {
                             userInfo = response.data.userInfo;
+                            try {
+                                const HTTP_PREFIX = import.meta.env.VITE_HOST;
+                                const response = await axios.post(HTTP_PREFIX + 'api/token/', {
+                                    "username": this.jhed.toLowerCase(),
+                                    "password": this.password
+                                });
+                                localStorage.setItem('access_token', response.data.access);
+                                localStorage.setItem('refresh_token', response.data.refresh);
+                                localStorage.setItem('user', JSON.stringify(userInfo));
+                                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+                                console.log(userInfo);
+                                this.$emit('userStateChange', {});
+                                this.$router.push('/');
+                            } catch (error) {
+                                console.error('Login error:', error);
+                                this.$emit('cancelLogin', {});
+                            }
                         }
                     })
                     .catch(error => {
                         this.state = 7;
                         console.error('Error fetching data:', error);
-                        return;
                     })
 
-                // get token
-                try {
-                    const HTTP_PREFIX = import.meta.env.VITE_HOST;
-                    const response = await axios.post(HTTP_PREFIX + 'api/token/', {
-                        "username": this.jhed.toLowerCase(),
-                        "password": this.password
-                    });
-                    // this.$emit('userLogin', {"user": userInfo, "token": response.data});
-                    localStorage.setItem('access_token', response.data.access);
-                    localStorage.setItem('refresh_token', response.data.refresh);
-                    localStorage.setItem('user', JSON.stringify(userInfo));
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-                    console.log(userInfo);
-                    this.$router.push('/userhome');
-                } catch (error) {
-                    console.error('Login error:', error);
-                    // Handle login error (e.g., show error message)
-                    this.$emit('cancelLogin', {});
-                    return;
-                }
             }
 
         },
@@ -310,7 +306,7 @@ export default {
     margin-left: 4%;
     font-family: "Comic Sans MS";
     font-size: 3vw;
-    color: rgb(255, 111, 0);
+    color: #758673;
     user-select: none;
 }
 
@@ -318,7 +314,7 @@ export default {
     float: left;
     height: 100vh;
     width: 50%;
-    background-color: rgb(165, 190, 255);
+    background-color: #d8e8fa;
 }
 
 #right {

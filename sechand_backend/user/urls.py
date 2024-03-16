@@ -1,8 +1,6 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
-from django.conf.urls.static import static
-from django.conf import settings
 
 
 urlpatterns = [
@@ -14,11 +12,8 @@ urlpatterns = [
     path('reset-password/<jhed>', views.reset_password, name='reset_password'),
     path('profile/', views.get_user_profile, name='get_user_profile'),
     path('profile/update', views.update_user_profile, name='update_user_profile'),
-    path('init-info', views.init_info, name='init_info'),
+    path('init-info/', views.init_info, name='init_info'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/order-history', views.get_order_history, name='get_order_history'),
     path('profile/order-history/new', views.add_new_purchase_history, name='add_new_purchase_history')
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
