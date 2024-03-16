@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserNavbar />
+        <UserNavbar :currentUser="this.currentUser" @userLogout="userStateChange" />
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -9,7 +9,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <form @submit.prevent="submitForm">
+                    <form id="form" @submit.prevent="submitForm">
                         <!-- Item Name -->
                         <div class="mb-3">
                             <label for="itemName" class="form-label">Item Name</label>
@@ -44,7 +44,7 @@
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
                             <input type="text" class="form-control" id="address" :value="this.currentUser.address.name"
-                                readonly />
+                                disabled />
                         </div>
 
                         <!-- Buttons -->
@@ -53,7 +53,7 @@
                                 Cancel
                             </button>
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="submit" class="btn btn-danger me-2" @click="deleteItem">
+                            <button type="submit" class="btn btn-danger me-2" id="dltBtn" @click="deleteItem">
                                 Delete
                             </button>
                         </div>
@@ -62,8 +62,8 @@
                 <div class="col-md-6">
                     <!-- Image Preview -->
                     <div class="mb-3">
-                        <label class="form-label">Image Preview</label>
-                        <img v-if="picture" :src="picturePreview" class="img-fluid" alt="Image Preview" />
+                        <label class="form-label">Image Preview</label><br>
+                        <img v-if="picture" :src="pictureUrl" class="img-fluid" alt="Image Preview" />
                         <div v-else class="text-muted">No image selected</div>
                     </div>
                 </div>
@@ -71,18 +71,23 @@
         </div>
     </div>
 </template>
-    
+
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 export default {
     name: "EditItem",
+    props: {
+        currentUser: Object,
+    },
     components: {
         UserNavbar,
     },
     data() {
         return {
             item: {},
+            picture: null,
+            pictureUrl: '',
             currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
@@ -100,8 +105,12 @@ export default {
         }
     },
     methods: {
+        userStateChange() {
+            this.$emit("userStateChange", {});
+        },
         handleFileUpload(event) {
             this.picture = event.target.files[0];
+            this.pictureUrl = URL.createObjectURL(this.picture);
         },
         cancel() {
             this.$router.go(-1);
@@ -138,7 +147,7 @@ export default {
                 formData.append('price', this.item.price);
                 // formData.append('user_id', this.user.id);
                 if (this.picture) {
-                    formData.append('picture', this.picture);
+                    formData.append('image', this.picture);
                 }
                 console.log(formData);
                 const response = await axios.patch(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, formData, {
@@ -158,7 +167,7 @@ export default {
     },
 };
 </script>
-<style>
+<style scoped>
 .btn {
     margin-left: 4px;
 }
@@ -168,4 +177,3 @@ export default {
     cursor: pointer;
 }
 </style>
-    

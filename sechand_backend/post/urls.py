@@ -10,14 +10,23 @@ urlpatterns = [
     #   int count: indicates numbers of each request should return
     path("Items/all", views.GetAllItems, name="GetAllItems"),
 
-    path("Items/Collection/new", views.AddNewCollection, name="AddNewCollection"),
+    path("Items/Collection/new/<uuid:item_id>", views.AddNewCollection, name="AddNewCollection"),
 
     path("Items/Collection", views.GetUserCollection, name="GetUserCollection"),
+
+    path("Items/Collection/delete/<uuid:item_id>", views.DeleteUserCollection, name="DeleteUserCollection"),
+
+    path("Items/Collection/item/<uuid:item_id>", views.IsUserCollected, name="IsUserCollected"),
 
     # POST
     path("Item/new", views.CreateNewItem, name="CreateNewItem"),
 
+
     # GET PATCH DELETE
-    path("Item/<uuid:item_id>", views.ProcessSingleItem, name="ProcessSingleItem")
+    path("Item/<uuid:item_id>", views.ProcessSingleItem, name="ProcessSingleItem"),
+
+    path("Items/Search", views.SearchItems, name="SearchItems"),
+
+    path("Items/Browse", views.BrowseOneKindItems, name="BrowseOneKindItems")
 
 ]

@@ -1,8 +1,6 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
-from django.conf.urls.static import static
-from django.conf import settings
 
 
 urlpatterns = [
@@ -19,6 +17,3 @@ urlpatterns = [
     path('profile/order-history', views.get_order_history, name='get_order_history'),
     path('profile/order-history/new', views.add_new_purchase_history, name='add_new_purchase_history')
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

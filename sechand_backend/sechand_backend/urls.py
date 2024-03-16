@@ -17,12 +17,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
-    # To access database, username: admin, password: admin1234
+    # To access database, username: admin, password: admin
     path("admin/", admin.site.urls),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path("api/v1/post/", include("post.urls")),
-    path("user/", include("user.urls"))
+    path("user/", include("user.urls")),
+    # Chat DEV
+    path("api/v1/chat/", include("chat.urls"))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

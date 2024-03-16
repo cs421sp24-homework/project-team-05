@@ -2,17 +2,20 @@
   <nav class="navbar navbar-expand-sm fixed-top">
     <div class="navbar-elements">
       <a class="navbar-brand" href="#" @click="goToHome">
-        <img src="../assets/logo_temp.svg" alt="Icon" class="icon" />
+        <img src="../assets/logo_temp.svg" alt="Icon" class="icon" id="sechand-icon" />
         Sechand</a>
       <div class="navbar-nav ml-auto">
         <div class="nav-item">
-          <img :src="currentUser.image" class="user-icon" @click="profile" />
+          <img src="/comment.png" id="chat" @click="chat" />
+        </div>
+        <div class="nav-item">
+          <img :src="this.currentUser.image" class="user-icon" @click="profile" id="avt" />
         </div>
         <div class="nav-item">
           <Button @btn-click="profile" :text="currentUser.displayname" color="transparent"></Button>
         </div>
         <div class="nav-item">
-          <Button class="logout-btn" @btn-click="logout" text="Logout" color="danger"></Button>
+          <Button class="logout-btn" id="logoutBtn" @btn-click="logout" text="Logout" color="danger"></Button>
         </div>
       </div>
     </div>
@@ -23,40 +26,39 @@
 import Button from "./Button.vue";
 export default {
   name: "UserNavbar",
-  // props: {
-  //   currentUser: Object,
-  // },
+  props: {
+    currentUser: Object,
+  },
   components: {
     Button,
   },
-  data() {
-    return {
-      currentUser: JSON.parse(localStorage.getItem('user'))
-    };
+  created() {
+    console.log("UserNavbar", this.currentUser);
   },
   methods: {
+    chat() {
+      this.$router.push("/chat");
+    },
     profile() {
       this.$router.push("/me");
     },
     goToHome() {
-      this.$router.push("/userhome");
+      this.$router.push("/");
     },
     logout() {
+      this.$router.replace("/");
       localStorage.clear(); // Clear all storage
       this.$emit("userLogout", {});
-      this.$router.replace({ name: 'Home' });
+      console.log("logout", this.currentUser);
+
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
 .navbar {
   background-color: #98a497;
-  /* padding-top: 15px; */
-  /* Increase top padding */
-  /* padding-bottom: 20px; */
-  /* Increase bottom padding */
 }
 
 .navbar-elements {
@@ -106,5 +108,11 @@ export default {
   padding: 5px 10px;
   border-radius: 5px;
   /* cursor: pointer; */
+}
+
+#chat {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 </style>

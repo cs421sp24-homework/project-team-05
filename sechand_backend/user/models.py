@@ -26,7 +26,7 @@ class VerifyEmailCode(models.Model):
 
     # Code expires after 1 minute
     def is_expired(self):
-        return timezone.now() > self.created_at + datetime.timedelta(minutes=10)
+        return timezone.now() > self.created_at + datetime.timedelta(minutes=2)
 
 
 class ResetPasswordCode(models.Model):
@@ -37,7 +37,7 @@ class ResetPasswordCode(models.Model):
 
     # Code expires after 1 minute
     def is_expired(self):
-        return timezone.now() > self.created_at + datetime.timedelta(minutes=10)
+        return timezone.now() > self.created_at + datetime.timedelta(minutes=2)
     
 
 class Address(models.Model):
