@@ -21,6 +21,7 @@ axios.interceptors.response.use(response => response, async error => {
             const response = await axios.post(HTTP_PREFIX + 'api/token/refresh/', { "refresh": refreshToken });
             const newAccessToken = response.data.access;
             localStorage.setItem('access_token', newAccessToken);
+
             axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;  // Update the global header
             originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;  // Update the original request
             console.log("new auth");
