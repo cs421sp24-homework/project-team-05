@@ -5,9 +5,9 @@ env:
 
 on:
   push:
-    branches: [ "main", "pre-deploy" ]
+    branches: [ "main", "pre-deploy", "development" ]
   pull_request:
-    branches: [ "main", "pre-deploy" ]
+    branches: [ "main", "pre-deploy", "development" ]
   
 jobs:
   Deploy-Production:
