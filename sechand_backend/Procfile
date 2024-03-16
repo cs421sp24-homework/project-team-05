@@ -1,2 +1,1 @@
-web: gunicorn --pythonpath sechand_backend sechand_backend.wsgi
 web: daphne -p $PORT sechand_backend.asgi:application
