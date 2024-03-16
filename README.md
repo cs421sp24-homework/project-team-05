@@ -57,7 +57,7 @@ SecHand is build based on the following technology:
 - To chat with the seller of an item, go to the item details page and click on the message icon on the right of the seller name.
 - **Note**: If you are running Sechand on your local machine, to test the chat, you would need to open two accounts in two separate browsers (e.g. Chrome and Firefox), not just two web pages.
 
-### Collect items to wishlist
+### Collect items to wishlist (Not for this iteration, still under construction)
 - You can collect items to wishlist from the item details page.
 - You can view your wishlist in the bottom section of your personal page.
 
