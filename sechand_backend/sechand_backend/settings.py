@@ -183,16 +183,6 @@ SIMPLE_JWT = {
 
 ASGI_APPLICATION = 'sechand_backend.asgi.application'
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": os.environ.get('REDIS_URL'),
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         }
-#     }
-# }
-
 CHANNEL_LAYERS = {
     'default': {
         # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
