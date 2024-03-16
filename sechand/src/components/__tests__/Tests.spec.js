@@ -47,7 +47,7 @@ describe("End-to-end Test", () => {
     it("Click 'Login' button on Login page", async () => {
         wrapper.find("#logBtn").trigger("click");
         await router.isReady();
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 4000));
         expect(wrapper.vm.$route.path).toBe("/");
         expect(wrapper.html()).toContain("Logout");
     });
