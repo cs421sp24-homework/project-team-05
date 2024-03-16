@@ -4,21 +4,21 @@ import { mount } from "@vue/test-utils";
 import App from "@/App.vue";
 import router from "@/router";
 
-// describe('Routing Test for Authentication Protection', () => {
+describe('Routing Test for Authentication Protection', () => {
 
-//     const routes = router.getRoutes();
-//     const wrapper = mount(App, {global: {plugins: [router]}});
-//     for (const route of routes) {
-//         it(route.meta.requiresAuth?
-//             "Redirects to 'Home' page when accessing '" + route.path + "' page without authentication;" :
-//             "Stay at '" + route.path + "' page without authentication;" , async () => {
-//                 await router.push(route.path);
-//                 if (route.meta.requiresAuth) expect(wrapper.vm.$route.path).toBe('/');
-//                 else expect(wrapper.vm.$route.path).toBe(route.path);
-//             }
-//         )
-//     }
-// })
+    const routes = router.getRoutes();
+    const wrapper = mount(App, {global: {plugins: [router]}});
+    for (const route of routes) {
+        it(route.meta.requiresAuth?
+            "Redirects to 'Home' page when accessing '" + route.path + "' page without authentication;" :
+            "Stay at '" + route.path + "' page without authentication;" , async () => {
+                await router.push(route.path);
+                if (route.meta.requiresAuth) expect(wrapper.vm.$route.path).toBe('/');
+                else expect(wrapper.vm.$route.path).toBe(route.path);
+            }
+        )
+    }
+})
 
 describe("End-to-end Test", () => {
     const wrapper = mount(App, { global: { plugins: [router] } });
@@ -116,7 +116,7 @@ describe("End-to-end Test", () => {
     });
 
     it("Change the Name of the Item", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         const nnin = wrapper.find("#itemName");
         nnin.element.value = "E2E Changed";
         await nnin.trigger("input");
@@ -125,9 +125,9 @@ describe("End-to-end Test", () => {
 
     it("Click 'Update' Button", async () => {
         await wrapper.find("#form").trigger("submit.prevent");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         expect(wrapper.vm.$route.path).toContain("/showitem");
-        await new Promise((resolve) => setTimeout(resolve, 300));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         expect(wrapper.html()).toContain("E2E Changed");
     });
     // Search the new item -- show changed name
@@ -147,7 +147,7 @@ describe("End-to-end Test", () => {
 
     it("Click the Search Button", async () => {
         await wrapper.find("#searchbtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         expect(wrapper.html()).toContain("E2E Changed");
     });
 
@@ -250,7 +250,7 @@ describe("End-to-end Test", () => {
     });
 
     it("Select a Chat", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 4000));
         await wrapper.find("#list_item").trigger("click");
         await new Promise((resolve) => setTimeout(resolve, 100));
         expect(wrapper.html()).contain("Send");
