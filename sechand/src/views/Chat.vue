@@ -141,7 +141,7 @@ export default {
       this.scrollToBottom();
     },
     connect() {
-      const wsPath = `wss://oose-project-65116e9428b0.herokuapp.com/ws/chat/${this.home_user.id}/`; // Use roomId in the path
+      const wsPath = `ws://oose-project-65116e9428b0.herokuapp.com/ws/chat/${this.home_user.id}/`; // Use roomId in the path
       console.log("using wsPath ", wsPath);
       if (this.ws) {
         this.ws.close(); // Close the existing connection if it exists
@@ -165,14 +165,14 @@ export default {
           messages: [message],
           last_message: message,
         });
+        if (this.active_chat) {
+          this.active_chat++;
+          this.active_roomId = this.chat_list[this.active_chat].id;
+        }
       }
       room.messages.push(message);
       room.last_message = message;
       this.scrollToBottom();
-      if (this.active_chat) {
-        this.active_chat++;
-        this.active_roomId = this.chat_list[this.active_chat].id;
-      }
     },
     sendMessage() {
       if (this.newMessage.trim() !== "") {
