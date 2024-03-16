@@ -84,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "sechand_backend.wsgi.application"
+# WSGI_APPLICATION = "sechand_backend.wsgi.application"
 
 
 # Database
