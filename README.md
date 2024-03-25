@@ -26,7 +26,7 @@ SecHand is build based on the following technology:
 
 ## Use SecHand
 ### Access website
-- Use the following link to access SecHand: https://sechand-todd-taos-projects.vercel.app/
+- Use the following link to access SecHand: https://sechand.vercel.app/
 - Or you can run it on your own machine
 
 ### Register your account
