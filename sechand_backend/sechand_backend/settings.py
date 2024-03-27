@@ -64,6 +64,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://sechand.vercel.app",
+    "https://sechand-k00feeehg-todd-taos-projects.vercel.app",
+    "https://sechand-todd-taos-projects.vercel.app"
 ]
 
 # CORS_ALLOW_ALL_ORIGINS = True
