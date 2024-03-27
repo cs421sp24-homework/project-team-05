@@ -45,7 +45,7 @@ export default {
     },
     userStateChange() {
       this.currentUser = JSON.parse(localStorage.getItem("user"));
-      console.log("APP",this.currentUser);
+      console.log("APP", this.currentUser);
     },
   },
 
