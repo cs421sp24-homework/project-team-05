@@ -186,14 +186,20 @@ SIMPLE_JWT = {
 ASGI_APPLICATION = 'sechand_backend.asgi.application'
 
 CHANNEL_LAYERS = {
-    'default': {
-        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [{
-                "address": os.environ.get('REDIS_URL'),
-                "ssl_cert_reqs": None,
-            }]
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
         }
     }
-}
+
+if os.environ.get('REDIS_URL'):
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [{
+                    "address": os.environ.get('REDIS_URL'),
+                    "ssl_cert_reqs": None,
+                }]
+            }
+        }
+    }
