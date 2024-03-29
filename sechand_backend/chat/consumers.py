@@ -1,12 +1,9 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync, sync_to_async
 import json
-from .models import Message, Room
-from .serializers import MessageSerializer
+# from .models import Message, Room
+# from .serializers import MessageSerializer
 from django.conf import settings
-from django.contrib.auth import get_user_model
-
-UserModel = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -65,6 +62,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def SaveMessage(self, room_id, sender_id, message_text):
         # This helper method saves the message to the database
+        from .models import Message, Room
+        from .serializers import MessageSerializer
+        from django.contrib.auth import get_user_model
+        UserModel = get_user_model()
         try:
             room = await sync_to_async(Room.objects.get)(id=room_id)
             user = await sync_to_async(UserModel.objects.get)(id=sender_id)
@@ -98,5 +99,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
 
     async def get_user_rooms(self, user_id):
+        from .models import Room
         rooms = await sync_to_async(list)(Room.objects.filter(users__contains=[user_id]))
         return rooms

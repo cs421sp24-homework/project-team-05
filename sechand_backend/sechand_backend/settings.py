@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-b^slz!-t0w0z_s*3yye3f7-ofc(ohp!8v%8)bpbnne8d)(@o7y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['oose-project-65116e9428b0.herokuapp.com','localhost:8000/','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['oose-project-65116e9428b0.herokuapp.com','localhost:8000','127.0.0.1','localhost']
 
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "channels",
-    # "channels_redis",
+    "channels_redis",
     "rest_framework",
     "rest_framework_simplejwt",
     "post",
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -61,13 +61,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-#     "https://sechand.vercel.app",
-# ]
-
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://sechand.vercel.app",
+    "https://sechand-k00feeehg-todd-taos-projects.vercel.app",
+    "https://sechand-todd-taos-projects.vercel.app"
+]
 
+CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = "sechand_backend.urls"
 
 TEMPLATES = [
@@ -184,11 +186,20 @@ SIMPLE_JWT = {
 ASGI_APPLICATION = 'sechand_backend.asgi.application'
 
 CHANNEL_LAYERS = {
-    'default': {
-        # 'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL')],
-        },
-    },
-}
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        }
+    }
+
+if os.environ.get('REDIS_URL'):
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [{
+                    "address": os.environ.get('REDIS_URL'),
+                    "ssl_cert_reqs": None,
+                }]
+            }
+        }
+    }
