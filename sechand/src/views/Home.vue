@@ -87,7 +87,7 @@ export default {
     try {
       if (this.currentUser) {
         const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/all", {
+        const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/user/all", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

@@ -18,12 +18,10 @@ import uuid
 def GetAllUserItems(request):
     if(request.user):
         #TODO: validate user token again
-        user_items = Item.objects.filter(seller = request.user.id)
-        if user_items.exists():
-            serializer = ItemSerializer(user_items, many=True)
-            return JsonResponse(serializer.data, safe=False, status=200)
-        else:
-            return JsonResponse({}, status=200)
+        user_items_list = list(Item.objects.filter(seller = request.user.id))
+        user_items = user_items_list[::-1]
+        serializer = ItemSerializer(user_items, many=True)
+        return JsonResponse(serializer.data, safe=False, status=200)
     else:
         return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
 
@@ -46,6 +44,30 @@ def GetAllItems(request):
     serializer = ItemSerializerWithSellerName(all_items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
+@api_view(['GET'])
+def GetAllItemsByDistance(request):
+    # get user status
+    count = request.data.get('count', 20)
+    # Sanitize params
+    try:
+        count = int(count)
+    except ValueError:
+        print("Invalid count parameter, must be an integer")
+        return JsonResponse({'error': 'Invalid count parameter, must be an integer'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if count < 1 or count > 30:
+        return JsonResponse({'error': 'Count parameter too large'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    all_items = Item.objects.all()[:count]
+    all_distances = {}
+    for item in all_items:
+        all_distances[item.id] = get_distance(request.user.address, item.seller.address)
+    sorted_items = sorted(list(all_items), key=lambda item: all_distances.get(item.id))
+    # for item in sorted_items:
+    #     print(all_distances.get(item.id))
+    serializer = ItemSerializerWithSellerName(sorted_items, many=True)
+    return JsonResponse(serializer.data, safe=False, status=200)
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def AddNewCollection(request,item_id):
@@ -62,7 +84,7 @@ def AddNewCollection(request,item_id):
         return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def GetUserCollection(request):
     if(request.user):
         #TODO: validate user token again
@@ -70,7 +92,8 @@ def GetUserCollection(request):
             user_id = request.user.id
             collections = UserCollection.objects.filter(user = user_id)
             item_ids =[collection.item for collection in collections]
-            items = Item.objects.filter(id__in=item_ids)
+            items_list = list(Item.objects.filter(id__in=item_ids))
+            items = items_list[::-1]
             serializer = ItemSerializerWithSellerName(items, many=True)
             return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         except Exception as e:
@@ -79,7 +102,7 @@ def GetUserCollection(request):
        return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
 
 @api_view(['DELETE'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def DeleteUserCollection(request,item_id):
     if(request.user):
         #TODO: validate user token again
@@ -95,7 +118,7 @@ def DeleteUserCollection(request,item_id):
        return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
     
 @api_view(['POST'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def IsUserCollected(request, item_id):
     if(request.user):
         #TODO: validate user token again
@@ -152,7 +175,7 @@ def ProcessSingleItem(request, item_id):
         
 @api_view(['POST'])
 # TODO: remove when actural release
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def CreateNewItem(request):
     if(request.user):
         #TODO: validate user token again
