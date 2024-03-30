@@ -15,7 +15,7 @@
         </ul>
       </div>
       <div class="right">
-        <Seach :categories="this.categories" @onClick="search" />
+        <Search :categories="this.categories" @onClick="search" />
         <div class="dropdowns-container">
           <Dropdown class="buttons" text="Location" :dropdownData="this.addrList" @update:selected="UpdateLocation">
           </Dropdown>
@@ -47,7 +47,7 @@
 
 <script>
 import UserNavbar from "../components/UserNavbar.vue";
-import Seach from "../components/Seach.vue";
+import Search from "../components/Search.vue";
 import Button from "@/components/Button.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
@@ -63,7 +63,7 @@ export default {
   },
   components: {
     UserNavbar,
-    Seach,
+    Search,
     Dropdown,
     Cards,
     Button,

@@ -15,7 +15,7 @@
 <script>
 import Button from "@/components/Button.vue";
 export default {
-  name: "Seach",
+  name: "Search",
   props: {
     categories: Array,
   },

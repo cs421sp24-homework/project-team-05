@@ -81,7 +81,7 @@ const router = createRouter({
         meta: { requiresAuth: true }
     },
     {
-      path: '/chat:receiver',
+      path: '/chat/:receiver',
       component: Chat,
       name: 'DirectChat',
       meta: { requiresAuth: true }
