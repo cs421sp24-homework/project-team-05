@@ -4,8 +4,9 @@ from django.db import IntegrityError
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer, CollectionDeserializer
-from .models import Item, UserCollection
+from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer
+from .serializers import TransactionSerializer, TransactionDeserializer
+from .models import Item, UserCollection, Transaction
 from user.models import Address
 from .utils import get_distance
 from django.db.models import Q
@@ -237,3 +238,45 @@ def BrowseOneKindItems(request):
     items = Item.objects.filter(category=category_value)
     serializer = ItemSerializerWithSellerName(items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def SaveTransaction(request):
+    if (request.user):
+
+        seller = request.data['seller_id']
+        buyer = request.data['buyer_id']
+        if(request.user.id == seller or request.user.id == buyer):
+            saved = False
+            while not saved:
+                serializer = TransactionSerializer(data=request.data)
+                if serializer.is_valid():
+                    try:
+                        serializer.save()
+                        saved = True
+                        return JsonResponse(serializer.data, status=201)
+                    except IntegrityError:
+                        continue
+                else:
+                    return JsonResponse({'error': 'Failed when saving transaction, serializing object.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return JsonResponse({'error': 'You are neither part of this transaction.'}, status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def GetAllTransactions(request):
+    if (request.user):
+        try:
+            user_id = request.user.id
+            # user_id = request.data['user_id']
+            transactions = Transaction.objects.filter(seller_id = user_id) | Transaction.objects.filter(buyer_id = user_id)
+            serializer = TransactionDeserializer(transactions, many=True)
+            print("Ops")
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f"Error saving message: {e}")
+            return JsonResponse({"error": e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
