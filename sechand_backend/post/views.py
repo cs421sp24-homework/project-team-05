@@ -89,9 +89,9 @@ def DeleteUserCollection(request,item_id):
         try:
             item = UserCollection.objects.get(user = user_id, item=item_id)
             item.delete()
-            return JsonResponse({'message': 'Item deleted'}, status=status.HTTP_200_OK)
-        except Item.DoesNotExist:
-            return JsonResponse({'error': 'Item not found'}, status=status.HTTP_200_OK)
+            return JsonResponse({'message': 'UserCollection deleted'}, status=status.HTTP_200_OK)
+        except UserCollection.DoesNotExist:
+            return JsonResponse({'error': 'UserCollection not found'}, status=status.HTTP_200_OK)
     else:
        return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
     
@@ -103,7 +103,7 @@ def IsUserCollected(request, item_id):
         user_id = request.user.id
         # user_id = request.data['user_id']      # enable this disable above for postman
         try:
-            item = UserCollection.objects.get(user = user_id, item=item_id)
+            UserCollection.objects.get(user = user_id, item=item_id)
             return JsonResponse({'collected': True}, status=status.HTTP_200_OK)
         except UserCollection.DoesNotExist:
             return JsonResponse({'collected': False}, status=status.HTTP_200_OK)
