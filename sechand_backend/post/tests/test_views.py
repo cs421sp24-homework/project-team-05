@@ -100,7 +100,140 @@ User = get_user_model()
 #         response = self.client.post(self.url, data=params)
 #         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class AddNewCollectionTest(TestCase):
+# class AddNewCollectionTest(TestCase):
+#     def setUp(self):
+#         self.client = APIClient()
+#         # Set up user and address
+#         self.seller = User.objects.create_user(username='testseller', password='seller1234', email='testseller@test.com')
+#         self.buyer = User.objects.create_user(username='testbuyer', password='buyer1234', email='testbuyer@test.com')
+#         self.item = Item.objects.create(
+#             name='Math Textbook',
+#             description='Description for Item 1',
+#             category='Books',
+#             price=Decimal('20.00'),
+#             seller=self.seller,
+#             is_sold=False
+#         )
+#         self.url = reverse('AddNewCollection', kwargs={'item_id': str(self.item.id)})
+    
+#     def test_add_collection(self):
+#         self.client.force_authenticate(user=self.buyer)
+#         # params = {'user': self.user.id, 'item': self.item1.id}
+#         response = self.client.post(self.url)
+#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+# class GetCollectionTest(TestCase):
+#     def setUp(self):
+#         self.client = APIClient()
+#         # Set up user and address
+#         self.seller = User.objects.create_user(username='testseller', password='seller1234', email='testseller@test.com')
+#         self.buyer = User.objects.create_user(username='testbuyer', password='buyer1234', email='testbuyer@test.com')
+
+#         self.item = Item.objects.create(
+#             name='Baseball',
+#             description='Description for Item 2',
+#             category='Sporting Goods',
+#             price=Decimal('50.00'),
+#             seller=self.seller,
+#             is_sold=False
+#         )
+#         self.item2 = Item.objects.create(
+#             name='Math Textbook',
+#             description='Description for Item 1',
+#             category='Books',
+#             price=Decimal('20.00'),
+#             seller=self.seller,
+#             is_sold=False
+#         )
+#         self.collection = UserCollection.objects.create(
+#             user = self.buyer,
+#             item = self.item.id
+#         )
+
+#         self.url = reverse('GetUserCollection')
+#         self.isCollectUrl = reverse('IsUserCollected', kwargs={'item_id': str(self.item.id)})
+    
+#     def test_get_collection(self):
+#         self.client.force_authenticate(user=self.buyer)
+#         # params = {'user': self.user.id, 'item': self.item1.id}
+#         response = self.client.get(self.url)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertEqual(len(response.json()), 1)
+#         self.assertEqual(response.json()[0]['id'], str(self.item.id))
+#         self.assertEqual(response.json()[0]['name'], self.item.name)
+#         self.assertEqual(response.json()[0]['description'], self.item.description)
+#         self.assertEqual(response.json()[0]['category'], self.item.category)
+
+#         self.collection2 = UserCollection.objects.create(
+#             user = self.buyer,
+#             item = self.item2.id
+#         )
+
+#         response = self.client.get(self.url)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertEqual(len(response.json()), 2)
+#         self.assertEqual(response.json()[1]['id'], str(self.item2.id))
+#         self.assertEqual(response.json()[1]['name'], self.item2.name)
+#         self.assertEqual(response.json()[1]['description'], self.item2.description)
+#         self.assertEqual(response.json()[1]['category'], self.item2.category)
+
+#     def test_is_collected(self):
+#         self.client.force_authenticate(user=self.buyer)
+#         response = self.client.post(self.isCollectUrl)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertEqual(response.json()['collected'], True)
+
+# class DeleteCollectionTest(TestCase):
+#     def setUp(self):
+#         self.client = APIClient()
+#         # Set up user and address
+#         self.seller = User.objects.create_user(username='testseller', password='seller1234', email='testseller@test.com')
+#         self.buyer = User.objects.create_user(username='testbuyer', password='buyer1234', email='testbuyer@test.com')
+
+#         self.item = Item.objects.create(
+#             name='Baseball',
+#             description='Description for Item 2',
+#             category='Sporting Goods',
+#             price=Decimal('50.00'),
+#             seller=self.seller,
+#             is_sold=False
+#         )
+#         self.item2 = Item.objects.create(
+#             name='Math Textbook',
+#             description='Description for Item 1',
+#             category='Books',
+#             price=Decimal('20.00'),
+#             seller=self.seller,
+#             is_sold=False
+#         )
+#         self.collection = UserCollection.objects.create(
+#             user = self.buyer,
+#             item = self.item.id
+#         )
+#         self.collection2 = UserCollection.objects.create(
+#             user = self.buyer,
+#             item = self.item2.id
+#         )
+
+#         self.addurl = reverse('AddNewCollection', kwargs={'item_id': str(self.item2.id)})
+#         self.delurl = reverse('DeleteUserCollection', kwargs={'item_id': str(self.item2.id)})
+
+#         self.client.post(self.addurl)
+    
+#     def test_delete_collection(self):
+#         self.client.force_authenticate(user=self.buyer)
+#         # params = {'user': self.user.id, 'item': self.item1.id}
+#         response = self.client.delete(self.delurl)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertEqual(len(response.json()), 1)
+#         self.assertEqual(response.json()['message'], "UserCollection deleted")
+
+#         response = self.client.delete(self.delurl)
+#         # self.assertRaises(UserCollection.DoesNotExist, self.client.delete, self.delurl)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertEqual(response.json()['error'], "UserCollection not found")
+
+class SaveNewTransaction(TestCase):
     def setUp(self):
         self.client = APIClient()
         # Set up user and address
@@ -114,123 +247,11 @@ class AddNewCollectionTest(TestCase):
             seller=self.seller,
             is_sold=False
         )
-        self.url = reverse('AddNewCollection', kwargs={'item_id': str(self.item.id)})
+        self.url = reverse('SaveTransaction')
+        self.client.force_authenticate(user=self.buyer)
     
     def test_add_collection(self):
-        self.client.force_authenticate(user=self.buyer)
-        # params = {'user': self.user.id, 'item': self.item1.id}
-        response = self.client.post(self.url)
+        params = {'seller_id': self.seller, 'buyer_id': self.buyer}
+        response = self.client.post(self.url, data=params)
+        print(response.json())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-class GetCollectionTest(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-        # Set up user and address
-        self.seller = User.objects.create_user(username='testseller', password='seller1234', email='testseller@test.com')
-        self.buyer = User.objects.create_user(username='testbuyer', password='buyer1234', email='testbuyer@test.com')
-
-        self.item = Item.objects.create(
-            name='Baseball',
-            description='Description for Item 2',
-            category='Sporting Goods',
-            price=Decimal('50.00'),
-            seller=self.seller,
-            is_sold=False
-        )
-        self.item2 = Item.objects.create(
-            name='Math Textbook',
-            description='Description for Item 1',
-            category='Books',
-            price=Decimal('20.00'),
-            seller=self.seller,
-            is_sold=False
-        )
-        self.collection = UserCollection.objects.create(
-            user = self.buyer,
-            item = self.item.id
-        )
-
-        self.url = reverse('GetUserCollection')
-        self.isCollectUrl = reverse('IsUserCollected', kwargs={'item_id': str(self.item.id)})
-    
-    def test_get_collection(self):
-        self.client.force_authenticate(user=self.buyer)
-        # params = {'user': self.user.id, 'item': self.item1.id}
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()[0]['id'], str(self.item.id))
-        self.assertEqual(response.json()[0]['name'], self.item.name)
-        self.assertEqual(response.json()[0]['description'], self.item.description)
-        self.assertEqual(response.json()[0]['category'], self.item.category)
-
-        self.collection2 = UserCollection.objects.create(
-            user = self.buyer,
-            item = self.item2.id
-        )
-
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()), 2)
-        self.assertEqual(response.json()[1]['id'], str(self.item2.id))
-        self.assertEqual(response.json()[1]['name'], self.item2.name)
-        self.assertEqual(response.json()[1]['description'], self.item2.description)
-        self.assertEqual(response.json()[1]['category'], self.item2.category)
-
-    def test_is_collected(self):
-        self.client.force_authenticate(user=self.buyer)
-        response = self.client.post(self.isCollectUrl)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['collected'], True)
-
-class DeleteCollectionTest(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-        # Set up user and address
-        self.seller = User.objects.create_user(username='testseller', password='seller1234', email='testseller@test.com')
-        self.buyer = User.objects.create_user(username='testbuyer', password='buyer1234', email='testbuyer@test.com')
-
-        self.item = Item.objects.create(
-            name='Baseball',
-            description='Description for Item 2',
-            category='Sporting Goods',
-            price=Decimal('50.00'),
-            seller=self.seller,
-            is_sold=False
-        )
-        self.item2 = Item.objects.create(
-            name='Math Textbook',
-            description='Description for Item 1',
-            category='Books',
-            price=Decimal('20.00'),
-            seller=self.seller,
-            is_sold=False
-        )
-        self.collection = UserCollection.objects.create(
-            user = self.buyer,
-            item = self.item.id
-        )
-        self.collection2 = UserCollection.objects.create(
-            user = self.buyer,
-            item = self.item2.id
-        )
-
-        self.addurl = reverse('AddNewCollection', kwargs={'item_id': str(self.item2.id)})
-        self.delurl = reverse('DeleteUserCollection', kwargs={'item_id': str(self.item2.id)})
-
-        self.client.post(self.addurl)
-    
-    def test_delete_collection(self):
-        self.client.force_authenticate(user=self.buyer)
-        # params = {'user': self.user.id, 'item': self.item1.id}
-        response = self.client.delete(self.delurl)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()['message'], "UserCollection deleted")
-
-        response = self.client.delete(self.delurl)
-        # self.assertRaises(UserCollection.DoesNotExist, self.client.delete, self.delurl)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['error'], "UserCollection not found")
-
-

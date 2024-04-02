@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=10)
     address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True)
     displayname = models.CharField(max_length=30)
-    image = models.ImageField(upload_to='media/', blank=True, null=True)
+    image = models.ImageField(upload_to='media/userAvatar/', blank=True, null=True)
     is_visible = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
 

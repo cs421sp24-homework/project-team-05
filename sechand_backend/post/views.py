@@ -254,7 +254,7 @@ def SaveTransaction(request):
                     try:
                         serializer.save()
                         saved = True
-                        return JsonResponse(serializer.data, status=201)
+                        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
                     except IntegrityError:
                         continue
                 else:
