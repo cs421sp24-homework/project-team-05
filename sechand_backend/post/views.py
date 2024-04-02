@@ -244,9 +244,9 @@ def BrowseOneKindItems(request):
 def SaveTransaction(request):
     if (request.user):
 
-        seller = request.data['seller_id']
-        buyer = request.data['buyer_id']
-        if(request.user.id == seller or request.user.id == buyer):
+        # seller = request.data['seller_id']
+        # buyer = request.data['buyer_id']
+        # if(request.user.id == seller or request.user.id == buyer):
             saved = False
             while not saved:
                 serializer = TransactionSerializer(data=request.data)
@@ -259,8 +259,8 @@ def SaveTransaction(request):
                         continue
                 else:
                     return JsonResponse({'error': 'Failed when saving transaction, serializing object.'}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return JsonResponse({'error': 'You are neither part of this transaction.'}, status=status.HTTP_401_UNAUTHORIZED)
+        # else:
+        #     return JsonResponse({'error': 'You are neither part of this transaction.'}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
 
