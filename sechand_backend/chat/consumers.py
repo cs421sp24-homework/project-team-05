@@ -40,13 +40,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json.get('message', ''),
-        item = text_data_json.get('item', '')
+        message = text_data_json.get('message', '')
+        # item = text_data_json.get('item', '')
         sender_web = text_data_json.get('sender', '')
         room_id = text_data_json.get('room_id', '')
         room_group_name = 'chat_%s' % room_id
 
-        message = await self.SaveMessage(room_id, sender_web, message, item)
+        message = await self.SaveMessage(room_id, sender_web, message)
         print("receive ", message)
         
         # Send message to room group
@@ -62,7 +62,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
-    async def SaveMessage(self, room_id, sender_id, message_text, item):
+    async def SaveMessage(self, room_id, sender_id, message_text):
         # This helper method saves the message to the database
         from .models import Message, Room
         from .serializers import MessageSerializer
@@ -86,6 +86,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from room group
     async def chat_message(self, event):
         message = event['content']
+        item = event['data']
         sender = event['sender']
         timestamp = event['timestamp']
         room_id = event['room_id']
@@ -94,6 +95,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'content': message,
+            'data': item,
             'sender': sender,
             'timestamp': timestamp,
             'room_id': room_id,

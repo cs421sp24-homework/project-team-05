@@ -15,6 +15,9 @@
 
                 <div id="guest-content">
                     {{ message.content }}
+                    <span v-if="message.data">
+                        <br>{{ message.data }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -30,6 +33,9 @@
 
                 <div id="home-content">
                     {{ message.content }}
+                    <span v-if="message.data">
+                        <br>{{ message.data }}
+                    </span>
                 </div>
 
             </div>

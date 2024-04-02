@@ -206,10 +206,20 @@ export default {
     const receiver = this.$route.params.receiver;
 
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    const accessToken = localStorage.getItem("access_token");
 
     try {
-      const accessToken = localStorage.getItem("access_token");
       if (receiver) {
+        await axios.post(
+          HTTP_PREFIX + `api/v1/chat/Conversation/auto-send/${receiver}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        // console.log(response.data.message)
+
         const response = await axios.get(
           HTTP_PREFIX + `api/v1/chat/Conversation/list/${receiver}`,
           {
@@ -221,6 +231,8 @@ export default {
         this.chat_list = response.data.chat_list;
         this.active_chat = response.data.active_chat;
         this.active_roomId = this.chat_list[this.active_chat].id;
+
+        this.scrollToBottom();
       } else {
         const response = await axios.get(
           HTTP_PREFIX + "api/v1/chat/Conversation/list",

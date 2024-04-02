@@ -4,8 +4,13 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Room, Message
+from post.models import Item
+from post.serializers import ItemSerializer
 from .serializers import RoomSerializer, RoomSerializerWithMessages
 from django.db.models import Q, Exists, OuterRef
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
         
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -61,3 +66,29 @@ def GetChatListWithReceiver(request, receiver_id):
     # print("serializer_other", serializer_other.data)
     sorted_data = sorted(serializer_other.data, key=lambda x: x['last_message']['timestamp'], reverse=True)
     return Response({'chat_list': serializer_prior.data + sorted_data, 'active_chat': 0}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def SendItemLink(request, receiver_id):
+    item = Item.objects.get(seller=request.user)
+    room_id = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id])).id
+    message = Message.objects.create(
+        room=Room.objects.get(id=room_id),
+        sender=request.user,
+        data=ItemSerializer(item).data,
+        content='Hi, I\'m interested in this item.'
+    )
+    room_group_name = 'chat_%s' % room_id
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        room_group_name,
+        {
+            'type': 'chat_message',
+            'content': message.content,
+            'data': message.data,
+            'sender': message.sender,
+            'timestamp': message.timestamp,
+            'room_id': room_id,
+        }
+    )
+    return Response({'message': 'item link sent'}, status=status.HTTP_200_OK)
