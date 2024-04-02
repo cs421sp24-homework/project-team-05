@@ -27,6 +27,10 @@ urlpatterns = [
 
     path("Items/Search", views.SearchItems, name="SearchItems"),
 
-    path("Items/Browse", views.BrowseOneKindItems, name="BrowseOneKindItems")
+    path("Items/Browse", views.BrowseOneKindItems, name="BrowseOneKindItems"),
+
+    path("Order/Transactions/all", views.GetAllTransactions, name="GetAllTransactions"),
+
+    path("Order/Transaction/new", views.SaveTransaction, name="SaveTransaction"),
 
 ]
