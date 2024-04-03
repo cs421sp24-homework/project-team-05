@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import Item, UserCollection
+from .models import Item, UserCollection, Transaction
+from user.models import CustomUser
+# from ..user.models import CustomUser
+from uuid import UUID
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -29,22 +32,62 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCollection
         fields = ['user', 'item']
-    
-class CollectionDeserializer(serializers.ModelSerializer):
-    item_details = serializers.SerializerMethodField()
-    user_id = serializers.SerializerMethodField()
+        
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['id', 'item_id', 'seller_id', 'buyer_id', 'price']
+
+class TransactionDeserializer(serializers.ModelSerializer):
+    item_name = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    # category = serializers.SerializerMethodField()
+    seller_name = serializers.SerializerMethodField()
+    seller_icon = serializers.SerializerMethodField()
+    buyer_name = serializers.SerializerMethodField()
+    buyer_icon = serializers.SerializerMethodField()
 
     class Meta:
-        model = UserCollection
-        fields = ['user_id', 'item_details']
+        model = Transaction
+        fields = ['id', 'item_id', 'item_name','description', 'image', 
+                  'price', 'seller_id', 'seller_name', 'seller_icon', 
+                  'buyer_id', 'buyer_name', 'buyer_icon']
 
-    def get_user_id(self, obj):
-        return obj.user.id if obj.user else None
+    def get_item_name(self, obj):
+        item = Item.objects.get(id = obj.item_id)
+        print(item.name)
+        return item.name
     
-    def get_item_details(self, obj):
-        try:
-            # Assuming 'seller' is now a field storing user identifier directly
-            item_instance = Item.objects.get(id=obj.item)
-            return ItemSerializerWithSellerName(item_instance).data
-        except ObjectDoesNotExist:
-            return None
+    def get_description(self, obj):
+        item = Item.objects.get(id = obj.item_id)
+        print(item.description)
+        return item.description
+    
+    def get_image(self, obj):
+        item = Item.objects.get(id = obj.item_id)
+        if item.image:
+            return item.image.url
+        return None
+    
+    def get_seller_name(self, obj):
+        user = CustomUser.objects.get(id = obj.seller_id)
+        print(user.displayname)
+        return user.displayname
+    
+    def get_seller_icon(self, obj):
+        user = CustomUser.objects.get(id = obj.seller_id)
+        if user.image:
+            return user.image.url
+        return None
+    
+    def get_buyer_name(self, obj):
+        user = CustomUser.objects.get(id = obj.buyer_id)
+        print(user.displayname)
+        return user.displayname
+    
+    def get_buyer_icon(self, obj):
+        user = CustomUser.objects.get(id = obj.buyer_id)
+        if user.image:
+            return user.image.url
+        return None

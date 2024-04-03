@@ -106,11 +106,13 @@ DATABASES = {
 }
 
 # Azure Storage configurations
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-AZURE_ACCOUNT_NAME = 'sechand'
-AZURE_ACCOUNT_KEY = 'fMVhL17pFTQ3hxOqIrPaflUyb8pbBkYA5WUOPmd2I4f7tjK54JzfgN3tsU9YE0B9GLtHupM39RSg+AStz7GLnQ=='
-AZURE_CONTAINER = 'media'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_STORAGE_BUCKET_NAME = 'sechandbucket'
+AWS_ACCESS_KEY_ID = 'AKIAXYKJR3LLM4SD6IIF'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_REGION_NAME = 'us-east-2' 
 
+AWS_QUERYSTRING_AUTH = False
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

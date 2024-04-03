@@ -8,7 +8,7 @@ class Item(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=128)
     description = models.TextField()
-    image = models.ImageField(upload_to='media/', blank=True, null=True)
+    image = models.ImageField(upload_to='media/itemImage/', blank=True, null=True)
     # TODO: shrink below length limit
     category = models.CharField(max_length=128, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -18,3 +18,10 @@ class Item(models.Model):
 class UserCollection(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     item = models.UUIDField()
+
+class Transaction(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    item_id = models.UUIDField()
+    seller_id = models.BigIntegerField()
+    buyer_id = models.BigIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
