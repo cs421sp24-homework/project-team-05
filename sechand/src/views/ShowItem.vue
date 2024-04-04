@@ -10,23 +10,27 @@
 
             <!-- Right side: Details -->
             <div class="right-side">
-                <h2>{{ item.name }}</h2>
+                <h2>{{ item.name }} </h2>
+                <span class="category">{{ item.category }}</span>
                 <p class="price">Price: ${{ item.price }}</p>
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
-                    <img v-if="!isCurrentUserSeller" src="/comment.png" id="chat" @click="chat" />
+                    <Button id="chat" v-if="currentUser && !isCurrentUserSeller" @click="chat" text="Chat with Seller"
+                        color="lightBlue"></Button>
                 </p>
-
+                <div class="location">{{ item.sellerLocation }}
+                </div>
                 <!-- Description -->
                 <div class="description">
                     <h5>Description:</h5>
                     <p>{{ item.description }}</p>
                 </div>
                 <Button id="editBtn" v-if="isCurrentUserSeller" @click="editItem" text="Edit" color="red"></Button>
-                <Button id="cllBtn" v-if="!isitemCollected" @click="collectItem" text="Collect"
+                <Button id="cllBtn" v-if="currentUser && !isitemCollected" @click="collectItem" text="Collect"
                     color="lightgreen"></Button>
-                <Button v-if="isitemCollected" @click="unCollectItem" text="Collected" color="orange"></Button>
+                <Button v-if="currentUser && isitemCollected" @click="unCollectItem" text="Collected"
+                    color="orange"></Button>
             </div>
         </div>
     </div>
@@ -46,7 +50,7 @@ export default {
     data() {
         return {
             // isCurrentUserSeller: true,
-            isitemCollected: Boolean,
+            isitemCollected: false,
             isLoading: false,
             item: {},
             id: null,
@@ -120,24 +124,24 @@ export default {
             if (this.currentUser.id === this.item.seller) {
                 this.isCurrentUserSeller = true;
             }
+            try {
+                const accessToken = localStorage.getItem("access_token");
+                console.log("collect", this.id);
+                const response = await axios.post(HTTP_PREFIX + `api/v1/post/Items/Collection/item/${this.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+                this.isitemCollected = response.data.collected;
+            } catch (error) {
+                console.error(error);
+            }
         }
-        // get if item in collection
-        try {
-            const accessToken = localStorage.getItem("access_token");
-            console.log("collect", this.id);
-            const response = await axios.post(HTTP_PREFIX + `api/v1/post/Items/Collection/item/${this.id}`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-            this.isitemCollected = response.data.collected;
-        } catch (error) {
-            console.error(error);
-        }
+
     },
     computed: {
         isCurrentUserSeller() {
-            if(this.currentUser){
+            if (this.currentUser) {
                 return this.currentUser.id === this.item.seller;
             }
             return false;
@@ -180,15 +184,23 @@ export default {
     font-weight: bold;
 }
 
+.location {
+    font-size: 20px;
+    font-style: italic;
+    color: #7d7c7c;
+}
+
+.loc_label {
+    font-weight: bold;
+}
+
 #item-img {
-    width: 100%;
-    height: 100%;
+    width: 40vw;
+    height: 60vh;
     object-fit: cover;
 }
 
 #chat {
-    width: 30px;
-    height: 30px;
     float: right;
     cursor: pointer;
 }
@@ -198,5 +210,11 @@ export default {
     height: 30px;
     border-radius: 50%;
     margin-right: 10px;
+}
+
+.category {
+    font-size: 15px;
+    font-style: italic;
+    color: #555353;
 }
 </style>

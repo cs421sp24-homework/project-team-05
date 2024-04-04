@@ -134,6 +134,7 @@ export default {
         }
       );
       this.historyCardsData = response.data;
+      console.log("historyCardsData", response.data);
     } catch (error) {
       console.error(error);
     }

@@ -19,11 +19,8 @@
             <!-- Upload Picture -->
             <div class="mb-3 d-flex align-items-center">
               <label for="uploadPicture" class="form-label me-2">Upload Picture</label>
-              <input type="file" id="uploadPicture" accept="image/*" style="display: none" ref="fileInput"
-                @change="handleFileUpload" />
-              <button type="button" class="btn btn-primary" @click="$refs.fileInput.click()">
-                Choose File
-              </button>
+              <input type="file" id="uploadPicture" accept="image/*" ref="fileInput" @change="handleFileUpload"
+                required />
             </div>
             <!-- Choose Category -->
             <div class="mb-3">
@@ -133,11 +130,10 @@ export default {
         formData.append("category", this.category);
         formData.append("price", this.price);
         formData.append("seller", this.currentUser.id);
-        if (this.currentUser.username!='mxia8' || this.picture) {
-            formData.append("image", this.picture);
+        if (this.currentUser.username != 'mxia8' || this.picture) {
+          formData.append("image", this.picture);
         }
 
-        console.log(formData);
         const response = await axios.post(
           HTTP_PREFIX + "api/v1/post/Item/new",
           formData,
@@ -183,9 +179,6 @@ export default {
   box-sizing: border-box;
 }
 
-.postForm input[type="file"] {
-  display: none;
-}
 
 .postForm .btn-file {
   cursor: pointer;
