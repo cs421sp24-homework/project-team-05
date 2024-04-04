@@ -200,7 +200,7 @@ if os.environ.get('REDIS_URL'):
             'CONFIG': {
                 "hosts": [{
                     "address": os.environ.get('REDIS_URL'),
-                    "ssl_cert_reqs": None,
+                    # "ssl_cert_reqs": None,
                 }]
             }
         }
