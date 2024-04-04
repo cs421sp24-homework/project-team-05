@@ -129,6 +129,8 @@ export default {
       active_roomId: null,
       newMessage: "",
       home_user: null,
+      ws: null,
+      shouldReconnect: true,
       // receiver: null,
     };
   },
@@ -146,16 +148,23 @@ export default {
       this.scrollToBottom();
     },
     connect() {
-      const wsPath = `wss://oose-project-65116e9428b0.herokuapp.com/ws/chat/${this.home_user.id}/`; // Use roomId in the path
+      const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
+
+      const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.home_user.id}/`; // Use roomId in the path
       console.log("using wsPath ", wsPath);
       if (this.ws) {
+        console.log("ws instance exist, close the current one, open a new one.");
+        this.shouldReconnect = false;
         this.ws.close(); // Close the existing connection if it exists
       }
       this.ws = new WebSocket(wsPath);
       this.ws.onmessage = this.receiveMessage;
       this.ws.onclose = () => {
-        console.log("WebSocket closed. Attempting to reconnect...");
-        setTimeout(this.connect, 1000);
+        console.log("WebSocket closed.");
+        if(this.shouldReconnect) {
+          console.log("Attempting to reconnect...")
+          setTimeout(this.connect, 1000);
+        }
       };
     },
     receiveMessage(e) {
@@ -223,6 +232,7 @@ export default {
     // console.log(this.home_user);
     // console.log('receiver', this.$route.params);
     const receiver = this.$route.params.receiver;
+    const item = this.$route.params.item;
 
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
     const accessToken = localStorage.getItem("access_token");
@@ -230,7 +240,7 @@ export default {
     try {
       if (receiver) {
         await axios.post(
-          HTTP_PREFIX + `api/v1/chat/Conversation/auto-send/${receiver}`,
+          HTTP_PREFIX + `api/v1/chat/Conversation/auto-send/${receiver}/${item}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -267,6 +277,19 @@ export default {
       console.error(error);
     }
     this.connect();
+  },
+  beforeDestroy() {
+    this.shouldReconnect = false;
+    if (this.ws) {
+      this.ws.close();
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.shouldReconnect = false;
+    if (this.ws) {
+      this.ws.close();
+    }
+    next();
   },
 };
 </script>
