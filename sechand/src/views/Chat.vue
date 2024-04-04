@@ -124,6 +124,8 @@ export default {
       active_roomId: null,
       newMessage: "",
       home_user: null,
+      ws:null,
+      shouldReconnect: true,
       // receiver: null,
     };
   },
@@ -151,8 +153,11 @@ export default {
       this.ws = new WebSocket(wsPath);
       this.ws.onmessage = this.receiveMessage;
       this.ws.onclose = () => {
-        console.log("WebSocket closed. Attempting to reconnect...");
-        setTimeout(this.connect, 1000);
+        console.log("WebSocket closed.");
+        if(this.shouldReconnect) {
+          console.log("Attempting to reconnect...")
+          setTimeout(this.connect, 1000);
+        }
       };
     },
     receiveMessage(e) {
@@ -238,6 +243,12 @@ export default {
       console.error(error);
     }
     this.connect();
+  },
+  beforeDestroy() {
+    this.shouldReconnect = false;
+    if (this.ws) {
+      this.ws.close();
+    }
   },
 };
 </script>
