@@ -141,7 +141,7 @@ export default {
       this.scrollToBottom();
     },
     connect() {
-      const WBSOCKET_PREFIX = import.meta.env.SOCKET_HOST ? import.meta.env.SOCKET_HOST : "ws://127.0.0.1:8000/";
+      const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
 
       const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.home_user.id}/`; // Use roomId in the path
       console.log("using wsPath ", wsPath);
