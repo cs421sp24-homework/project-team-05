@@ -81,7 +81,12 @@
 
           <div id="msg" ref="messageContainer">
             <div v-for="(item, index) of chat_list[active_chat].messages">
-              <Message :user="home_user" :message="item" />
+                <Message 
+                    :user="home_user" 
+                    :message="item" 
+                    @buy="sendOrder"
+                    @confirm="sendConfirmation"
+                />
             </div>
           </div>
 
@@ -187,6 +192,20 @@ export default {
         console.log(message);
         this.newMessage = "";
       }
+    },
+    sendOrder(data) {
+        console.log(data);
+        // TODO
+        // Send an order message, 
+        // content='I want to buy this item.' 
+        // data=data.item_data
+    },
+    sendConfirmation(data) {
+        console.log(data);
+        // TODO
+        // Confirm an order, create an order in the DB, send a confirmation message,
+        // content='I have sold this item to you.' 
+        // data=data.item_data
     },
     scrollToBottom() {
       this.$nextTick(() => {
@@ -337,6 +356,7 @@ export default {
 
 #msg {
   height: 55vh;
+  padding-bottom: 1.5vh;
   border-bottom: solid rgb(134, 134, 134) 1px;
   overflow-y: auto;
   overflow-x: hidden;
