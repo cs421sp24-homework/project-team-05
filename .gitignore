@@ -42,3 +42,4 @@ coverage
 .vercel/
 .vscode
 .env
+/sechand_backend/venv
