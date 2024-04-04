@@ -202,19 +202,27 @@ export default {
         this.newMessage = "";
       }
     },
+    // TODO
+    // connect transaction APIs
     sendOrder(data) {
-        console.log(data);
-        // TODO
-        // Send an order message, 
-        // content='I want to buy this item.' 
-        // data=data.item_data
+        console.log("item data", data);
+        const message = {
+          message: 'I want to buy this item.', 
+          sender: this.home_user.id,
+          room_id: this.active_roomId,
+          item: data.item_data,
+        };
+        this.ws.send(JSON.stringify(message));
     },
     sendConfirmation(data) {
-        console.log(data);
-        // TODO
-        // Confirm an order, create an order in the DB, send a confirmation message,
-        // content='I have sold this item to you.' 
-        // data=data.item_data
+        console.log("item data", data);
+        const message = {
+          message: 'I have sold this item to you.', 
+          sender: this.home_user.id,
+          room_id: this.active_roomId,
+          item: data.item_data,
+        };
+        this.ws.send(JSON.stringify(message));
     },
     scrollToBottom() {
       this.$nextTick(() => {
