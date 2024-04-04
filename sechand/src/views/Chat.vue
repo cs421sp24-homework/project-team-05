@@ -148,6 +148,8 @@ export default {
       const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.home_user.id}/`; // Use roomId in the path
       console.log("using wsPath ", wsPath);
       if (this.ws) {
+        console.log("ws instance exist, close the current one, open a new one.");
+        this.shouldReconnect = false;
         this.ws.close(); // Close the existing connection if it exists
       }
       this.ws = new WebSocket(wsPath);
