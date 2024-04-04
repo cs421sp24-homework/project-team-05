@@ -141,7 +141,9 @@ export default {
       this.scrollToBottom();
     },
     connect() {
-      const wsPath = `wss://oose-project-65116e9428b0.herokuapp.com/ws/chat/${this.home_user.id}/`; // Use roomId in the path
+      const WBSOCKET_PREFIX = import.meta.env.SOCKET_HOST ? import.meta.env.SOCKET_HOST : "ws://127.0.0.1:8000/";
+
+      const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.home_user.id}/`; // Use roomId in the path
       console.log("using wsPath ", wsPath);
       if (this.ws) {
         this.ws.close(); // Close the existing connection if it exists
