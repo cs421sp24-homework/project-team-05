@@ -6,6 +6,12 @@ import os
 from django.db import models
 from django.utils.timezone import now
 from django.conf import settings
+from django.core.exceptions import ValidationError
+
+def validate_image_size(image):
+    max_size = 5 * 1024 * 1024
+    if image.size > max_size:
+        raise ValidationError("Image file too large ( > 5MB )")
 
 def gen_unique_filename(instance, filename):
 
@@ -28,7 +34,7 @@ class Item(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=128)
     description = models.TextField()
-    image = models.ImageField(upload_to=gen_unique_filename, blank=True, null=True)
+    image = models.ImageField(upload_to=gen_unique_filename, blank=True, null=True) #, validators=[validate_image_size]
     # TODO: shrink below length limit
     category = models.CharField(max_length=128, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
