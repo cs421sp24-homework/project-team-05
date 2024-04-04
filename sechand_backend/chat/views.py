@@ -69,16 +69,19 @@ def GetChatListWithReceiver(request, receiver_id):
 
 
 @api_view(['POST'])
-def SendItemLink(request, receiver_id):
-    item = Item.objects.get(seller=request.user)
-    room_id = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id])).id
+def SendItemLink(request, receiver_id, item_id):
+    item = Item.objects.get(id=item_id)
+    try:
+        room = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
+    except Room.DoesNotExist:
+        room = Room.objects.create(users=[request.user.id, receiver_id])
     message = Message.objects.create(
-        room=Room.objects.get(id=room_id),
+        room=room,
         sender=request.user,
         data=ItemSerializer(item).data,
         content='Hi, I\'m interested in this item.'
     )
-    room_group_name = 'chat_%s' % room_id
+    room_group_name = 'chat_%s' % room.id
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         room_group_name,
@@ -88,7 +91,8 @@ def SendItemLink(request, receiver_id):
             'data': message.data,
             'sender': message.sender,
             'timestamp': message.timestamp,
-            'room_id': room_id,
+            'room_id': room.id,
         }
     )
+    print("auto send link")
     return Response({'message': 'item link sent'}, status=status.HTTP_200_OK)

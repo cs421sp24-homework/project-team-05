@@ -13,5 +13,5 @@ class Message(models.Model):
     room = models.ForeignKey(Room, related_name='messages', on_delete=models.CASCADE)
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='messages', on_delete=models.CASCADE)
     content = models.TextField()
-    data = models.JSONField(default=dict, blank=True, null=True)
+    data = models.JSONField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)

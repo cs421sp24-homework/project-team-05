@@ -124,7 +124,7 @@ export default {
       active_roomId: null,
       newMessage: "",
       home_user: null,
-      ws:null,
+      ws: null,
       shouldReconnect: true,
       // receiver: null,
     };
@@ -213,6 +213,7 @@ export default {
     // console.log(this.home_user);
     // console.log('receiver', this.$route.params);
     const receiver = this.$route.params.receiver;
+    const item = this.$route.params.item;
 
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
     const accessToken = localStorage.getItem("access_token");
@@ -220,7 +221,7 @@ export default {
     try {
       if (receiver) {
         await axios.post(
-          HTTP_PREFIX + `api/v1/chat/Conversation/auto-send/${receiver}`,
+          HTTP_PREFIX + `api/v1/chat/Conversation/auto-send/${receiver}/${item}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -263,6 +264,13 @@ export default {
     if (this.ws) {
       this.ws.close();
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.shouldReconnect = false;
+    if (this.ws) {
+      this.ws.close();
+    }
+    next();
   },
 };
 </script>
