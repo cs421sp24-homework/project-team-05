@@ -35,9 +35,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="col-9 text-end">
-            <Button @btn-click="search" text="Apply" color="lightblue" id="apply"></Button>
-          </div> -->
         </div>
         <Cards :cards="cardsData" />
       </div>
@@ -108,7 +105,6 @@ export default {
     async search(payload) {
       const HTTP_PREFIX = import.meta.env.VITE_HOST;
       try {
-        // console.log(payload.cate)
         const formData = new FormData();
         formData.append("desc_text", payload.input);
         formData.append("category", payload.cate);
@@ -135,32 +131,6 @@ export default {
         console.error("Error submitting form:", error);
       }
     },
-    // async applyFilter() {
-    //   const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    //   try {
-    //     const formData = new FormData();
-    //     formData.append("desc_text", "");
-    //     formData.append("lowest_price", this.filters.min);
-    //     formData.append("highest_price", this.filters.max);
-    //     const loc_array = this.filters.locations
-    //     loc_array.forEach((item, index) => {
-    //       formData.append("locations", item);
-    //     });
-    //     const response = await axios.post(
-    //       HTTP_PREFIX + "api/v1/post/Items/Search",
-    //       formData,
-    //       {
-    //         headers: {
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       }
-    //     );
-    //     console.log("Form submitted successfully:", response.data);
-    //     this.cardsData = response.data;
-    //   } catch (error) {
-    //     console.error("Error submitting form:", error);
-    //   }
-    // },
     async UpdateCategory(category) {
       console.log("update category", category);
       const HTTP_PREFIX = import.meta.env.VITE_HOST;
@@ -224,6 +194,11 @@ export default {
 .dropdowns-container {
   display: flex;
   /* justify-content: space-between; */
+}
+
+.list-group {
+  width: 15%;
+  position: fixed;
 }
 
 .list-group-item {

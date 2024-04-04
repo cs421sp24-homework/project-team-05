@@ -156,9 +156,8 @@ export default {
                 const formData = new FormData();
                 formData.append('name', this.item.name);
                 formData.append('description', this.item.description);
-                formData.append('tag', ["ABC"]);
+                formData.append('category', this.item.category);
                 formData.append('price', this.item.price);
-                // formData.append('user_id', this.user.id);
                 if (this.picture) {
                     formData.append('image', this.picture);
                 }
@@ -170,8 +169,6 @@ export default {
                 });
                 console.log("Form submitted successfully:", response.data);
                 this.$router.go(-1);
-                // Optionally, you can navigate to another page after successful form submission
-                // this.$router.go(-1);
             } catch (error) {
                 console.error("Error submitting form:", response.data);
                 console.error("Error submitting form:", error);
