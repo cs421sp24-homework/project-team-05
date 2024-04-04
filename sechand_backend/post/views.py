@@ -254,11 +254,20 @@ def SaveTransaction(request):
                     try:
                         serializer.save()
                         saved = True
-                        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+                        # return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
                     except IntegrityError:
                         continue
                 else:
                     return JsonResponse({'error': 'Failed when saving transaction, serializing object.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            item_id = request.data['item_id']
+            item = Item.objects.get(id=item_id)
+            itemSerializer = ItemSerializer(item, data={"is_sold": True}, partial=True)
+            if itemSerializer.is_valid():
+                itemSerializer.save()
+                return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return JsonResponse(itemSerializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         # else:
         #     return JsonResponse({'error': 'You are neither part of this transaction.'}, status=status.HTTP_401_UNAUTHORIZED)
     else:
