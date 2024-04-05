@@ -60,8 +60,9 @@ export default {
     },
     methods: {
         chat() {
-            // console.log("Chatting with seller", this.item.seller);
-            this.$router.push({ name: 'DirectChat', params: { receiver: this.item.seller, item: this.item.id } });
+            sessionStorage.setItem("receiver", this.item.seller);
+            sessionStorage.setItem("item", this.item.id);
+            this.$router.push({ name: 'Chat' });
         },
         userStateChange() {
             this.$emit("userStateChange", {});

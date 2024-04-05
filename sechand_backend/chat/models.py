@@ -15,3 +15,6 @@ class Message(models.Model):
     content = models.TextField()
     data = models.JSONField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
