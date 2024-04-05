@@ -9,53 +9,34 @@
       <div id="content">
         <div id="content-left">
           <div class="list-group" id="scroll" v-if="chat_list">
-            <a
-              v-for="(item, index) in chat_list"
-              @click="setActive(item, index)"
-              :class="[
-                'list-group-item',
-                'list-group-item-action',
-                { active: index === active_chat },
-                'w-100',
-              ]"
-              aria-current="true"
-              id="list_item"
-            >
+            <a v-for="(item, index) in chat_list" @click="setActive(item, index)" :class="[
+    'list-group-item',
+    'list-group-item-action',
+    { active: index === active_chat },
+    'w-100',
+  ]" aria-current="true" id="list_item">
               <div class="avatar-wrapper">
-                <img
-                  :src="item.user.image"
-                  style="
+                <img :src="item.user.image" style="
                     height: 3vw;
                     width: 3vw;
                     border-radius: 50%;
                     object-fit: cover;
-                  "
-                />
+                  " />
               </div>
               <div class="left-info">
                 <div class="d-flex">
-                  <h5
-                    style="margin-right: 0; font-weight: 700; font-size: 1.2vw"
-                  >
+                  <h5 style="margin-right: 0; font-weight: 700; font-size: 1.2vw">
                     {{ item.user.displayname }}
                   </h5>
-                  <small
-                    style="font-size: 0.7vw"
-                    id="time"
-                    v-if="item.last_message"
-                    >{{ item.last_message.timestamp }}</small
-                  >
+                  <small style="font-size: 0.7vw" id="time" v-if="item.last_message">{{ item.last_message.timestamp
+                    }}</small>
                 </div>
-                <p
-                  class="mb-1"
-                  style="color: #a0a0a0; font-size: 0.9vw"
-                  v-if="item.last_message"
-                >
+                <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw" v-if="item.last_message">
                   {{
-                    item.last_message.content.length > 35
-                      ? item.last_message.content.slice(0, 35) + "..."
-                      : item.last_message.content
-                  }}
+    item.last_message.content.length > 35
+      ? item.last_message.content.slice(0, 35) + "..."
+      : item.last_message.content
+  }}
                 </p>
                 <!-- <small style="font-weight: bold;">{{ "additional info" }} </small> -->
               </div>
@@ -65,23 +46,20 @@
 
         <div id="no-select" v-if="active_chat == null">
           {{
-            chat_list ? "No conversation selected." : "No conversation exists."
-          }}
+    chat_list ? "No conversation selected." : "No conversation exists."
+  }}
         </div>
 
         <div id="content-right" v-else>
           <div id="head_line">
-            <p
-              style="margin-left: 2vw; margin-top: 1vh"
-              v-if="active_chat != null"
-            >
+            <p style="margin-left: 2vw; margin-top: 1vh" v-if="active_chat != null">
               {{ chat_list[active_chat].user.displayname }}
             </p>
           </div>
 
           <div id="msg" ref="messageContainer">
             <div v-for="(item, index) of chat_list[active_chat].messages">
-              <Message :user="home_user" :message="item" />
+              <Message :user="home_user" :message="item" @buy="sendOrder" @confirm="sendConfirmation" />
             </div>
           </div>
 
@@ -89,17 +67,10 @@
             <div id="toolbox">potentially a toolbox?</div>
 
             <div id="text-input">
-              <input
-                id="input-box"
-                type="text"
-                v-model="newMessage"
-                class="form-control"
-                :placeholder="
-                  'Send a message to ' +
-                  chat_list[active_chat].user.displayname +
-                  '...'
-                "
-              />
+              <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to ' +
+    chat_list[active_chat].user.displayname +
+    '...'
+    " />
               <button id="sendBtn" @click="sendMessage" class="btn btn-primary">
                 Send
               </button>
@@ -124,7 +95,7 @@ export default {
       active_roomId: null,
       newMessage: "",
       home_user: null,
-      ws:null,
+      ws: null,
       shouldReconnect: true,
       // receiver: null,
     };
@@ -139,7 +110,7 @@ export default {
     setActive(item, index) {
       this.active_chat = index;
       this.active_roomId = item.id;
-      console.log("active_roomId", this.active_roomId);
+      console.log("set new messages=0");
       this.scrollToBottom();
     },
     connect() {
@@ -156,7 +127,7 @@ export default {
       this.ws.onmessage = this.receiveMessage;
       this.ws.onclose = () => {
         console.log("WebSocket closed.");
-        if(this.shouldReconnect) {
+        if (this.shouldReconnect) {
           console.log("Attempting to reconnect...")
           setTimeout(this.connect, 1000);
         }
@@ -182,6 +153,9 @@ export default {
       room.messages.push(message);
       room.last_message = message;
       this.scrollToBottom();
+      // if (this.active_roomId != message.room_id) {
+      //   console.log("new message received in another room");
+      // }
     },
     sendMessage() {
       if (this.newMessage.trim() !== "") {
@@ -195,6 +169,59 @@ export default {
         this.ws.send(JSON.stringify(message)); // Send the message content
         console.log(message);
         this.newMessage = "";
+      }
+    },
+    async sendOrder(data) {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      // const accessToken = localStorage.getItem("access_token");
+
+      const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`)
+      console.log("item is sold", response.data.is_sold);
+      if (response.data.is_sold) {
+        alert("This item has been sold.");
+      } else {
+        // console.log("item data", data);
+        const message = {
+          message: 'I want to buy this item.',
+          sender: this.home_user.id,
+          room_id: this.active_roomId,
+          item: data.item_data,
+        };
+        this.ws.send(JSON.stringify(message));
+      }
+    },
+    async sendConfirmation(data) {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`)
+      if (response.data.is_sold) {
+        alert("This item has been sold.");
+      } else {
+        const message = {
+          message: 'I have sold this item to you.',
+          sender: this.home_user.id,
+          room_id: this.active_roomId,
+          item: data.item_data,
+        };
+        this.ws.send(JSON.stringify(message));
+
+        console.log("seller id", data.item_data.seller);
+        // console.log("not sold")
+
+        const response = await axios.post(
+          HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
+          {
+            "item_id": data.item_data.id,
+            "buyer_id": this.chat_list[this.active_chat].user.id,
+            "seller_id": data.item_data.seller,
+            "price": data.item_data.price,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
       }
     },
     scrollToBottom() {
@@ -212,13 +239,24 @@ export default {
     this.home_user = JSON.parse(localStorage.getItem("user"));
     // console.log(this.home_user);
     // console.log('receiver', this.$route.params);
-    const receiver = this.$route.params.receiver;
+    const receiver = sessionStorage.getItem("receiver");
+    const item = sessionStorage.getItem("item");
+    sessionStorage.clear();
 
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    const accessToken = localStorage.getItem("access_token");
 
     try {
-      const accessToken = localStorage.getItem("access_token");
       if (receiver) {
+        await axios.post(
+          HTTP_PREFIX + `api/v1/chat/Conversation/auto-send/${receiver}/${item}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+
         const response = await axios.get(
           HTTP_PREFIX + `api/v1/chat/Conversation/list/${receiver}`,
           {
@@ -230,6 +268,8 @@ export default {
         this.chat_list = response.data.chat_list;
         this.active_chat = response.data.active_chat;
         this.active_roomId = this.chat_list[this.active_chat].id;
+
+        this.scrollToBottom();
       } else {
         const response = await axios.get(
           HTTP_PREFIX + "api/v1/chat/Conversation/list",
@@ -251,6 +291,13 @@ export default {
     if (this.ws) {
       this.ws.close();
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.shouldReconnect = false;
+    if (this.ws) {
+      this.ws.close();
+    }
+    next();
   },
 };
 </script>
@@ -340,6 +387,7 @@ export default {
 
 #msg {
   height: 55vh;
+  padding-bottom: 1.5vh;
   border-bottom: solid rgb(134, 134, 134) 1px;
   overflow-y: auto;
   overflow-x: hidden;

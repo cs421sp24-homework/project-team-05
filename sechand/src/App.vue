@@ -1,9 +1,4 @@
 <template>
-  <!-- <router-view @userLogin="userLogin" 
-                 @userLogout="logout"
-                 :currentUser="user"
-                 :addrList="addrList"
-                 :token="token"></router-view> -->
   <router-view @userStateChange="userStateChange" :currentUser="currentUser" :addrList="addrList"
     :categories="categories" @updateUser="updateUser"></router-view>
 </template>
@@ -45,7 +40,7 @@ export default {
     },
     userStateChange() {
       this.currentUser = JSON.parse(localStorage.getItem("user"));
-      console.log("APP",this.currentUser);
+      console.log("APP", this.currentUser);
     },
   },
 

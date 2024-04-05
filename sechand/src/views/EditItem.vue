@@ -13,19 +13,24 @@
                         <!-- Item Name -->
                         <div class="mb-3">
                             <label for="itemName" class="form-label">Item Name</label>
-                            <input type="text" class="form-control" id="itemName" v-model="item.name" required />
+                            <input type="text" class="form-control" id="itemName" v-model="item.name" />
                         </div>
 
                         <!-- Upload Picture -->
                         <div class="mb-3 d-flex align-items-center">
                             <label for="uploadPicture" class="form-label me-2">Upload Picture</label>
-                            <input type="file" id="uploadPicture" accept="image/*" style="display: none" ref="fileInput"
+                            <input type="file" id="uploadPicture" accept="image/*" ref="fileInput"
                                 @change="handleFileUpload" />
-                            <button type="button" class="btn btn-primary" @click="$refs.fileInput.click()">
-                                Choose File
-                            </button>
                         </div>
-
+                        <!-- Choose Category -->
+                        <div class="mb-3">
+                            <label for="Category" class="form-label">Category</label>
+                            <select class="form-select" id="Category" v-model="item.category" required>
+                                <option v-for="(value, index) in this.categories" :key="index" :value="value">
+                                    {{ value }}
+                                </option>
+                            </select>
+                        </div>
                         <!-- Description -->
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
@@ -62,9 +67,14 @@
                 <div class="col-md-6">
                     <!-- Image Preview -->
                     <div class="mb-3">
-                        <label class="form-label">Image Preview</label><br>
-                        <img v-if="picture" :src="pictureUrl" class="img-fluid" alt="Image Preview" />
-                        <div v-else class="text-muted">No image selected</div>
+                        <label class="form-label">Card Preview</label><br />
+                        <Card :card="{
+            name: this.item.name,
+            description: this.item.description,
+            price: this.item.price,
+            image: this.item.image,
+            displayname: this.currentUser.displayname,
+        }"></Card>
                     </div>
                 </div>
             </div>
@@ -74,14 +84,17 @@
 
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
+import Card from "@/components/Card.vue";
 import axios from "axios";
 export default {
     name: "EditItem",
     props: {
         currentUser: Object,
+        categories: Array,
     },
     components: {
         UserNavbar,
+        Card,
     },
     data() {
         return {
@@ -143,9 +156,8 @@ export default {
                 const formData = new FormData();
                 formData.append('name', this.item.name);
                 formData.append('description', this.item.description);
-                formData.append('tag', ["ABC"]);
+                formData.append('category', this.item.category);
                 formData.append('price', this.item.price);
-                // formData.append('user_id', this.user.id);
                 if (this.picture) {
                     formData.append('image', this.picture);
                 }
@@ -157,8 +169,6 @@ export default {
                 });
                 console.log("Form submitted successfully:", response.data);
                 this.$router.go(-1);
-                // Optionally, you can navigate to another page after successful form submission
-                // this.$router.go(-1);
             } catch (error) {
                 console.error("Error submitting form:", response.data);
                 console.error("Error submitting form:", error);
@@ -168,6 +178,11 @@ export default {
 };
 </script>
 <style scoped>
+.container {
+    margin-top: 12vh;
+    margin-left: 5vw;
+}
+
 .btn {
     margin-left: 4px;
 }

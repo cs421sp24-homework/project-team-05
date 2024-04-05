@@ -41,11 +41,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json.get('message', '')
+        item = text_data_json.get('item', '')
         sender_web = text_data_json.get('sender', '')
         room_id = text_data_json.get('room_id', '')
         room_group_name = 'chat_%s' % room_id
 
-        message = await self.SaveMessage(room_id, sender_web, message)
+        if item:
+            message = await self.SaveMessage(room_id, sender_web, message, item)
+        else:
+            message = await self.SaveMessage(room_id, sender_web, message)
         print("receive ", message)
         
         # Send message to room group
@@ -54,13 +58,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'content': message['content'],
+                'data': message['data'],
                 'sender': message['sender'],
                 'timestamp': message['timestamp'],
                 'room_id': room_id,
             }
         )
 
-    async def SaveMessage(self, room_id, sender_id, message_text):
+    async def SaveMessage(self, room_id, sender_id, message_text, item_data=None):
         # This helper method saves the message to the database
         from .models import Message, Room
         from .serializers import MessageSerializer
@@ -72,7 +77,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message = await sync_to_async(Message.objects.create)(
                 room=room,
                 sender=user,
-                content=message_text
+                content=message_text,
+                data=item_data
             )
             print(f"Message saved successfully: {message_text}")
             # Serialize the message
@@ -84,6 +90,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from room group
     async def chat_message(self, event):
         message = event['content']
+        item = event['data']
         sender = event['sender']
         timestamp = event['timestamp']
         room_id = event['room_id']
@@ -92,6 +99,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'content': message,
+            'data': item,
             'sender': sender,
             'timestamp': timestamp,
             'room_id': room_id,
