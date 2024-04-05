@@ -133,6 +133,7 @@ export default {
           },
         }
       );
+      console.log("historyCardsData", response.data);
       this.historyCardsData = response.data;
       console.log("historyCardsData", response.data);
     } catch (error) {

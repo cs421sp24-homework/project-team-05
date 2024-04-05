@@ -41,7 +41,7 @@ def GetAllItems(request):
     if count < 1 or count > 30:
         return JsonResponse({'error': 'Count parameter too large'}, status=status.HTTP_400_BAD_REQUEST)
     
-    all_items = Item.objects.all()[:count]
+    all_items = Item.objects.filter(is_sold=False)[:count]
     serializer = ItemSerializerWithSellerName(all_items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
@@ -59,7 +59,7 @@ def GetAllItemsByDistance(request):
     if count < 1 or count > 30:
         return JsonResponse({'error': 'Count parameter too large'}, status=status.HTTP_400_BAD_REQUEST)
     
-    all_items = Item.objects.all()[:count]
+    all_items = Item.objects.filter(is_sold=False).exclude(seller=request.user)[:count]
     all_distances = {}
     for item in all_items:
         all_distances[item.id] = get_distance(request.user.address, item.seller.address)
@@ -263,52 +263,43 @@ def BrowseOneKindItems(request):
     return JsonResponse(serializer.data, safe=False, status=200)
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def SaveTransaction(request):
-    if (request.user):
-
-        # seller = request.data['seller_id']
-        # buyer = request.data['buyer_id']
-        # if(request.user.id == seller or request.user.id == buyer):
-            saved = False
-            while not saved:
-                serializer = TransactionSerializer(data=request.data)
-                if serializer.is_valid():
-                    try:
-                        serializer.save()
-                        saved = True
-                        # return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-                    except IntegrityError:
-                        continue
-                else:
-                    return JsonResponse({'error': 'Failed when saving transaction, serializing object.'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            item_id = request.data['item_id']
-            item = Item.objects.get(id=item_id)
-            itemSerializer = ItemSerializer(item, data={"is_sold": True}, partial=True)
-            if itemSerializer.is_valid():
-                itemSerializer.save()
-                return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return JsonResponse(itemSerializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        # else:
-        #     return JsonResponse({'error': 'You are neither part of this transaction.'}, status=status.HTTP_401_UNAUTHORIZED)
+    print("transaction data", request.data)
+    saved = False
+    while not saved:
+        serializer = TransactionSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                saved = True
+                # return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                continue
+        else:
+            return JsonResponse({'error': 'Failed when saving transaction, serializing object.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    item_id = request.data['item_id']
+    item = Item.objects.get(id=item_id)
+    itemSerializer = ItemSerializer(item, data={"is_sold": True}, partial=True)
+    if itemSerializer.is_valid():
+        itemSerializer.save()
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
     else:
-        return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
+        return JsonResponse(itemSerializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def GetAllTransactions(request):
-    if (request.user):
-        try:
-            user_id = request.user.id
-            # user_id = request.data['user_id']
-            transactions = Transaction.objects.filter(seller_id = user_id) | Transaction.objects.filter(buyer_id = user_id)
-            serializer = TransactionDeserializer(transactions, many=True)
-            print("Ops")
-            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(f"Error saving message: {e}")
-            return JsonResponse({"error": e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        return JsonResponse({'error': 'User did not login or have valid credentials'}, status.HTTP_401_UNAUTHORIZED)
+    try:
+
+        user_id = request.user.id
+        # user_id = request.data['user_id']
+        transactions_list = list(Transaction.objects.filter(buyer_id = user_id))
+        transactions = transactions_list[::-1]
+        serializer = TransactionDeserializer(transactions, many=True)
+        print("Ops")
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(f"Error saving message: {e}")
+        return JsonResponse({"error": e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

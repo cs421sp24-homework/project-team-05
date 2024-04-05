@@ -144,7 +144,7 @@ export default {
     setActive(item, index) {
       this.active_chat = index;
       this.active_roomId = item.id;
-      console.log("active_roomId", this.active_roomId);
+      console.log("set new messages=0");
       this.scrollToBottom();
     },
     connect() {
@@ -187,6 +187,9 @@ export default {
       room.messages.push(message);
       room.last_message = message;
       this.scrollToBottom();
+      // if (this.active_roomId != message.room_id) {
+      //   console.log("new message received in another room");
+      // }
     },
     sendMessage() {
       if (this.newMessage.trim() !== "") {
@@ -202,10 +205,16 @@ export default {
         this.newMessage = "";
       }
     },
-    // TODO
-    // connect transaction APIs
-    sendOrder(data) {
-        console.log("item data", data);
+    async sendOrder(data) {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      // const accessToken = localStorage.getItem("access_token");
+
+      const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`)
+      console.log("item is sold", response.data.is_sold);
+      if (response.data.is_sold) {
+        alert("This item has been sold.");
+      } else {
+        // console.log("item data", data);
         const message = {
           message: 'I want to buy this item.', 
           sender: this.home_user.id,
@@ -213,9 +222,15 @@ export default {
           item: data.item_data,
         };
         this.ws.send(JSON.stringify(message));
+      }
     },
-    sendConfirmation(data) {
-        console.log("item data", data);
+    async sendConfirmation(data) {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`)
+      if (response.data.is_sold) {
+        alert("This item has been sold.");
+      } else {
         const message = {
           message: 'I have sold this item to you.', 
           sender: this.home_user.id,
@@ -223,6 +238,25 @@ export default {
           item: data.item_data,
         };
         this.ws.send(JSON.stringify(message));
+
+        console.log("seller id", data.item_data.seller);
+        // console.log("not sold")
+
+        const response = await axios.post(
+          HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
+          {
+            "item_id": data.item_data.id,
+            "buyer_id": this.home_user.id,
+            "seller_id": data.item_data.seller,
+            "price": data.item_data.price,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      }
     },
     scrollToBottom() {
       this.$nextTick(() => {
@@ -239,8 +273,9 @@ export default {
     this.home_user = JSON.parse(localStorage.getItem("user"));
     // console.log(this.home_user);
     // console.log('receiver', this.$route.params);
-    const receiver = this.$route.params.receiver;
-    const item = this.$route.params.item;
+    const receiver = sessionStorage.getItem("receiver");
+    const item = sessionStorage.getItem("item");
+    sessionStorage.clear();
 
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
     const accessToken = localStorage.getItem("access_token");
@@ -255,7 +290,6 @@ export default {
             },
           }
         )
-        // console.log(response.data.message)
 
         const response = await axios.get(
           HTTP_PREFIX + `api/v1/chat/Conversation/list/${receiver}`,
