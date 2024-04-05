@@ -144,7 +144,7 @@ export default {
     setActive(item, index) {
       this.active_chat = index;
       this.active_roomId = item.id;
-      console.log("active_roomId", this.active_roomId);
+      console.log("set new messages=0");
       this.scrollToBottom();
     },
     connect() {
@@ -187,6 +187,9 @@ export default {
       room.messages.push(message);
       room.last_message = message;
       this.scrollToBottom();
+      // if (this.active_roomId != message.room_id) {
+      //   console.log("new message received in another room");
+      // }
     },
     sendMessage() {
       if (this.newMessage.trim() !== "") {

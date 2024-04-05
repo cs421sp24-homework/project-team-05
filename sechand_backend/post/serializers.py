@@ -39,22 +39,25 @@ class TransactionSerializer(serializers.ModelSerializer):
         fields = ['id', 'item_id', 'seller_id', 'buyer_id', 'price']
 
 class TransactionDeserializer(serializers.ModelSerializer):
-    item_name = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
-    # category = serializers.SerializerMethodField()
-    seller_name = serializers.SerializerMethodField()
-    seller_icon = serializers.SerializerMethodField()
-    buyer_name = serializers.SerializerMethodField()
-    buyer_icon = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+    seller = serializers.SerializerMethodField()
+    displayname = serializers.SerializerMethodField()
+    sellerIcon = serializers.SerializerMethodField()
+    is_sold = serializers.SerializerMethodField()
 
     class Meta:
         model = Transaction
-        fields = ['id', 'item_id', 'item_name','description', 'image', 
-                  'price', 'seller_id', 'seller_name', 'seller_icon', 
-                  'buyer_id', 'buyer_name', 'buyer_icon']
+        fields = ['id', 'name', 'description', 'image', 'category', 'price', 'seller', 'displayname', 'sellerIcon', 'is_sold']
 
-    def get_item_name(self, obj):
+    def get_id(self, obj):
+        return obj.item_id
+    
+    def get_name(self, obj):
         item = Item.objects.get(id = obj.item_id)
         print(item.name)
         return item.name
@@ -70,24 +73,32 @@ class TransactionDeserializer(serializers.ModelSerializer):
             return item.image.url
         return None
     
-    def get_seller_name(self, obj):
+    def get_category(self, obj):
+        item = Item.objects.get(id = obj.item_id)
+        print(item.category)
+        return item.category
+    
+    def get_price(self, obj):
+        item = Item.objects.get(id = obj.item_id)
+        print(item.price)
+        return item.price
+    
+    def get_seller(self, obj):
+        user = CustomUser.objects.get(id = obj.seller_id)
+        print(user.id)
+        return user.id
+    
+    def get_displayname(self, obj):
         user = CustomUser.objects.get(id = obj.seller_id)
         print(user.displayname)
         return user.displayname
     
-    def get_seller_icon(self, obj):
+    def get_sellerIcon(self, obj):
         user = CustomUser.objects.get(id = obj.seller_id)
         if user.image:
             return user.image.url
         return None
-    
-    def get_buyer_name(self, obj):
-        user = CustomUser.objects.get(id = obj.buyer_id)
-        print(user.displayname)
-        return user.displayname
-    
-    def get_buyer_icon(self, obj):
-        user = CustomUser.objects.get(id = obj.buyer_id)
-        if user.image:
-            return user.image.url
-        return None
+
+    def get_is_sold(self, obj):
+        item = Item.objects.get(id = obj.item_id)
+        return item.is_sold

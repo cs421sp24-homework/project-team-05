@@ -19,7 +19,7 @@ import uuid
 def GetAllUserItems(request):
     if(request.user):
         #TODO: validate user token again
-        user_items_list = list(Item.objects.filter(seller = request.user.id, is_sold=False))
+        user_items_list = list(Item.objects.filter(seller = request.user.id))
         user_items = user_items_list[::-1]
         serializer = ItemSerializer(user_items, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
@@ -292,12 +292,13 @@ def SaveTransaction(request):
 # @permission_classes([AllowAny])
 def GetAllTransactions(request):
     try:
+
         user_id = request.user.id
         # user_id = request.data['user_id']
-        transactions_list = list(Transaction.objects.filter(seller_id = user_id) | Transaction.objects.filter(buyer_id = user_id))
+        transactions_list = list(Transaction.objects.filter(buyer_id = user_id))
         transactions = transactions_list[::-1]
         serializer = TransactionDeserializer(transactions, many=True)
-        # print("Ops")
+        print("Ops")
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     except Exception as e:
         print(f"Error saving message: {e}")

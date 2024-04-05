@@ -126,13 +126,14 @@ export default {
     try {
       const accessToken = localStorage.getItem("access_token");
       const response = await axios.get(
-        HTTP_PREFIX + "api/v1/post/UserItems/all",
+        HTTP_PREFIX + "api/v1/post/Order/Transactions/all",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
+      console.log("historyCardsData", response.data);
       this.historyCardsData = response.data;
     } catch (error) {
       console.error(error);
