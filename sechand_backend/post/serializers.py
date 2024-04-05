@@ -18,9 +18,10 @@ class ItemSerializerWithSellerName(serializers.ModelSerializer):
     displayname = serializers.SerializerMethodField()
     sellerIcon = serializers.SerializerMethodField()
     sellerLocation = serializers.SerializerMethodField()
+
     class Meta:
         model = Item
-        fields = ['id', 'name', 'description', 'image', 'category', 'price', 'seller', 'displayname', 'sellerIcon', 'sellerLocation','is_sold']
+        fields = ['id', 'name', 'description', 'image', 'category', 'price', 'seller', 'displayname', 'sellerIcon', 'sellerLocation', 'is_sold']
 
     def get_displayname(self, obj):
         return obj.seller.displayname if obj.seller else None
@@ -30,7 +31,7 @@ class ItemSerializerWithSellerName(serializers.ModelSerializer):
     
     def get_sellerLocation(self, obj):
         return obj.seller.address.name if obj.seller.address.name else None
-    
+
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCollection
