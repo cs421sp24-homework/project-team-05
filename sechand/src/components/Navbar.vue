@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg">
+  <nav class="navbar navbar-expand-sm fixed-top">
     <div class="navbar-elements">
       <a class="navbar-brand" href="#" @click="goToHome">
         <img src="../assets/logo_temp.svg" alt="Icon" class="mr-2 icon" />

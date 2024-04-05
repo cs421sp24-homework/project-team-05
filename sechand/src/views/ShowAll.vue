@@ -1,5 +1,5 @@
 <template>
-    <div class="my-items">
+    <div>
         <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
         <div class="container">
             <div class="row">
@@ -22,7 +22,7 @@ import axios from "axios";
 export default {
     name: "ShowAll",
     props: {
-        currentUser: Object,
+        // currentUser: Object,
     },
     components: {
         UserNavbar,
@@ -30,6 +30,7 @@ export default {
     },
     data() {
         return {
+            currentUser: JSON.parse(localStorage.getItem("user")),
             text: "",
             data: "",
             postCardsData: [],
