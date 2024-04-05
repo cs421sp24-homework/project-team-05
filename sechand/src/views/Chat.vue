@@ -9,53 +9,34 @@
       <div id="content">
         <div id="content-left">
           <div class="list-group" id="scroll" v-if="chat_list">
-            <a
-              v-for="(item, index) in chat_list"
-              @click="setActive(item, index)"
-              :class="[
-                'list-group-item',
-                'list-group-item-action',
-                { active: index === active_chat },
-                'w-100',
-              ]"
-              aria-current="true"
-              id="list_item"
-            >
+            <a v-for="(item, index) in chat_list" @click="setActive(item, index)" :class="[
+    'list-group-item',
+    'list-group-item-action',
+    { active: index === active_chat },
+    'w-100',
+  ]" aria-current="true" id="list_item">
               <div class="avatar-wrapper">
-                <img
-                  :src="item.user.image"
-                  style="
+                <img :src="item.user.image" style="
                     height: 3vw;
                     width: 3vw;
                     border-radius: 50%;
                     object-fit: cover;
-                  "
-                />
+                  " />
               </div>
               <div class="left-info">
                 <div class="d-flex">
-                  <h5
-                    style="margin-right: 0; font-weight: 700; font-size: 1.2vw"
-                  >
+                  <h5 style="margin-right: 0; font-weight: 700; font-size: 1.2vw">
                     {{ item.user.displayname }}
                   </h5>
-                  <small
-                    style="font-size: 0.7vw"
-                    id="time"
-                    v-if="item.last_message"
-                    >{{ item.last_message.timestamp }}</small
-                  >
+                  <small style="font-size: 0.7vw" id="time" v-if="item.last_message">{{ item.last_message.timestamp
+                    }}</small>
                 </div>
-                <p
-                  class="mb-1"
-                  style="color: #a0a0a0; font-size: 0.9vw"
-                  v-if="item.last_message"
-                >
+                <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw" v-if="item.last_message">
                   {{
-                    item.last_message.content.length > 35
-                      ? item.last_message.content.slice(0, 35) + "..."
-                      : item.last_message.content
-                  }}
+    item.last_message.content.length > 35
+      ? item.last_message.content.slice(0, 35) + "..."
+      : item.last_message.content
+  }}
                 </p>
                 <!-- <small style="font-weight: bold;">{{ "additional info" }} </small> -->
               </div>
@@ -65,28 +46,20 @@
 
         <div id="no-select" v-if="active_chat == null">
           {{
-            chat_list ? "No conversation selected." : "No conversation exists."
-          }}
+    chat_list ? "No conversation selected." : "No conversation exists."
+  }}
         </div>
 
         <div id="content-right" v-else>
           <div id="head_line">
-            <p
-              style="margin-left: 2vw; margin-top: 1vh"
-              v-if="active_chat != null"
-            >
+            <p style="margin-left: 2vw; margin-top: 1vh" v-if="active_chat != null">
               {{ chat_list[active_chat].user.displayname }}
             </p>
           </div>
 
           <div id="msg" ref="messageContainer">
             <div v-for="(item, index) of chat_list[active_chat].messages">
-                <Message 
-                    :user="home_user" 
-                    :message="item" 
-                    @buy="sendOrder"
-                    @confirm="sendConfirmation"
-                />
+              <Message :user="home_user" :message="item" @buy="sendOrder" @confirm="sendConfirmation" />
             </div>
           </div>
 
@@ -94,17 +67,10 @@
             <div id="toolbox">potentially a toolbox?</div>
 
             <div id="text-input">
-              <input
-                id="input-box"
-                type="text"
-                v-model="newMessage"
-                class="form-control"
-                :placeholder="
-                  'Send a message to ' +
-                  chat_list[active_chat].user.displayname +
-                  '...'
-                "
-              />
+              <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to ' +
+    chat_list[active_chat].user.displayname +
+    '...'
+    " />
               <button id="sendBtn" @click="sendMessage" class="btn btn-primary">
                 Send
               </button>
@@ -161,7 +127,7 @@ export default {
       this.ws.onmessage = this.receiveMessage;
       this.ws.onclose = () => {
         console.log("WebSocket closed.");
-        if(this.shouldReconnect) {
+        if (this.shouldReconnect) {
           console.log("Attempting to reconnect...")
           setTimeout(this.connect, 1000);
         }
@@ -216,7 +182,7 @@ export default {
       } else {
         // console.log("item data", data);
         const message = {
-          message: 'I want to buy this item.', 
+          message: 'I want to buy this item.',
           sender: this.home_user.id,
           room_id: this.active_roomId,
           item: data.item_data,
@@ -232,7 +198,7 @@ export default {
         alert("This item has been sold.");
       } else {
         const message = {
-          message: 'I have sold this item to you.', 
+          message: 'I have sold this item to you.',
           sender: this.home_user.id,
           room_id: this.active_roomId,
           item: data.item_data,
@@ -246,7 +212,7 @@ export default {
           HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
           {
             "item_id": data.item_data.id,
-            "buyer_id": this.home_user.id,
+            "buyer_id": this.chat_list[this.active_chat].user.id,
             "seller_id": data.item_data.seller,
             "price": data.item_data.price,
           },
