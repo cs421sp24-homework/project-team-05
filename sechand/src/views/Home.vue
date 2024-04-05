@@ -198,10 +198,10 @@ export default {
   /* justify-content: space-between; */
 }
 
-.list-group {
+/* .list-group {
   width: 15%;
   position: fixed;
-}
+} */
 
 .list-group-item {
   background: #333435;

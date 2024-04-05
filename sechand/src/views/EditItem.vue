@@ -41,8 +41,10 @@
                         <!-- Price -->
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="number" step="0.01" class="form-control" id="price" v-model="item.price"
+                            <div class="price-container">
+                                <input type="number" step="0.01" class="form-control" id="price" v-model="item.price"
                                 required />
+                            </div>
                         </div>
 
                         <!-- Address -->
@@ -181,6 +183,21 @@ export default {
 .container {
     margin-top: 12vh;
     margin-left: 5vw;
+}
+
+#form input[type="number"] {
+  padding-left: 20px;
+}
+
+.price-container {
+  position: relative;
+}
+
+.price-container::before {
+  color: #5c6267;
+  content: '$';
+  position: absolute;
+  padding: 6px 8px;
 }
 
 .btn {
