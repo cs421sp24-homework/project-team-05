@@ -56,7 +56,7 @@ export default {
   props: {
     addrList: Array,
     categories: Array,
-    currentUser: Object,
+    // currentUser: Object,
   },
   components: {
     UserNavbar,
@@ -69,7 +69,7 @@ export default {
   },
   data() {
     return {
-      // currentUser: JSON.parse(localStorage.getItem("user")),
+      currentUser: JSON.parse(localStorage.getItem("user")),
       All: "all",
       distanceList: ["1", "3", "5", "10"],
       isLoading: false,
@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     userStateChange() {
-      // this.currentUser = JSON.parse(localStorage.getItem("user"));
+      this.currentUser = JSON.parse(localStorage.getItem("user"));
       this.$emit("userStateChange", {});
     },
     async search(payload) {
