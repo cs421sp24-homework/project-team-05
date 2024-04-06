@@ -176,10 +176,10 @@ class GetCollectionTest(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 2)
-        self.assertEqual(response.json()[1]['id'], str(self.item2.id))
-        self.assertEqual(response.json()[1]['name'], self.item2.name)
-        self.assertEqual(response.json()[1]['description'], self.item2.description)
-        self.assertEqual(response.json()[1]['category'], self.item2.category)
+        self.assertEqual(response.json()[1]['id'], str(self.item.id))
+        self.assertEqual(response.json()[1]['name'], self.item.name)
+        self.assertEqual(response.json()[1]['description'], self.item.description)
+        self.assertEqual(response.json()[1]['category'], self.item.category)
 
     def test_is_collected(self):
         self.client.force_authenticate(user=self.buyer)
