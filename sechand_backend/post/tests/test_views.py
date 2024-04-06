@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from post.models import Item, UserCollection
-from user.models import Address
+from user.models import Address, CustomUser
 from rest_framework import status
 from rest_framework.test import APIClient
 from decimal import Decimal
@@ -37,6 +37,8 @@ class ProcessSingleItemTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.address = Address.objects.create(name='Test Address', street='123 Main St', zipcode='12345', latitude=Decimal('40.7128'), longitude=Decimal('-74.0060'))
+        self.user.address = self.address
         self.item = Item.objects.create(name='Test Item', description='Test Desc', category='Test Category', price=10.01, seller=self.user)
         self.url = reverse('ProcessSingleItem', kwargs={'item_id': self.item.id})
 
@@ -128,7 +130,9 @@ class GetCollectionTest(TestCase):
         # Set up user and address
         self.seller = User.objects.create_user(username='testseller', password='seller1234', email='testseller@test.com')
         self.buyer = User.objects.create_user(username='testbuyer', password='buyer1234', email='testbuyer@test.com')
-
+        self.address = Address.objects.create(name='Test Address', street='123 Main St', zipcode='12345', latitude=Decimal('40.7128'), longitude=Decimal('-74.0060'))
+        self.seller.address = self.address
+        self.buyer.address = self.address
         self.item = Item.objects.create(
             name='Baseball',
             description='Description for Item 2',
@@ -263,5 +267,5 @@ class TransactionTest(TestCase):
         response = self.client.get(self.getUrl)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()[0]['item_name'], 'Math Textbook')
+        self.assertEqual(response.json()[0]['name'], 'Math Textbook')
 

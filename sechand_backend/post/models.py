@@ -43,7 +43,7 @@ class Item(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
-            print(self.pk)
+            # print(self.pk)
             try:
                 old_instance = Item.objects.get(pk=self.pk)
                 if old_instance.image and self.image and old_instance.image != self.image:

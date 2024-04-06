@@ -98,6 +98,7 @@ def GetUserCollection(request):
             serializer = ItemSerializerWithSellerName(items, many=True)
             return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         except Exception as e:
+            print(e)
             return JsonResponse({},status=status.HTTP_200_OK)
     else:
        return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
@@ -206,8 +207,8 @@ def SearchItems(request):
     location = request.POST.getlist('location')  # location could be list
     distance = float(request.POST.get('distance', -1))  # should be in miles  
 
-    print("Search items based on desc: ", desc_text, ",low price: ", lowest_price, ", high price: ", highest_price, ", catgory: ", category)
-    print("location: ", location, ", distance: ", distance)
+    # print("Search items based on desc: ", desc_text, ",low price: ", lowest_price, ", high price: ", highest_price, ", catgory: ", category)
+    # print("location: ", location, ", distance: ", distance)
     query = Q()
     items = Item.objects.annotate(
         search=SearchVector('name', 'description')
@@ -234,7 +235,7 @@ def SearchItems(request):
         user_addr = request.user.address
         all_addresses = Address.objects.all()
         addrLst = [addr for addr in all_addresses if get_distance(user_addr, addr) <= distance]
-        print(addrLst)
+        # print(addrLst)
         # for address in all_addresses:
         #     if get_distance(user_address, address) <= distance:
         #         addrLst.append(address)
@@ -265,7 +266,7 @@ def BrowseOneKindItems(request):
 @api_view(['POST'])
 # @permission_classes([AllowAny])
 def SaveTransaction(request):
-    print("transaction data", request.data)
+    # print("transaction data", request.data)
     saved = False
     while not saved:
         serializer = TransactionSerializer(data=request.data)
@@ -298,7 +299,7 @@ def GetAllTransactions(request):
         transactions_list = list(Transaction.objects.filter(buyer_id = user_id))
         transactions = transactions_list[::-1]
         serializer = TransactionDeserializer(transactions, many=True)
-        print("Ops")
+        # print("Ops")
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     except Exception as e:
         print(f"Error saving message: {e}")

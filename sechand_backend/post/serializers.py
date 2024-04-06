@@ -30,7 +30,7 @@ class ItemSerializerWithSellerName(serializers.ModelSerializer):
         return obj.seller.image.url if obj.seller and obj.seller.image else None
     
     def get_sellerLocation(self, obj):
-        return obj.seller.address.name if obj.seller.address.name else None
+        return obj.seller.address.name if obj.seller.address and obj.seller.address.name else None
 
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,12 +63,12 @@ class TransactionDeserializer(serializers.ModelSerializer):
     
     def get_name(self, obj):
         item = Item.objects.get(id = obj.item_id)
-        print(item.name)
+        # print(item.name)
         return item.name
     
     def get_description(self, obj):
         item = Item.objects.get(id = obj.item_id)
-        print(item.description)
+        # print(item.description)
         return item.description
     
     def get_image(self, obj):
@@ -79,22 +79,22 @@ class TransactionDeserializer(serializers.ModelSerializer):
     
     def get_category(self, obj):
         item = Item.objects.get(id = obj.item_id)
-        print(item.category)
+        # print(item.category)
         return item.category
     
     def get_price(self, obj):
         item = Item.objects.get(id = obj.item_id)
-        print(item.price)
+        # print(item.price)
         return item.price
     
     def get_seller(self, obj):
         user = CustomUser.objects.get(id = obj.seller_id)
-        print(user.id)
+        # print(user.id)
         return user.id
     
     def get_displayname(self, obj):
         user = CustomUser.objects.get(id = obj.seller_id)
-        print(user.displayname)
+        # print(user.displayname)
         return user.displayname
     
     def get_sellerIcon(self, obj):
