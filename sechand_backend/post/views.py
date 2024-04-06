@@ -106,34 +106,27 @@ def GetUserCollection(request):
 @api_view(['DELETE'])
 # @permission_classes([AllowAny])
 def DeleteUserCollection(request,item_id):
-    if(request.user):
-        #TODO: validate user token again
-        user_id = request.user.id
-        # user_id = request.data['user_id']
-        try:
-            item = UserCollection.objects.get(user = user_id, item=item_id)
-            item.delete()
-            return JsonResponse({'message': 'UserCollection deleted'}, status=status.HTTP_200_OK)
-        except UserCollection.DoesNotExist:
-            return JsonResponse({'error': 'UserCollection not found'}, status=status.HTTP_200_OK)
-    else:
-       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+    #TODO: validate user token again
+    user_id = request.user.id
+    # user_id = request.data['user_id']
+    try:
+        item = UserCollection.objects.get(user = user_id, item=item_id)
+        item.delete()
+        return JsonResponse({'message': 'UserCollection deleted'}, status=status.HTTP_200_OK)
+    except UserCollection.DoesNotExist:
+        return JsonResponse({'error': 'UserCollection not found'}, status=status.HTTP_200_OK)
     
 @api_view(['POST'])
 # @permission_classes([AllowAny])
 def IsUserCollected(request, item_id):
-    if(request.user):
-        #TODO: validate user token again
-        user_id = request.user.id
-        # user_id = request.data['user_id']      # enable this disable above for postman
-        try:
-            UserCollection.objects.get(user = user_id, item=item_id)
-            return JsonResponse({'collected': True}, status=status.HTTP_200_OK)
-        except UserCollection.DoesNotExist:
-            return JsonResponse({'collected': False}, status=status.HTTP_200_OK)
-            
-    else:
-       return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
+    #TODO: validate user token again
+    user_id = request.user.id
+    # user_id = request.data['user_id']      # enable this disable above for postman
+    try:
+        UserCollection.objects.get(user = user_id, item=item_id)
+        return JsonResponse({'collected': True}, status=status.HTTP_200_OK)
+    except UserCollection.DoesNotExist:
+        return JsonResponse({'collected': False}, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([AllowAny])
@@ -179,23 +172,20 @@ def ProcessSingleItem(request, item_id):
 # TODO: remove when actural release
 # @permission_classes([AllowAny])
 def CreateNewItem(request):
-    if(request.user):
-        #TODO: validate user token again
-        req_data = request.data
-        saved = False
-        while not saved:
-            serializer = ItemSerializer(data=request.data)
-            if serializer.is_valid():
-                try:
-                    serializer.save()
-                    saved = True
-                    return JsonResponse(serializer.data, status=201)
-                except IntegrityError:
-                    continue
-            else:
-                return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return JsonResponse({'error': 'User did not login or have valid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    #TODO: validate user token again
+    req_data = request.data
+    saved = False
+    while not saved:
+        serializer = ItemSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                saved = True
+                return JsonResponse(serializer.data, status=201)
+            except IntegrityError:
+                continue
+        else:
+            return JsonResponse({'error': 'Failed with serializing new object.'}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -293,7 +283,6 @@ def SaveTransaction(request):
 # @permission_classes([AllowAny])
 def GetAllTransactions(request):
     try:
-
         user_id = request.user.id
         # user_id = request.data['user_id']
         transactions_list = list(Transaction.objects.filter(buyer_id = user_id))
