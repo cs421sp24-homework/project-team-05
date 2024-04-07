@@ -15,7 +15,7 @@
         </ul>
       </div>
       <div class="right">
-        <Seach :categories="this.categories" @onClick="search" />
+        <Search :categories="this.categories" @onClick="search" />
         <div class="dropdowns-container">
           <Dropdown class="buttons" text="Location" :dropdownData="this.addrList" @update:selected="UpdateLocation">
           </Dropdown>
@@ -35,9 +35,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="col-9 text-end">
-            <Button @btn-click="search" text="Apply" color="lightblue" id="apply"></Button>
-          </div> -->
         </div>
         <Cards :cards="cardsData" />
       </div>
@@ -47,7 +44,7 @@
 
 <script>
 import UserNavbar from "../components/UserNavbar.vue";
-import Seach from "../components/Seach.vue";
+import Search from "../components/Search.vue";
 import Button from "@/components/Button.vue";
 import Dropdown from "../components/Dropdown.vue";
 import Cards from "../components/Cards.vue";
@@ -59,11 +56,11 @@ export default {
   props: {
     addrList: Array,
     categories: Array,
-    currentUser: Object,
+    // currentUser: Object,
   },
   components: {
     UserNavbar,
-    Seach,
+    Search,
     Dropdown,
     Cards,
     Button,
@@ -72,6 +69,7 @@ export default {
   },
   data() {
     return {
+      currentUser: JSON.parse(localStorage.getItem("user")),
       All: "all",
       distanceList: ["1", "3", "5", "10"],
       isLoading: false,
@@ -82,14 +80,14 @@ export default {
     };
   },
   async created() {
-    const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    // this.currentUser = JSON.parse(localStorage.getItem("user"));
-    this.$emit("userStateChange", {});
     console.log("HOME: ", this.currentUser);
+    const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    this.$emit("userStateChange", {});
+    this.currentUser = JSON.parse(localStorage.getItem("user"));
     try {
       if (this.currentUser) {
         const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/all", {
+        const response = await axios.get(HTTP_PREFIX + "api/v1/post/Items/user/all", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -105,12 +103,12 @@ export default {
   },
   methods: {
     userStateChange() {
+      this.currentUser = JSON.parse(localStorage.getItem("user"));
       this.$emit("userStateChange", {});
     },
     async search(payload) {
       const HTTP_PREFIX = import.meta.env.VITE_HOST;
       try {
-        // console.log(payload.cate)
         const formData = new FormData();
         formData.append("desc_text", payload.input);
         formData.append("category", payload.cate);
@@ -137,32 +135,6 @@ export default {
         console.error("Error submitting form:", error);
       }
     },
-    // async applyFilter() {
-    //   const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    //   try {
-    //     const formData = new FormData();
-    //     formData.append("desc_text", "");
-    //     formData.append("lowest_price", this.filters.min);
-    //     formData.append("highest_price", this.filters.max);
-    //     const loc_array = this.filters.locations
-    //     loc_array.forEach((item, index) => {
-    //       formData.append("locations", item);
-    //     });
-    //     const response = await axios.post(
-    //       HTTP_PREFIX + "api/v1/post/Items/Search",
-    //       formData,
-    //       {
-    //         headers: {
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       }
-    //     );
-    //     console.log("Form submitted successfully:", response.data);
-    //     this.cardsData = response.data;
-    //   } catch (error) {
-    //     console.error("Error submitting form:", error);
-    //   }
-    // },
     async UpdateCategory(category) {
       console.log("update category", category);
       const HTTP_PREFIX = import.meta.env.VITE_HOST;
@@ -227,6 +199,11 @@ export default {
   display: flex;
   /* justify-content: space-between; */
 }
+
+/* .list-group {
+  width: 15%;
+  position: fixed;
+} */
 
 .list-group-item {
   background: #333435;

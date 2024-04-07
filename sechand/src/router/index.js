@@ -75,21 +75,21 @@ const router = createRouter({
     {
         path: '/chat',
         component: Chat,
-        name: 'GeneralChat',
+        name: 'Chat',
         meta: { requiresAuth: true }
     },
+    // {
+    //   path: '/chat/:receiver/:item',
+    //   component: Chat,
+    //   name: 'DirectChat',
+    //   meta: { requiresAuth: true }
+    // },
     {
-      path: '/chat:receiver',
-      component: Chat,
-      name: 'DirectChat',
+      path: '/Me/Showall/:data',
+      component: ShowAll,
+      name: 'ShowAll',
       meta: { requiresAuth: true }
-  },
-  {
-    path: '/Me/Showall/:data',
-    component: ShowAll,
-    name: 'ShowAll',
-    meta: { requiresAuth: true }
-},
+    },
   ]
 })
 

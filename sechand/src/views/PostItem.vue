@@ -19,11 +19,8 @@
             <!-- Upload Picture -->
             <div class="mb-3 d-flex align-items-center">
               <label for="uploadPicture" class="form-label me-2">Upload Picture</label>
-              <input type="file" id="uploadPicture" accept="image/*" style="display: none" ref="fileInput"
-                @change="handleFileUpload" />
-              <button type="button" class="btn btn-primary" @click="$refs.fileInput.click()">
-                Choose File
-              </button>
+              <input type="file" id="uploadPicture" accept="image/*" ref="fileInput" @change="handleFileUpload"
+                required />
             </div>
             <!-- Choose Category -->
             <div class="mb-3">
@@ -43,7 +40,9 @@
             <!-- Price -->
             <div class="mb-3">
               <label for="price" class="form-label">Price</label>
-              <input type="number" step="0.01" class="form-control" id="price" v-model="price" required />
+              <div class="price-container">
+                <input type="number" step="0.01" class="form-control" id="price" v-model="price" placeholder="0.00" required />
+              </div>
             </div>
 
             <!-- Address -->
@@ -133,11 +132,10 @@ export default {
         formData.append("category", this.category);
         formData.append("price", this.price);
         formData.append("seller", this.currentUser.id);
-        if (this.currentUser.username!='mxia8' || this.picture) {
-            formData.append("image", this.picture);
+        if (this.currentUser.username != 'mxia8' || this.picture) {
+          formData.append("image", this.picture);
         }
 
-        console.log(formData);
         const response = await axios.post(
           HTTP_PREFIX + "api/v1/post/Item/new",
           formData,
@@ -183,8 +181,19 @@ export default {
   box-sizing: border-box;
 }
 
-.postForm input[type="file"] {
-  display: none;
+.postForm input[type="number"] {
+  padding-left: 20px;
+}
+
+.price-container {
+  position: relative;
+}
+
+.price-container::before {
+  color: #5c6267;
+  content: '$';
+  position: absolute;
+  padding: 8px;
 }
 
 .postForm .btn-file {

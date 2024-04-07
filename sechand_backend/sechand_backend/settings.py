@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = "django-insecure-b^slz!-t0w0z_s*3yye3f7-ofc(ohp!8v%8)bpbnne8d)(@o7y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['oose-project-65116e9428b0.herokuapp.com','localhost:8000/','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['oose-project-65116e9428b0.herokuapp.com','localhost:8000','127.0.0.1','localhost']
 
 
 # Application definition
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "channels",
+    "channels_redis",
     "rest_framework",
     "rest_framework_simplejwt",
     "post",
@@ -49,7 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -59,13 +61,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-#     "https://sechand.vercel.app",
-# ]
-
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://sechand.vercel.app",
+    "https://sechand-k00feeehg-todd-taos-projects.vercel.app",
+    "https://sechand-todd-taos-projects.vercel.app"
+]
 
+CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = "sechand_backend.urls"
 
 TEMPLATES = [
@@ -102,11 +106,13 @@ DATABASES = {
 }
 
 # Azure Storage configurations
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-AZURE_ACCOUNT_NAME = 'sechand'
-AZURE_ACCOUNT_KEY = 'fMVhL17pFTQ3hxOqIrPaflUyb8pbBkYA5WUOPmd2I4f7tjK54JzfgN3tsU9YE0B9GLtHupM39RSg+AStz7GLnQ=='
-AZURE_CONTAINER = 'media'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_STORAGE_BUCKET_NAME = 'sechandbucket'
+AWS_ACCESS_KEY_ID = 'AKIAXYKJR3LLM4SD6IIF'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_REGION_NAME = 'us-east-2' 
 
+AWS_QUERYSTRING_AUTH = False
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -176,12 +182,26 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
-    'REFRESH_TOKEN_LIFETIME': timedelta(hours=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=8),
 }
 
 ASGI_APPLICATION = 'sechand_backend.asgi.application'
+
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        }
+    }
+
+if os.environ.get('REDIS_URL'):
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [{
+                    "address": os.environ.get('REDIS_URL'),
+                    # "ssl_cert_reqs": None,
+                }]
+            }
+        }
+    }

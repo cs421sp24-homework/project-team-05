@@ -15,7 +15,26 @@
 
                 <div id="guest-content">
                     {{ message.content }}
+                    <div class="content-grid" v-if="message.data && Object.keys(message.data).length">
+                        <img id="guest-content-left" :src="message.data.image">
+                        <div id="guest-content-right">
+                            <div class="content-right-name">
+                                {{ message.data.name }}
+                            </div>
+                            <div class="content-right-desc">
+                                {{ message.data.description.length>50? message.data.description.slice(0,50)+'...':message.data.description }}
+                            </div>
+                            <div class="content-right-price">
+                                $ {{ message.data.price }}
+                            </div>
+                            <button v-if="!message.data.is_sold && message.content.slice(0,2)=='Hi'" class="content-btn btn btn-primary" disabled>Wait for Order</button>
+                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I w'" class="content-btn btn btn-success" @click="confirm">Confirm</button>
+                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I h'" class="content-btn btn btn-secondary" disabled>Sold</button>
+                            <button v-else class="content-btn btn btn-secondary" disabled>Sold</button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -28,8 +47,27 @@
                         {{ message.sender.displayname }}</div>
                 </div>
 
+                
                 <div id="home-content">
                     {{ message.content }}
+                    <div class="content-grid" v-if="message.data && Object.keys(message.data).length">
+                        <img id="home-content-left" :src="message.data.image">
+                        <div id="guest-content-right">
+                            <div class="content-right-name">
+                                {{ message.data.name }}
+                            </div>
+                            <div class="content-right-desc">
+                                {{ message.data.description.length>50? message.data.description.slice(0,50)+'...':message.data.description }}
+                            </div>
+                            <div class="content-right-price">
+                                $ {{ message.data.price }}
+                            </div>
+                            <button v-if="!message.data.is_sold && message.content.slice(0,2)=='Hi'" class="content-btn btn btn-light" @click="buy">Buy</button>
+                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I w'" class="content-btn btn btn-warning" style="font-size: 1vh;" disabled>Wait for Confirmation</button>
+                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I h'" class="content-btn btn btn-secondary">Sold</button>
+                            <button v-else class="content-btn btn btn-secondary" disabled>Sold</button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -56,6 +94,15 @@ export default {
         user: Object,
         message: Object,
     },
+
+    methods:{
+        confirm(){
+            this.$emit("confirm", {'item_data': this.message.data});
+        },
+        buy(){
+            this.$emit("buy", {'item_data': this.message.data});
+        }
+    }
 }
 
 </script>
@@ -95,12 +142,64 @@ export default {
     font-size: 0.9vw;
     max-width: 20vw;
     width: fit-content;
+    height: fit-content;
     padding-left: 0.5vw;
     padding-right: 0.5vw;
     padding-top: 0.5vh;
     padding-bottom: 0.5vh;
     overflow-wrap: break-word;
 }
+
+.content-grid{
+    display: flex;
+    flex-direction: row;
+    padding-top: 1vh;
+    margin-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    border-top: rgb(171, 171, 171) 1px solid;
+}
+
+.content-btn{
+    font-size: 1.2vh;
+    font-weight: 800;
+    min-width: 5vw;
+    width: fit-content;
+}
+
+#guest-content-left{
+    width: 45%; 
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 1px gray solid;
+}
+
+#guest-content-right{
+    width: auto;
+    padding-left: 1vw;
+}
+
+.content-right-name{
+    font-size: 1vw;
+    font-weight: 800;
+    height: fit-content;
+    padding-bottom: 0.5vw;
+}
+
+.content-right-desc{
+    font-size: 0.7vw;
+    font-weight: 500;
+    height: 3vw;
+    padding-bottom: 1vw;
+}
+
+.content-right-price{
+    color: rgb(255, 77, 0);
+    font-size: 1vw;
+    font-weight: 800;
+    height: fit-content;
+    padding-bottom: 0.5vw;
+}
+
 
 #msg-home{
     margin-top: 1vh;
@@ -142,6 +241,13 @@ export default {
     padding-bottom: 0.5vh;
     margin-left: auto;
     overflow-wrap: break-word;
+}
+
+#home-content-left{
+    width: 45%; 
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 1px white solid;
 }
 
 </style>
