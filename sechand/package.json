@@ -14,12 +14,15 @@
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "dotnet": "^1.1.4",
     "vue": "^3.4.19",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",
     "@vue/test-utils": "^2.4.4",
+    "dotenv-webpack": "^8.0.1",
     "jsdom": "^24.0.0",
     "sass": "^1.71.1",
     "vite": "^5.0.11",

@@ -1,20 +1,15 @@
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="navbar-elements">
       <a class="navbar-brand" href="#" @click="goToHome">
-        <img src="/icon.jpg" alt="Icon" class="mr-2 icon" />
-        Sechand</a
-      >
+        <img src="../assets/logo_temp.svg" alt="Icon" class="mr-2 icon" />
+        Sechand</a>
       <div class="row justify-content-end">
         <div class="col-auto">
-          <Button @btn-click="$emit('Login')" text="Login" color="red"></Button>
+          <Button id="navLogin" @btn-click="login" text="Login" color="transparent"></Button>
         </div>
         <div class="col-auto">
-          <Button
-            @btn-click="$emit('Signup')"
-            text="Sign Up"
-            color="red"
-          ></Button>
+          <Button @btn-click="signup" text="Sign Up" color="transparent"></Button>
         </div>
       </div>
     </div>
@@ -27,20 +22,47 @@ export default {
   components: {
     Button,
   },
-  methods:{
+  methods: {
     goToHome() {
       this.$router.push("/");
       console.log("goToHome");
     },
+    login() {
+      this.$router.push("/login");
+      console.log("login");
+    },
+    signup() {
+      this.$router.push("/signup");
+      console.log("signup");
+    },
   },
 };
 </script>
-<style>
-.space {
-  margin-left: 10px; /* Adjust the margin to create space between buttons */
+<style scoped>
+.navbar {
+  background-color: #98a497;
 }
+
+.navbar-elements {
+  margin-left: 5vw;
+  margin-right: 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar-brand {
+  color: #ffffff;
+  /* Text color */
+  font-weight: bold;
+  font-size: 24px;
+
+  line-height: 1;
+}
+
 .icon {
-  width: 30px; /* Adjust width as needed */
-  height: 30px; /* Adjust height as needed */
+  width: 40px;
+  height: 40px;
 }
 </style>

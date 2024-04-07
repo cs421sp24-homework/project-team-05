@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import UserHome from '../views/UserHome.vue'
 import Me from '../views/Me.vue'
 import PostItem from '../views/PostItem.vue'
 import ShowItem from '../views/ShowItem.vue'
@@ -9,20 +8,19 @@ import Login from '.././views/Login.vue'
 import Signup from '.././views/Signup.vue'
 import Profile from '.././views/Profile.vue'
 import Empty from '@/views/Empty.vue'
+import Chat from '@/views/Chat.vue'
+import ShowAll from '@/views/ShowAll.vue'
+
+import ChatTest from '../views/ChatTest.vue'; // Import your chat component
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+
   routes: [
     {
       path: '/',
       name: 'Home',
       component: Home,
-    },
-    {
-      path: '/userhome',
-      name: 'UserHome',
-      component: UserHome,
-      meta: { requiresAuth: true }
     },
     {
       path: '/me',
@@ -39,7 +37,7 @@ const router = createRouter({
     {
       path: '/showitem',
       component: Empty,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/edititem',
@@ -50,7 +48,7 @@ const router = createRouter({
       path: '/showitem/:id',
       name: 'ShowItem',
       component: ShowItem,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: '/edititem/:id',
@@ -76,6 +74,24 @@ const router = createRouter({
         name: 'Profile',
         meta: { requiresAuth: true }
     },
+    {
+        path: '/chat',
+        component: Chat,
+        name: 'Chat',
+        meta: { requiresAuth: true }
+    },
+    // {
+    //   path: '/chat/:receiver/:item',
+    //   component: Chat,
+    //   name: 'DirectChat',
+    //   meta: { requiresAuth: true }
+    // },
+    {
+      path: '/Me/Showall/:data',
+      component: ShowAll,
+      name: 'ShowAll',
+      meta: { requiresAuth: true }
+    },
   ]
 })
 
@@ -84,6 +100,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!isAuthenticated) {
             next({ name: 'Home' });
+
         } 
         else {
             next();
@@ -92,7 +109,7 @@ router.beforeEach((to, from, next) => {
     else {
         next(); 
     }
-});
-
+  }
+);
 
 export default router
