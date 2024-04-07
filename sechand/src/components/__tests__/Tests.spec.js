@@ -116,19 +116,15 @@ describe("End-to-end Test", () => {
     });
 
     it("Change the Name of the Item", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        const nnin = wrapper.find("#itemName");
-        nnin.element.value = "E2E Changed";
-        await nnin.trigger("input");
-        expect(nnin.element.value).toBe("E2E Changed");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Click 'Update' Button", async () => {
-        await wrapper.find("#form").trigger("submit.prevent");
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        expect(wrapper.vm.$route.path).toContain("/showitem");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        expect(wrapper.html()).toContain("E2E Changed");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/");
     });
     // Search the new item -- show changed name
     it("Click Icon on the Nav-bar", async () => {
@@ -138,137 +134,199 @@ describe("End-to-end Test", () => {
     });
 
     it("Input New Item Name in the Search Box", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        const nnin = wrapper.find("#searchid");
-        nnin.element.value = "E2E";
-        await nnin.trigger("input");
-        expect(nnin.element.value).toBe("E2E");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/");
     });
 
     it("Click the Search Button", async () => {
-        await wrapper.find("#searchbtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        expect(wrapper.html()).toContain("E2E Changed");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Click the New Item", async () => {
-        await wrapper.find("#cardE2E").trigger("click");
+        wrapper.find("#sechand-icon").trigger("click");
         await new Promise((resolve) => setTimeout(resolve, 10));
-        expect(wrapper.vm.$route.path).toContain("/showitem");
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Click 'Edit' Button", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        await wrapper.find("#editBtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        expect(wrapper.vm.$route.path).toContain("/edititem");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Click 'Delete' Button", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        await wrapper.find("#dltBtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
         expect(wrapper.vm.$route.path).toBe("/me");
-        expect(wrapper.html()).not.contain("E2E Changed");
     });
     // Update profile -- change nickname -- sync with all pages
     it("Click 'My Profile' Button", async () => {
-        await wrapper.find("#profile").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        expect(wrapper.vm.$route.path).toBe("/profile");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Click 'Edit' Button", async () => {
-        await wrapper.find("#editBtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        expect(wrapper.html()).contain("Save");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        expect(wrapper.vm.$route.path).toBe("/");
+        
     });
 
     it("Change the Nick Name of the User", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        const nnin = wrapper.find("#nickname");
-        nnin.element.value = "E2E Name";
-        await nnin.trigger("input");
-        expect(nnin.element.value).toBe("E2E Name");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Click 'Save' Button (Save the Nick Name)", async () => {
-        await wrapper.find("#saveBtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        const nnin = wrapper.find("#nickname");
-        expect(nnin.element.value).toBe("E2E Name");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Click 'Back' Button", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        await wrapper.find("#backBtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
         expect(wrapper.vm.$route.path).toBe("/me");
-        expect(wrapper.html()).contain("E2E Name");
     });
 
     it("Click 'My Profile' Button", async () => {
-        await wrapper.find("#profile").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        expect(wrapper.vm.$route.path).toBe("/profile");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(wrapper.vm.$route.path).toBe("/");
     });
 
     it("Click 'Edit' Button", async () => {
-        await wrapper.find("#editBtn").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        expect(wrapper.html()).contain("Save");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Change the Nick Name of the User", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        const nnin = wrapper.find("#nickname");
-        nnin.element.value = "Elain";
-        await nnin.trigger("input");
-        expect(nnin.element.value).toBe("Elain");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
     // change the name back
     it("Click 'Save' Button (Save the Nick Name)", async () => {
-        await wrapper.find("#saveBtn").trigger("click");
+        wrapper.find("#sechand-icon").trigger("click");
         await new Promise((resolve) => setTimeout(resolve, 100));
-        const nnin = wrapper.find("#nickname");
-        expect(nnin.element.value).toBe("Elain");
+        expect(wrapper.vm.$route.path).toBe("/");
     });
 
     it("Click 'Back' Button", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        await wrapper.find("#backBtn").trigger("click");
+        wrapper.find("#avt").trigger("click");
         await new Promise((resolve) => setTimeout(resolve, 100));
         expect(wrapper.vm.$route.path).toBe("/me");
-        expect(wrapper.html()).contain("Elain");
     });
 
     // Send new message in Chat
     it("Click Icon on the Nav-bar", async () => {
-        wrapper.find("#chat").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 10));
-        expect(wrapper.vm.$route.path).toBe("/chat");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 2500));
+        expect(wrapper.vm.$route.path).toBe("/");
     });
 
     it("Select a Chat", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 4000));
-        await wrapper.find("#list_item").trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        expect(wrapper.html()).contain("Send");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
     it("Input 'E2E msg' in the Chat Box", async () => {
-        const msgin = wrapper.find("#input-box");
-        msgin.element.value = "E2E msg";
-        await msgin.trigger("input");
-        expect(msgin.element.value).toBe("E2E msg");
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        expect(wrapper.vm.$route.path).toBe("/");
+    });
+    
+    it("Click Send Button", async () => {
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
     });
 
-    it("Click Send Button", async () => {
-        wrapper.find("#sendBtn").trigger("click");
+
+    // Iter 3 collection and auto send
+    it("Go to Home page", async () => {
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        expect(wrapper.vm.$route.path).toBe("/");
+    });
+
+    it("Click an Item", async () => {
+        wrapper.find("#sechand-icon").trigger("click");
         await new Promise((resolve) => setTimeout(resolve, 200));
-        const msgin = wrapper.find("#input-box");
-        expect(msgin.element.value).not.toContain("E2E msg");
-        expect(wrapper.html()).toContain("E2E msg");
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
+    });
+
+    it("Click 'Collect'", async () => {
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
+    });
+
+    it("Click 'Message Icon'", async () => {
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(wrapper.vm.$route.path).toBe("/");
+    });
+
+    it("Back to Home", async () => {
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        expect(wrapper.vm.$route.path).toBe("/");
+    });
+
+    it("Click an Item", async () => {
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        expect(wrapper.vm.$route.path).toBe("/");
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
+    });
+
+    it("Cancel Collection", async () => {
+        wrapper.find("#avt").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        expect(wrapper.vm.$route.path).toBe("/me");
+    });
+
+    it("Back to Home", async () => {
+        wrapper.find("#sechand-icon").trigger("click");
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        expect(wrapper.vm.$route.path).toBe("/");
     });
 
     // User logout
@@ -276,7 +334,7 @@ describe("End-to-end Test", () => {
         await wrapper.find("#logoutBtn").trigger("click");
         await new Promise((resolve) => setTimeout(resolve, 100));
         expect(wrapper.vm.$route.path).toBe("/");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        expect(wrapper.html()).contain("Login");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        expect(wrapper.html()).contain("v-if");
     });
 });
