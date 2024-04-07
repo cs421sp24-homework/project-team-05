@@ -27,7 +27,7 @@ SecHand is build based on the following technology:
 ## Use SecHand
 ### Access website
 - Use the following link to access SecHand: https://sechand.vercel.app/
-- Or you can run it on your own machine (see **Installation and Run**)
+- Or you can run it on your own machine (see [**Run Sechand**](https://github.com/cs421sp24-homework/project-team-05?tab=readme-ov-file#run-sechand))
 
 ### Register your account
 - Start using SecHand by registering your account. At the homepage of our website, click the Sign up button at the top right corner.
