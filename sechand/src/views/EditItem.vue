@@ -191,8 +191,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    <!-- </div>
+  </div> -->
 </template>
 
 <script>
@@ -200,7 +200,6 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import Card from "@/components/Card.vue";
 import axios from "axios";
 export default {
-<<<<<<< HEAD
     name: "EditItem",
     props: {
         currentUser: Object,
@@ -221,26 +220,6 @@ export default {
     async created() {
         // Check if the current user is the seller of the item
         this.id = this.$route.params.id;
-=======
-  name: "EditItem",
-  props: {
-    currentUser: Object,
-  },
-  components: {
-    UserNavbar,
-  },
-  data() {
-    return {
-      item: {},
-      picture: null,
-      pictureUrl: "",
-      currentUser: JSON.parse(localStorage.getItem("user")),
-    };
-  },
-  async created() {
-    // Check if the current user is the seller of the item
-    this.id = this.$route.params.id;
->>>>>>> origin/main
 
     try {
       const HTTP_PREFIX = import.meta.env.VITE_HOST;
@@ -257,7 +236,6 @@ export default {
     userStateChange() {
       this.$emit("userStateChange", {});
     },
-<<<<<<< HEAD
     methods: {
         userStateChange() {
             this.$emit("userStateChange", {});
@@ -315,11 +293,6 @@ export default {
                 console.error("Error submitting form:", error);
             }
         },
-=======
-    handleFileUpload(event) {
-      this.picture = event.target.files[0];
-      this.pictureUrl = URL.createObjectURL(this.picture);
->>>>>>> origin/main
     },
     cancel() {
       this.$router.go(-1);
