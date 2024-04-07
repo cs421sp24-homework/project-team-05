@@ -80,10 +80,10 @@ export default {
     };
   },
   async created() {
-    const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    // this.currentUser = JSON.parse(localStorage.getItem("user"));
-    this.$emit("userStateChange", {});
     console.log("HOME: ", this.currentUser);
+    const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    this.$emit("userStateChange", {});
+    this.currentUser = JSON.parse(localStorage.getItem("user"));
     try {
       if (this.currentUser) {
         const accessToken = localStorage.getItem("access_token");
