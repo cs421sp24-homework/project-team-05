@@ -28,15 +28,16 @@
                   <h5 style="margin-right: 0; font-weight: 700; font-size: 1.2vw">
                     {{ item.user.displayname }}
                   </h5>
+                  {{ item.notification }}
                   <small style="font-size: 0.7vw" id="time" v-if="item.last_message">{{ item.last_message.timestamp
                     }}</small>
                 </div>
                 <p class="mb-1" style="color: #a0a0a0; font-size: 0.9vw" v-if="item.last_message">
                   {{
-    item.last_message.content.length > 35
-      ? item.last_message.content.slice(0, 35) + "..."
-      : item.last_message.content
-  }}
+                    item.last_message.content.length > 35
+                      ? item.last_message.content.slice(0, 35) + "..."
+                      : item.last_message.content
+                  }}
                 </p>
                 <!-- <small style="font-weight: bold;">{{ "additional info" }} </small> -->
               </div>
@@ -85,6 +86,7 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import Message from "@/components/Message.vue";
+import { getWebSocketInstance } from "@/services/WebSocketManager";
 import axios from "axios";
 
 export default {
@@ -110,40 +112,53 @@ export default {
     setActive(item, index) {
       this.active_chat = index;
       this.active_roomId = item.id;
-      console.log("set new messages=0");
+      item.notification = 0;
       this.scrollToBottom();
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      const accessToken = localStorage.getItem("access_token");
+      axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/read-message`, 
+        {
+          "room_id": this.active_roomId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      // console.log("notifications", this.chat_list[index].user, this.chat_list[index].notification);
     },
     connect() {
       const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
 
       const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.home_user.id}/`; // Use roomId in the path
       console.log("using wsPath ", wsPath);
-      if (this.ws) {
-        console.log("ws instance exist, close the current one, open a new one.");
-        this.shouldReconnect = false;
-        this.ws.close(); // Close the existing connection if it exists
-      }
-      this.ws = new WebSocket(wsPath);
+      // if (this.ws) {
+      //   console.log("ws instance exist, close the current one, open a new one.");
+      //   this.shouldReconnect = false;
+      //   this.ws.close(); // Close the existing connection if it exists
+      // }
+      this.ws = getWebSocketInstance(wsPath);
       this.ws.onmessage = this.receiveMessage;
       this.ws.onclose = () => {
         console.log("WebSocket closed.");
-        if (this.shouldReconnect) {
-          console.log("Attempting to reconnect...")
-          setTimeout(this.connect, 1000);
-        }
+        // if (this.shouldReconnect) {
+        //   console.log("Attempting to reconnect...")
+        //   setTimeout(this.connect, 1000);
+        // }
       };
     },
     receiveMessage(e) {
       const message = JSON.parse(e.data);
       console.log("received message", message);
       const room = this.chat_list.find((room) => room.id === message.room_id);
-      console.log("room", room);
+      // console.log("room", room);
       if (room == undefined) {
         this.chat_list.unshift({
           id: message.room_id,
           user: message.sender,
           messages: [message],
           last_message: message,
+          notification: 0,
         });
         if (this.active_chat) {
           this.active_chat++;
@@ -153,9 +168,25 @@ export default {
       room.messages.push(message);
       room.last_message = message;
       this.scrollToBottom();
-      // if (this.active_roomId != message.room_id) {
-      //   console.log("new message received in another room");
-      // }
+      if (this.active_roomId != message.room_id) {
+        // room.notification++;
+        const HTTP_PREFIX = import.meta.env.VITE_HOST;
+        const accessToken = localStorage.getItem("access_token");
+        axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/new-message`, {
+            "room_id": room.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }).then((response) => {
+          console.log("notification", room.user.displayname, response.data.count);
+          room.notification = response.data.count;
+          }).catch((error) => {
+            console.error(error);
+          });
+      }
+      // console.log("notification", room.user.displayname, room.notification);
     },
     sendMessage() {
       if (this.newMessage.trim() !== "") {
@@ -281,24 +312,25 @@ export default {
         );
         this.chat_list = response.data;
       }
+      // console.log("chat list", this.chat_list);
     } catch (error) {
       console.error(error);
     }
     this.connect();
   },
   beforeDestroy() {
-    this.shouldReconnect = false;
+    // this.shouldReconnect = false;
     if (this.ws) {
       this.ws.close();
     }
   },
-  beforeRouteLeave(to, from, next) {
-    this.shouldReconnect = false;
-    if (this.ws) {
-      this.ws.close();
-    }
-    next();
-  },
+  // beforeRouteLeave(to, from, next) {
+  //   this.shouldReconnect = false;
+  //   if (this.ws) {
+  //     this.ws.close();
+  //   }
+  //   next();
+  // },
 };
 </script>
 

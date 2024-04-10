@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Room, Message
+from .models import Room, Message, Notification
 from user.models import CustomUser
 from user.serializers import CustomUserSerializerSimple
 
@@ -18,21 +18,28 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = ('room', 'sender', 'content', 'data', 'timestamp')
 
 
+class NotificationSerializer(serializers.ModelSerializer):
+    user = CustomUserSerializerSimple(read_only=True)
+    room = RoomSerializer(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ('user', 'room', 'count')
+
+
 class RoomSerializerWithMessages(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     # name = serializers.SerializerMethodField()
     messages = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
+    notification = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
-        fields = ('id', 'user', 'messages', 'last_message')
+        fields = ('id', 'user', 'messages', 'last_message', 'notification')
     
     def get_user(self, obj):
         user = self.context['request'].user
-        # print("user, user0, user1", user.id, obj.users[0], obj.users[1])
-        # print("user = user0", str(user.id) == obj.users[0])
-        # print("user = user1", str(user.id) == obj.users[1])
         if str(user.id) == str(obj.users[0]):
             other_user = CustomUser.objects.get(id=obj.users[1])
         else:
@@ -49,3 +56,11 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
             return MessageSerializer(last_message).data
         else:
             return None
+    
+    def get_notification(self, obj):
+        try:
+            notification = Notification.objects.get(user=self.context['request'].user, room=obj)
+        except Notification.DoesNotExist:
+            notification = Notification.objects.create(user=self.context['request'].user, room=obj)
+        
+        return notification.count

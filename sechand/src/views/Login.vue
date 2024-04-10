@@ -3,7 +3,7 @@
         <div id="left">
             <h1 id="title" @click="toHome">SecHand</h1>
             <img id="logo" src="\icon.png" />
-            <h2 id="slogan"> {This is a slogan This is a slogan This is a slogan This is a slogan} </h2>
+            <h2 id="slogan"> Seamlessly Connect, Seamlessly Trade: Your Trusted Hub for Student Exchange at JHU. </h2>
         </div>
 
         <div id="right">
@@ -103,6 +103,7 @@
 <script>
 import axios from 'axios';
 import CodeContainer from '@/components/CodeContainer.vue';
+import { getWebSocketInstance } from '@/services/WebSocketManager';
 
 export default {
     data() {
@@ -177,6 +178,9 @@ export default {
                                 localStorage.setItem('user', JSON.stringify(userInfo));
                                 axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
                                 console.log(userInfo);
+                                const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
+                                const wsPath = WBSOCKET_PREFIX + `ws/chat/${userInfo.id}/`;
+                                getWebSocketInstance(wsPath);
                                 this.$emit('userStateChange', {});
                                 this.$router.push('/');
                             } catch (error) {
@@ -339,7 +343,7 @@ export default {
     font-family: "Comic Sans MS";
     font-style: italic;
     font-weight: 250;
-    font-size: 2vw;
+    font-size: 1.8vw;
     user-select: none;
 }
 

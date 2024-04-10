@@ -82,7 +82,7 @@ export default {
   async created() {
     console.log("HOME: ", this.currentUser);
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
-    this.$emit("userStateChange", {});
+    // this.$emit("userStateChange", {});
     this.currentUser = JSON.parse(localStorage.getItem("user"));
     try {
       if (this.currentUser) {

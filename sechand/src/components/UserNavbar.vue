@@ -24,6 +24,7 @@
 
 <script>
 import Button from "./Button.vue";
+import { getWebSocketInstance } from "@/services/WebSocketManager";
 export default {
   name: "UserNavbar",
   props: {
@@ -48,9 +49,11 @@ export default {
     logout() {
       this.$router.replace("/");
       localStorage.clear(); // Clear all storage
+      const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
+      const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.currentUser.id}/`;
+      getWebSocketInstance(wsPath).close();
       this.$emit("userLogout", {});
       console.log("logout", this.currentUser);
-
     }
   }
 };
