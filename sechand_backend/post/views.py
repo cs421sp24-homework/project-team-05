@@ -339,3 +339,13 @@ def WriteReview(request, order_id):
     # else:
     #     return JsonResponse({'error': 'You are not the buyer of such order'}, status=status.HTTP_401_UNAUTHORIZED)
     
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def GetUnReviewedOrder(request):
+    user_id = request.data['id']
+    # user_id = request.user.id
+    transactions = Transaction.objects.filter(buyer_id=user_id).exclude(review__isnull=False)
+
+    serializer = TransactionReviewSerializer(transactions, many=True)
+
+    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
