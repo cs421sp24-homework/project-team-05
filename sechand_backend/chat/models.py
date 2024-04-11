@@ -30,3 +30,6 @@ class Notification(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='notifications', on_delete=models.CASCADE)
     room = models.ForeignKey(Room, related_name='notifications', on_delete=models.CASCADE)
     count = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'room')

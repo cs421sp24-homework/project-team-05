@@ -10,4 +10,5 @@ urlpatterns = [
     path("Conversation/auto-send/<int:receiver_id>/<uuid:item_id>", views.SendItemLink, name="SendItemLink"),
     path("Conversation/new-message", views.NewMessageNotification, name="NewMessageNotification"),
     path("Conversation/read-message", views.ReadMessageNotification, name="ReadMessageNotification"),
+    path("Conversation/notification-count", views.GetNotificationCount, name="GetNotificationCount"),
 ]

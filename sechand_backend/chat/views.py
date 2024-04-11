@@ -103,8 +103,7 @@ def NewMessageNotification(request):
     room_id = request.data['room_id']
     room = Room.objects.get(id=room_id)
     notification = Notification.objects.get(user=request.user, room=room)
-    notification.count += 1
-    notification.save()
+    notification.update(count=notification.count + 1)
     return Response({'message': 'notification sent', 'count': notification.count}, status=status.HTTP_200_OK)
 
 
@@ -113,7 +112,13 @@ def ReadMessageNotification(request):
     room_id = request.data['room_id']
     room = Room.objects.get(id=room_id)
     notification = Notification.objects.get(user=request.user, room=room)
-    notification.count = 0
-    notification.save()
+    notification.update(count=0)
     return Response({'message': 'notification read', 'count': 0}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def GetNotificationCount(request):
+    notifications = Notification.objects.filter(user=request.user)
+    count = sum([notification.count for notification in notifications]) if notifications else 0
+    return Response({'count': count}, status=status.HTTP_200_OK)
     
