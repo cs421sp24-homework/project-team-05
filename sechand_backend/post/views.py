@@ -321,3 +321,21 @@ def GetUserReviews(request, user_id):
 
     return JsonResponse(response_data, safe=False, status=status.HTTP_200_OK)
 
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def WriteReview(request, order_id):
+
+    order = Transaction.objects.get(id=order_id)
+    # if(request.user and order and request.user == order.buyer_id):
+    try:
+        serializer = TransactionReviewSerializer(order, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=200)
+        else:
+            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Transaction.DoesNotExist:
+        return JsonResponse({'error': 'Transaction not found'}, status=status.HTTP_404_NOT_FOUND)
+    # else:
+    #     return JsonResponse({'error': 'You are not the buyer of such order'}, status=status.HTTP_401_UNAUTHORIZED)
+    

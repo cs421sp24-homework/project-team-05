@@ -37,4 +37,6 @@ urlpatterns = [
 
     path("Order/Transaction/Review/<int:user_id>", views.GetUserReviews, name="GetUserReviews"),
 
+    path("Order/Transaction/Review/add/<uuid:order_id>", views.WriteReview, name="WriteReview"),
+
 ]
