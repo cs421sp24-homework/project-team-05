@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer
-from .serializers import TransactionSerializer, TransactionDeserializer
+from .serializers import TransactionSerializer, TransactionDeserializer, TransactionReviewSerializer
 from .models import Item, UserCollection, Transaction
 from user.models import Address
 from .utils import get_distance
@@ -293,3 +293,31 @@ def GetAllTransactions(request):
     except Exception as e:
         print(f"Error saving message: {e}")
         return JsonResponse({"error": e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def GetUserReviews(request, user_id):
+    transactions = Transaction.objects.filter(seller_id=user_id)#.exclude(review__isnull=True)
+
+    serializer = TransactionReviewSerializer(transactions, many=True)
+
+    rating_sum = 0
+
+    for transaction in transactions:
+        if transaction.rating is not None:
+            rating_sum += transaction.rating
+        else:
+            rating_sum += 5.0
+    
+    if transactions:
+        overall_rating = rating_sum / len(transactions)
+    else:
+        overall_rating = 0
+
+    response_data = {
+        'reviews': serializer.data,
+        'overall_rating': overall_rating
+    }
+
+    return JsonResponse(response_data, safe=False, status=status.HTTP_200_OK)
+
