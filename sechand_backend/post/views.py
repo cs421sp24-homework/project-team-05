@@ -297,7 +297,7 @@ def GetAllTransactions(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def GetUserReviews(request, user_id):
-    transactions = Transaction.objects.filter(seller_id=user_id)#.exclude(review__isnull=True)
+    transactions = Transaction.objects.filter(seller_id=user_id).exclude(review__isnull=True)
 
     serializer = TransactionReviewSerializer(transactions, many=True)
 
