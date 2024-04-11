@@ -342,8 +342,8 @@ def WriteReview(request, order_id):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def GetUnReviewedOrder(request):
-    user_id = request.data['id']
-    # user_id = request.user.id
+    # user_id = request.data['id']
+    user_id = request.user.id
     transactions = Transaction.objects.filter(buyer_id=user_id).exclude(review__isnull=False)
 
     serializer = TransactionReviewSerializer(transactions, many=True)
