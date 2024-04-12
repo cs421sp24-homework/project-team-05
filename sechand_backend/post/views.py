@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import ItemSerializer, ItemSerializerWithSellerName, CollectionSerializer
-from .serializers import TransactionSerializer, TransactionDeserializer
+from .serializers import TransactionSerializer, TransactionDeserializer, TransactionReviewSerializer
 from .models import Item, UserCollection, Transaction
 from user.models import Address
 from .utils import get_distance
@@ -293,3 +293,59 @@ def GetAllTransactions(request):
     except Exception as e:
         print(f"Error saving message: {e}")
         return JsonResponse({"error": e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def GetUserReviews(request, user_id):
+    transactions = Transaction.objects.filter(seller_id=user_id).exclude(review__isnull=True)
+
+    serializer = TransactionReviewSerializer(transactions, many=True)
+
+    rating_sum = 0
+
+    for transaction in transactions:
+        if transaction.rating is not None:
+            rating_sum += transaction.rating
+        else:
+            rating_sum += 5.0
+    
+    if transactions:
+        overall_rating = rating_sum / len(transactions)
+    else:
+        overall_rating = 0
+
+    response_data = {
+        'reviews': serializer.data,
+        'overall_rating': overall_rating
+    }
+
+    return JsonResponse(response_data, safe=False, status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def WriteReview(request, order_id):
+
+    order = Transaction.objects.get(id=order_id)
+    # if(request.user and order and request.user == order.buyer_id):
+    try:
+        serializer = TransactionReviewSerializer(order, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=200)
+        else:
+            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Transaction.DoesNotExist:
+        return JsonResponse({'error': 'Transaction not found'}, status=status.HTTP_404_NOT_FOUND)
+    # else:
+    #     return JsonResponse({'error': 'You are not the buyer of such order'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def GetUnReviewedOrder(request):
+    # user_id = request.data['id']
+    user_id = request.user.id
+    transactions = Transaction.objects.filter(buyer_id=user_id).exclude(review__isnull=False)
+
+    serializer = TransactionReviewSerializer(transactions, many=True)
+
+    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
