@@ -110,13 +110,24 @@ export default {
       this.$emit("userStateChange", {});
     },
     setActive(item, index) {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      const accessToken = localStorage.getItem("access_token");
+      if (this.active_roomId && index != this.active_chat) {
+        axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
+        {
+          "room_id": this.active_roomId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      }
       this.active_chat = index;
       this.active_roomId = item.id;
       item.notification = 0;
       this.scrollToBottom();
-      const HTTP_PREFIX = import.meta.env.VITE_HOST;
-      const accessToken = localStorage.getItem("access_token");
-      axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/read-message`, 
+      axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/message/read`, 
         {
           "room_id": this.active_roomId,
         },
@@ -172,16 +183,14 @@ export default {
         // room.notification++;
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
         const accessToken = localStorage.getItem("access_token");
-        axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/new-message`, {
-            "room_id": room.id,
-          },
+        axios.get(HTTP_PREFIX + `api/v1/chat/Conversation/notification/one-count/${room.id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           }).then((response) => {
-          console.log("notification", room.user.displayname, response.data.count);
-          room.notification = response.data.count;
+            console.log("notification", room.user.displayname, response.data.count);
+            room.notification = response.data.count;
           }).catch((error) => {
             console.error(error);
           });
@@ -200,6 +209,22 @@ export default {
         this.ws.send(JSON.stringify(message)); // Send the message content
         console.log(message);
         this.newMessage = "";
+
+        // const HTTP_PREFIX = import.meta.env.VITE_HOST;
+        // const accessToken = localStorage.getItem("access_token");
+        // axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/message/new`, {
+        //     "room_id": this.active_roomId,
+        //     "receiver_id": this.chat_list[this.active_chat].user.id,
+        //   },
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${accessToken}`,
+        //     },
+        //   }).then((response) => {
+        //     console.log("notification", this.chat_list[this.active_chat].user.id, response.data.count);
+        //   }).catch((error) => {
+        //     console.error(error);
+        //   });
       }
     },
     async sendOrder(data) {
@@ -324,13 +349,22 @@ export default {
       this.ws.close();
     }
   },
-  // beforeRouteLeave(to, from, next) {
-  //   this.shouldReconnect = false;
-  //   if (this.ws) {
-  //     this.ws.close();
-  //   }
-  //   next();
-  // },
+  beforeRouteLeave(to, from, next) {
+    if (this.active_roomId) {
+      const HTTP_PREFIX = import.meta.env.VITE_HOST;
+      const accessToken = localStorage.getItem("access_token");
+      axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
+        {
+          "room_id": this.active_roomId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+    }
+    next();
+  },
 };
 </script>
 

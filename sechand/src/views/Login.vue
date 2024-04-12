@@ -103,7 +103,6 @@
 <script>
 import axios from 'axios';
 import CodeContainer from '@/components/CodeContainer.vue';
-import { getWebSocketInstance } from '@/services/WebSocketManager';
 
 export default {
     data() {
@@ -178,9 +177,9 @@ export default {
                                 localStorage.setItem('user', JSON.stringify(userInfo));
                                 axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
                                 console.log(userInfo);
-                                const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
-                                const wsPath = WBSOCKET_PREFIX + `ws/chat/${userInfo.id}/`;
-                                getWebSocketInstance(wsPath);
+                                // const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
+                                // const wsPath = WBSOCKET_PREFIX + `ws/chat/${userInfo.id}/`;
+                                // getWebSocketInstance(wsPath);
                                 this.$emit('userStateChange', {});
                                 this.$router.push('/');
                             } catch (error) {

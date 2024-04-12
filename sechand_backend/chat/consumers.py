@@ -67,13 +67,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def SaveMessage(self, room_id, sender_id, message_text, item_data=None):
         # This helper method saves the message to the database
-        from .models import Message, Room
+        from .models import Message, Room, Notification
         from .serializers import MessageSerializer
         from django.contrib.auth import get_user_model
         UserModel = get_user_model()
         try:
             room = await sync_to_async(Room.objects.get)(id=room_id)
             user = await sync_to_async(UserModel.objects.get)(id=sender_id)
+
+            receiver_id = room.users[0] if str(sender_id) == str(room.users[1]) else room.users[1]
+            notification = await sync_to_async(Notification.objects.get)(user__id=receiver_id, room=room)
+            if notification.active:
+                notification.count += 1
+                await sync_to_async(notification.save)()
+
             message = await sync_to_async(Message.objects.create)(
                 room=room,
                 sender=user,

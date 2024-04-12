@@ -101,24 +101,43 @@ def SendItemLink(request, receiver_id, item_id):
 @api_view(['POST'])
 def NewMessageNotification(request):
     room_id = request.data['room_id']
-    room = Room.objects.get(id=room_id)
-    notification = Notification.objects.get(user=request.user, room=room)
-    notification.update(count=notification.count + 1)
+    receiver_id = request.data['receiver_id']
+    notification = Notification.objects.get(user__id=receiver_id, room__id=room_id)
+    if notification.active:
+        notification.count += 1
+        notification.save()
     return Response({'message': 'notification sent', 'count': notification.count}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
 def ReadMessageNotification(request):
     room_id = request.data['room_id']
-    room = Room.objects.get(id=room_id)
-    notification = Notification.objects.get(user=request.user, room=room)
-    notification.update(count=0)
+    notification = Notification.objects.get(user=request.user, room__id=room_id)
+    notification.count = 0
+    notification.active = False
+    notification.save()
     return Response({'message': 'notification read', 'count': 0}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
-def GetNotificationCount(request):
+def GetOneNotificationCount(request, room_id):
+    notification = Notification.objects.get(user=request.user, room__id=room_id)
+    return Response({'count': notification.count}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def GetTotalNotificationCount(request):
     notifications = Notification.objects.filter(user=request.user)
     count = sum([notification.count for notification in notifications]) if notifications else 0
     return Response({'count': count}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def ActivateNotification(request):
+    room_id = request.data['room_id']
+    notification = Notification.objects.get(user=request.user, room__id=room_id)
+    notification.active=True
+    notification.save()
+    return Response({'message': 'notification activated'}, status=status.HTTP_200_OK)
+
     

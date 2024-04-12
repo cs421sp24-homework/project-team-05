@@ -24,7 +24,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = ('user', 'room', 'count')
+        fields = ('user', 'room', 'count', 'active')
 
 
 class RoomSerializerWithMessages(serializers.ModelSerializer):
