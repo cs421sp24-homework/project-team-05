@@ -337,7 +337,7 @@ export default {
         );
         this.chat_list = response.data;
       }
-      // console.log("chat list", this.chat_list);
+      console.log("items", this.chat_list[0].items);
     } catch (error) {
       console.error(error);
     }

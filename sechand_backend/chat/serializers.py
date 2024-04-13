@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Room, Message, Notification
 from user.models import CustomUser
 from user.serializers import CustomUserSerializerSimple
+from post.models import Item
+from post.serializers import ItemSerializer
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,10 +35,11 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
     messages = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
     notification = serializers.SerializerMethodField()
+    items = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
-        fields = ('id', 'user', 'messages', 'last_message', 'notification')
+        fields = ('id', 'user', 'messages', 'last_message', 'notification', 'items')
     
     def get_user(self, obj):
         user = self.context['request'].user
@@ -64,3 +67,8 @@ class RoomSerializerWithMessages(serializers.ModelSerializer):
             notification = Notification.objects.create(user=self.context['request'].user, room=obj)
         
         return notification.count
+    
+    def get_items(self, obj):
+        other_user_id = obj.users[0] if str(self.context['request'].user.id) == str(obj.users[1]) else obj.users[1]
+        items = Item.objects.filter(seller__id=other_user_id, is_sold=False)
+        return ItemSerializer(items, many=True).data
