@@ -14,7 +14,12 @@
                 </div>
 
                 <div id="guest-content">
-                    {{ message.content }}
+                    <!-- text content -->
+                    <div v-if="message.data && Object.keys(message.data).length && message.content.slice(0,3)=='I h'">
+                        {{ message.content.slice(0,29) }}
+                    </div>
+                    <div v-else>{{ message.content }}</div>
+                    <!-- item info -->
                     <div class="content-grid" v-if="message.data && Object.keys(message.data).length">
                         <img id="guest-content-left" :src="message.data.image">
                         <div id="guest-content-right">
@@ -22,15 +27,23 @@
                                 {{ message.data.name }}
                             </div>
                             <div class="content-right-desc">
-                                {{ message.data.description.length>50? message.data.description.slice(0,50)+'...':message.data.description }}
+                                {{ message.data.description }}
                             </div>
                             <div class="content-right-price">
                                 $ {{ message.data.price }}
                             </div>
                             <button v-if="!message.data.is_sold && message.content.slice(0,2)=='Hi'" class="content-btn btn btn-primary" disabled>Wait for Order</button>
                             <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I w'" class="content-btn btn btn-success" @click="confirm">Confirm</button>
-                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I h'" class="content-btn btn btn-secondary" disabled>Sold</button>
+                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I h'" class="content-btn btn btn-secondary" disabled>Sold to You</button>
                             <button v-else class="content-btn btn btn-secondary" disabled>Sold</button>
+                        </div>
+                    </div>
+                    <!-- order identifier -->
+                    <div v-if="message.data && Object.keys(message.data).length && message.content.slice(0,3)=='I h'" id="idtf-wrapper">
+                        Order Identifier:
+                        <div style="width: 0.5vw;"></div>
+                        <div id="idtf" v-for="char in message.content.slice(-6,)">
+                            {{ char }}
                         </div>
                     </div>
                 </div>
@@ -40,32 +53,44 @@
 
         <div id="msg-home" v-else>
             <div id="home-text">
-
+                <!-- text content -->
                 <div id="home-headline">
                     <div style="color: #666666; font-size: 0.8vw;">{{ message.timestamp }}</div>
                     <div style="font-size: 1vw; font-weight: 700; margin-left: 0.7vw; margin-right: 0.8vw;">
                         {{ message.sender.displayname }}</div>
                 </div>
 
-                
+                <!-- item info -->
                 <div id="home-content">
-                    {{ message.content }}
+                    <div v-if="message.data && Object.keys(message.data).length && message.content.slice(0,3)=='I h'">
+                        {{ message.content.slice(0,29) }}
+                    </div>
+                    <div v-else>{{ message.content }}</div>
                     <div class="content-grid" v-if="message.data && Object.keys(message.data).length">
-                        <img id="home-content-left" :src="message.data.image">
+                        <img id="guest-content-left" :src="message.data.image">
                         <div id="guest-content-right">
                             <div class="content-right-name">
                                 {{ message.data.name }}
                             </div>
                             <div class="content-right-desc">
-                                {{ message.data.description.length>50? message.data.description.slice(0,50)+'...':message.data.description }}
+                                {{ message.data.description }}
                             </div>
                             <div class="content-right-price">
                                 $ {{ message.data.price }}
                             </div>
                             <button v-if="!message.data.is_sold && message.content.slice(0,2)=='Hi'" class="content-btn btn btn-light" @click="buy">Buy</button>
                             <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I w'" class="content-btn btn btn-warning" style="font-size: 1vh;" disabled>Wait for Confirmation</button>
-                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I h'" class="content-btn btn btn-secondary">Sold</button>
+                            <button v-else-if="!message.data.is_sold && message.content.slice(0,3)=='I h'" class="content-btn btn btn-secondary">Sold to You</button>
                             <button v-else class="content-btn btn btn-secondary" disabled>Sold</button>
+                        </div>
+                    </div>
+
+                    <!-- order identifier -->
+                    <div v-if="message.data && Object.keys(message.data).length && message.content.slice(0,3)=='I h'" id="idtf-wrapper">
+                        Order Identifier:
+                        <div style="width: 0.5vw;"></div>
+                        <div id="idtf" v-for="char in message.content.slice(-6,)">
+                            {{ char }}
                         </div>
                     </div>
                 </div>
@@ -167,7 +192,7 @@ export default {
 }
 
 #guest-content-left{
-    width: 45%; 
+    width: 8vw; 
     aspect-ratio: 1;
     object-fit: cover;
     border: 1px gray solid;
@@ -179,17 +204,21 @@ export default {
 }
 
 .content-right-name{
-    font-size: 1vw;
-    font-weight: 800;
-    height: fit-content;
-    padding-bottom: 0.5vw;
+    font-size: 0.9vw;
+    font-weight: 700;
+    max-height: 3vw;
+    margin-bottom: 0.5vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content-right-desc{
     font-size: 0.7vw;
     font-weight: 500;
     height: 3vw;
-    padding-bottom: 1vw;
+    margin-bottom: 1vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content-right-price{
@@ -249,5 +278,31 @@ export default {
     object-fit: cover;
     border: 1px white solid;
 }
+
+#idtf-wrapper{
+    align-items: center;
+    width: 100%;
+    display: flex;
+    font-weight: 600;
+    border-top: rgb(171, 171, 171) 1px solid;
+    padding-top: 0.5vh;
+    margin-top: 0.5vh;
+}
+
+#idtf{
+    display: flex;
+    align-items: center;
+    font-weight: 900;
+    height: 1.2vw;
+    width: 1.2vw;
+    padding-left: 0.2vw;
+    margin-left: 0.4vw;
+    border: 2px solid rgb(255, 77, 0);
+    border-radius: 0.3vw;
+    background-color: rgb(255, 77, 0);
+    color: white;
+}
+
+
 
 </style>

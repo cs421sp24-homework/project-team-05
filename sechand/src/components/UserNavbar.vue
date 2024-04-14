@@ -5,8 +5,11 @@
         <img src="../assets/logo_temp.svg" alt="Icon" class="icon" id="sechand-icon" />
         Sechand</a>
       <div class="navbar-nav ml-auto">
-        <div class="nav-item">
+        <div class="nav-item" id="chat-icon">
           <img src="/comment.png" id="chat" @click="chat" />
+          <div id="notification" v-if="notification_count > 0">
+            {{ notification_count > 99? '···' : notification_count}}
+          </div>
         </div>
         <div class="nav-item">
           <img :src="this.currentUser.image" class="user-icon" @click="profile" id="avt" />
@@ -25,7 +28,15 @@
 <script>
 import Button from "./Button.vue";
 import { getWebSocketInstance } from "@/services/WebSocketManager";
+import axios from "axios";
+const HTTP_PREFIX = import.meta.env.VITE_HOST;
+const accessToken = localStorage.getItem("access_token");
 export default {
+  data(){
+    return{
+        notification_count: 0,
+    }
+  },
   name: "UserNavbar",
   props: {
     currentUser: Object,
@@ -33,11 +44,12 @@ export default {
   components: {
     Button,
   },
-  created() {
-    console.log("UserNavbar", this.currentUser);
+  mounted() {
+    this.getNotification();
   },
   methods: {
     chat() {
+      this.getNotification();
       this.$router.push("/chat");
     },
     profile() {
@@ -54,6 +66,15 @@ export default {
       getWebSocketInstance(wsPath).close();
       this.$emit("userLogout", {});
       console.log("logout", this.currentUser);
+    },
+    async getNotification() {
+        const notification_count = await axios.get(HTTP_PREFIX + "api/v1/chat/Conversation/notification/total-count",{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        this.notification_count = notification_count.data.count;
+        console.log("Noti-Count:" + this.notification_count);
     }
   }
 };
@@ -89,6 +110,24 @@ export default {
 
 .nav-item {
   margin-left: 10px;
+}
+
+#chat-icon{
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+}
+
+#notification{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgb(255, 33, 33);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .icon {
