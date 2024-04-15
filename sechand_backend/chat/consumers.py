@@ -50,7 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message = await self.SaveMessage(room_id, sender_web, message, item)
         else:
             message = await self.SaveMessage(room_id, sender_web, message)
-        print("receive ", message)
+        # print("receive ", message)
         
         # Send message to room group
         await self.channel_layer.group_send(
@@ -101,7 +101,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender = event['sender']
         timestamp = event['timestamp']
         room_id = event['room_id']
-        print(f"Broadcasting message: {message} from sender: {sender}")
+        # print(f"Broadcasting message: {message} from sender: {sender}")
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
