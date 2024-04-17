@@ -243,41 +243,77 @@ export default {
                 this.ws.send(JSON.stringify(message));
             }
         },
-        async sendConfirmation(data) {
+        sendConfirmation(data) {
             const HTTP_PREFIX = import.meta.env.VITE_HOST;
             const accessToken = localStorage.getItem("access_token");
-            const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`)
-            if (response.data.is_sold) {
-                alert("This item has been sold.");
-            } else {
-				var randomNumber = Math.floor(Math.random() * 1000000);
-				var randomString = randomNumber.toString().padStart(6, '0');
-                const message = {
-                    message: 'I have sold this item to you.' + randomString,
-                    sender: this.home_user.id,
-                    room_id: this.active_roomId,
-                    item: data.item_data,
-                };
-                this.ws.send(JSON.stringify(message));
+            axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`
+              ).then((response) => {
+                if (response.data.is_sold) {
+                //   console.log("this item has been sold.");
+                  alert("This item has been sold.");
+                } else {
+                  var randomNumber = Math.floor(Math.random() * 1000000);
+                  var randomString = randomNumber.toString().padStart(6, '0');
+                  const message = {
+                      message: 'I have sold this item to you.' + randomString,
+                      sender: this.home_user.id,
+                      room_id: this.active_roomId,
+                      item: data.item_data,
+                  };
+                  this.ws.send(JSON.stringify(message));
 
-                console.log("seller id", data.item_data.seller);
-                // console.log("not sold")
+                  // console.log("not sold")
 
-                const response = await axios.post(
-                    HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
-                    {
-                        "item_id": data.item_data.id,
-                        "buyer_id": this.chat_list[this.active_chat].user.id,
-                        "seller_id": data.item_data.seller,
-                        "price": data.item_data.price,
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    }
-                );
-            }
+                  axios.post(
+                      HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
+                      {
+                          "item_id": data.item_data.id,
+                          "buyer_id": this.chat_list[this.active_chat].user.id,
+                          "seller_id": data.item_data.seller,
+                          "price": data.item_data.price,
+                      },
+                      {
+                          headers: {
+                              Authorization: `Bearer ${accessToken}`,
+                          },
+                      }
+                  );
+                  console.log("item to be sold", data.item_data.seller);
+                }
+              }).catch((error) => {
+                console.error(error);
+              });
+            // if (response.data.is_sold) {
+            //   alert("This item has been sold.");
+            // } else {
+            //   var randomNumber = Math.floor(Math.random() * 1000000);
+            //   var randomString = randomNumber.toString().padStart(6, '0');
+            //   const message = {
+            //       message: 'I have sold this item to you.' + randomString,
+            //       sender: this.home_user.id,
+            //       room_id: this.active_roomId,
+            //       item: data.item_data,
+            //   };
+            //   this.ws.send(JSON.stringify(message));
+
+            //   // console.log("not sold")
+
+            //   await axios.post(
+            //       HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
+            //       {
+            //           "item_id": data.item_data.id,
+            //           "buyer_id": this.chat_list[this.active_chat].user.id,
+            //           "seller_id": data.item_data.seller,
+            //           "price": data.item_data.price,
+            //       },
+            //       {
+            //           headers: {
+            //               Authorization: `Bearer ${accessToken}`,
+            //           },
+            //       }
+            //   );
+            //   console.log("item to be sold", data.item_data.seller);
+            // }
         },
         scrollToBottom() {
             this.$nextTick(() => {

@@ -68,13 +68,14 @@ export default {
       console.log("logout", this.currentUser);
     },
     async getNotification() {
-        const notification_count = await axios.get(HTTP_PREFIX + "api/v1/chat/Conversation/notification/total-count",{
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        this.notification_count = notification_count.data.count;
-        console.log("Noti-Count:" + this.notification_count);
+      const accessToken = localStorage.getItem("access_token");
+      const notification_count = await axios.get(HTTP_PREFIX + "api/v1/chat/Conversation/notification/total-count",{
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      this.notification_count = notification_count.data.count;
+      console.log("Noti-Count:" + this.notification_count);
     }
   }
 };
