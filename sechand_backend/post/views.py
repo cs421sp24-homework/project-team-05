@@ -256,7 +256,7 @@ def BrowseOneKindItems(request):
 @api_view(['POST'])
 # @permission_classes([AllowAny])
 def SaveTransaction(request):
-    # print("transaction data", request.data)
+    print("transaction data", request.data)
     saved = False
     while not saved:
         serializer = TransactionSerializer(data=request.data)

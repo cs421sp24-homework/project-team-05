@@ -75,12 +75,22 @@ def SendItemLink(request, receiver_id, item_id):
         room = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
     except Room.DoesNotExist:
         room = Room.objects.create(users=[request.user.id, receiver_id])
+    
     message = Message.objects.create(
         room=room,
         sender=request.user,
         data=ItemSerializer(item).data,
         content='Hi, I\'m interested in this item.'
     )
+
+    try:
+        notification = Notification.objects.get(user__id=receiver_id, room=room)
+    except Notification.DoesNotExist:
+        notification = Notification.objects.create(user_id=receiver_id, room=room)
+    if notification.active:
+        notification.count += 1
+        notification.save()
+    
     room_group_name = 'chat_%s' % room.id
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
@@ -128,6 +138,7 @@ def GetOneNotificationCount(request, room_id):
 @api_view(['GET'])
 def GetTotalNotificationCount(request):
     notifications = Notification.objects.filter(user=request.user)
+    # print("total notifications", notifications)
     count = sum([notification.count for notification in notifications]) if notifications else 0
     return Response({'count': count}, status=status.HTTP_200_OK)
 
