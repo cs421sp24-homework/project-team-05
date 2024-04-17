@@ -63,8 +63,27 @@
                     </div>
 
                     <div id="input">
-                        <div id="toolbox">potentially a toolbox?</div>
-
+                        <div id="toolbox">
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="inputGroupSelect01" style="font-size: 0.9vw;">I want to buy</label>
+                                <select class="form-select" id="inputGroupSelect01" v-model="guest_item_idx" @change="selectItem" style="font-size: 0.9vw; font-weight: 600;">
+                                    <option selected :value="-1" disabled>--select an item--</option>
+                                    <option v-for="(guest_item, index) of chat_list[active_chat].items" :value="index">
+                                        {{ guest_item.name }}
+                                    </option>
+                                </select>
+                                <label class="input-group-text" for="inputGroupSelect01" style="font-size: 0.9vw;">for</label>
+                                <input type="number" class="form-control" v-model="guest_item_price" :disabled="guest_item_idx<0" style="font-size: 0.9vw; font-weight: 600;">
+                                <label class="input-group-text" for="inputGroupSelect01" style="font-size: 0.9vw;">$</label>
+                                <button class="btn btn-primary" type="button" 
+                                        @click="sendProposal" 
+                                        :disabled="guest_item_idx<0 || guest_item_price==null || guest_item_price.length==0"
+                                        style="font-size: 0.9vw;">
+                                            Send Proposal
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div id="text-input">
                             <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to ' +
                                 chat_list[active_chat].user.displayname +'...'"/>
@@ -84,7 +103,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import Message from "@/components/Message.vue";
 import { getWebSocketInstance } from "@/services/WebSocketManager";
 import axios from "axios";
-
+const HTTP_PREFIX = import.meta.env.VITE_HOST;
 export default {
     data() {
         return {
@@ -95,6 +114,8 @@ export default {
             home_user: null,
             ws: null,
             shouldReconnect: true,
+            guest_item_idx: -1,
+            guest_item_price: null
             // receiver: null,
         };
     },
@@ -106,7 +127,7 @@ export default {
             this.$emit("userStateChange", {});
         },
         setActive(item, index) {
-            const HTTP_PREFIX = import.meta.env.VITE_HOST;
+            
             const accessToken = localStorage.getItem("access_token");
             if (this.active_roomId && index != this.active_chat) {
                 axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
@@ -121,6 +142,8 @@ export default {
             }
             this.active_chat = index;
             this.active_roomId = item.id;
+            this.guest_item_idx = -1;
+            this.guest_item_price = null;
             item.notification = 0;
             this.scrollToBottom();
             axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/message/read`, 
@@ -178,7 +201,7 @@ export default {
             this.scrollToBottom();
             if (this.active_roomId != message.room_id) {
                 // room.notification++;
-                const HTTP_PREFIX = import.meta.env.VITE_HOST;
+                
                 const accessToken = localStorage.getItem("access_token");
                 axios.get(HTTP_PREFIX + `api/v1/chat/Conversation/notification/one-count/${room.id}`,
                     {
@@ -206,26 +229,10 @@ export default {
                 this.ws.send(JSON.stringify(message)); // Send the message content
                 console.log(message);
                 this.newMessage = "";
-
-                // const HTTP_PREFIX = import.meta.env.VITE_HOST;
-                // const accessToken = localStorage.getItem("access_token");
-                // axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/message/new`, {
-                //         "room_id": this.active_roomId,
-                //         "receiver_id": this.chat_list[this.active_chat].user.id,
-                //     },
-                //     {
-                //         headers: {
-                //             Authorization: `Bearer ${accessToken}`,
-                //         },
-                //     }).then((response) => {
-                //         console.log("notification", this.chat_list[this.active_chat].user.id, response.data.count);
-                //     }).catch((error) => {
-                //         console.error(error);
-                //     });
             }
         },
         async sendOrder(data) {
-            const HTTP_PREFIX = import.meta.env.VITE_HOST;
+            
             // const accessToken = localStorage.getItem("access_token");
 
             const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`)
@@ -243,83 +250,80 @@ export default {
                 this.ws.send(JSON.stringify(message));
             }
         },
-        sendConfirmation(data) {
-            const HTTP_PREFIX = import.meta.env.VITE_HOST;
+        async sendConfirmation(data) {
+            
             const accessToken = localStorage.getItem("access_token");
-            axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`
-              ).then((response) => {
-                if (response.data.is_sold) {
-                //   console.log("this item has been sold.");
-                  alert("This item has been sold.");
-                } else {
-                  var randomNumber = Math.floor(Math.random() * 1000000);
-                  var randomString = randomNumber.toString().padStart(6, '0');
-                  const message = {
-                      message: 'I have sold this item to you.' + randomString,
-                      sender: this.home_user.id,
-                      room_id: this.active_roomId,
-                      item: data.item_data,
-                  };
-                  this.ws.send(JSON.stringify(message));
+            const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${data.item_data.id}`)
+            if (response.data.is_sold) {
+                alert("This item has been sold.");
+            } else {
+				var randomNumber = Math.floor(Math.random() * 1000000);
+				var randomString = randomNumber.toString().padStart(6, '0');
+                var message_item = data.item_data;
+                message_item.identifier = randomString;
+                const message = {
+                    message: 'I have sold this item to you.',
+                    sender: this.home_user.id,
+                    room_id: this.active_roomId,
+                    item: message_item,
+                };
+                this.ws.send(JSON.stringify(message));
 
-                  // console.log("not sold")
-
-                  axios.post(
-                      HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
-                      {
-                          "item_id": data.item_data.id,
-                          "buyer_id": this.chat_list[this.active_chat].user.id,
-                          "seller_id": data.item_data.seller,
-                          "price": data.item_data.price,
-                      },
-                      {
-                          headers: {
-                              Authorization: `Bearer ${accessToken}`,
-                          },
-                      }
-                  );
-                  console.log("item to be sold", data.item_data.seller);
-                }
-              }).catch((error) => {
-                console.error(error);
-              });
-            // if (response.data.is_sold) {
-            //   alert("This item has been sold.");
-            // } else {
-            //   var randomNumber = Math.floor(Math.random() * 1000000);
-            //   var randomString = randomNumber.toString().padStart(6, '0');
-            //   const message = {
-            //       message: 'I have sold this item to you.' + randomString,
-            //       sender: this.home_user.id,
-            //       room_id: this.active_roomId,
-            //       item: data.item_data,
-            //   };
-            //   this.ws.send(JSON.stringify(message));
-
-            //   // console.log("not sold")
-
-            //   await axios.post(
-            //       HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
-            //       {
-            //           "item_id": data.item_data.id,
-            //           "buyer_id": this.chat_list[this.active_chat].user.id,
-            //           "seller_id": data.item_data.seller,
-            //           "price": data.item_data.price,
-            //       },
-            //       {
-            //           headers: {
-            //               Authorization: `Bearer ${accessToken}`,
-            //           },
-            //       }
-            //   );
-            //   console.log("item to be sold", data.item_data.seller);
-            // }
+                const response = await axios.post(
+                    HTTP_PREFIX + `api/v1/post/Order/Transaction/new`,
+                    {
+                        "item_id": data.item_data.id,
+                        "buyer_id": this.chat_list[this.active_chat].user.id,
+                        "seller_id": data.item_data.seller,
+                        "price":  (data.item_data.new_price? data.item_data.new_price:data.item_data.price),
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+            }
+        },
+        async sendProposal() {
+            var num_price = parseFloat(this.guest_item_price);
+            var cur_item = this.chat_list[this.active_chat].items[this.guest_item_idx];
+            if (cur_item.is_sold) {
+                window.alert("Sorry. The item has been sold.");
+                this.guest_item_idx = -1;
+                this.guest_item_price = nulls;
+            }
+            else if (num_price == NaN || num_price < 0) {
+                window.alert("Please input a valid price!");
+                this.guest_item_price = null;
+            }
+            else{
+                var old_price = cur_item.price;
+                var new_price = num_price.toFixed(2);
+                var message_item = cur_item;
+                var message_content = "I want to buy this item."
+                if (new_price != old_price) { // New price
+                    message_item.new_price = new_price;
+                    message_content = 'I want to buy this item for a NEW price.';
+                } 
+                const message = {
+                    message: message_content,
+                    sender: this.home_user.id,
+                    room_id: this.active_roomId,
+                    item: message_item,
+                };
+                this.ws.send(JSON.stringify(message));
+            }
         },
         scrollToBottom() {
             this.$nextTick(() => {
                 var container = this.$refs.messageContainer;
                 if (container) container.scrollTop = container.scrollHeight;
             });
+        },
+        selectItem() {
+            if (this.guest_item_idx==-1) this.guest_item_price = null;
+            else this.guest_item_price = this.chat_list[this.active_chat].items[this.guest_item_idx].price;
         },
     },
     components: {
@@ -334,7 +338,7 @@ export default {
         const item = sessionStorage.getItem("item");
         sessionStorage.clear();
 
-        const HTTP_PREFIX = import.meta.env.VITE_HOST;
+        
         const accessToken = localStorage.getItem("access_token");
 
         try {
@@ -390,7 +394,7 @@ export default {
     },
     beforeRouteLeave(to, from, next) {
         if (this.active_roomId) {
-            const HTTP_PREFIX = import.meta.env.VITE_HOST;
+            
             const accessToken = localStorage.getItem("access_token");
             axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
                 {
@@ -524,13 +528,8 @@ export default {
     height: calc(100% - 45vh - 5vh);
 }
 
-#toolbox {
-    height: 1vh;
-    /* border-bottom: solid rgb(134, 134, 134) 1px; */
-}
-
 #text-input {
-    margin-top: 3.5vh;
+    margin-top: 2.5vh;
     margin-left: 1vw;
     margin-right: 1vw;
     display: flex;
