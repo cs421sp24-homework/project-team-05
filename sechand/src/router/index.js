@@ -11,8 +11,6 @@ import Empty from '@/views/Empty.vue'
 import Chat from '@/views/Chat.vue'
 import ShowAll from '@/views/ShowAll.vue'
 
-import ChatTest from '../views/ChatTest.vue'; // Import your chat component
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
 

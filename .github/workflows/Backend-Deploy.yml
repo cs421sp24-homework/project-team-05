@@ -2,9 +2,9 @@ name: Backend Server AutoTest & Deploy
 
 on:
   push:
-    branches: [ "main", "pre-deploy" ]
+    branches: [ "pre-deploy", "main" ]
   pull_request:
-    branches: [ "main", "pre-deploy" ]
+    branches: [ "pre-deploy", "main" ]
   
 jobs:
   Backend-Tests:

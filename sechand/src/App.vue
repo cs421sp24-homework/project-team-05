@@ -5,6 +5,7 @@
 
 <script>
 import axios from "axios";
+import { getWebSocketInstance } from '@/services/WebSocketManager';
 
 export default {
   data() {
@@ -41,6 +42,11 @@ export default {
     userStateChange() {
       this.currentUser = JSON.parse(localStorage.getItem("user"));
       console.log("APP", this.currentUser);
+      if (this.currentUser) {
+        const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
+        const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.currentUser.id}/`;
+        getWebSocketInstance(wsPath);
+      }
     },
   },
 
@@ -59,6 +65,12 @@ export default {
         // console.error('Error fetching data:', error);
         window.alert("Failed to fetch address.");
       });
+    
+      if (this.currentUser) {
+        const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
+        const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.currentUser.id}/`;
+        getWebSocketInstance(wsPath);
+      }
   },
 };
 

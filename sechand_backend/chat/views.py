@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Room, Message
+from .models import Room, Message, Notification
 from post.models import Item
 from post.serializers import ItemSerializer
 from .serializers import RoomSerializer, RoomSerializerWithMessages
@@ -12,28 +12,28 @@ from django.db.models import Q, Exists, OuterRef
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
         
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def CreateRoom(request):
-    serializer = RoomSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def CreateRoom(request):
+#     serializer = RoomSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
-def GetOrCreateRoom(request):
-    user1 = request.user
-    user2 = request.data['receiver']
-    room = Room.objects.filter(Q(users__contains=[user1.id]) & Q(users__contains=[user2.id]))
-    if room.exists():
-        serializer = RoomSerializer(room)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        room = Room.objects.create(users=[user1.id, user2.id])
-        serializer = RoomSerializer(room)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# @api_view(['POST'])
+# def GetOrCreateRoom(request):
+#     user1 = request.user
+#     user2 = request.data['receiver']
+#     room = Room.objects.filter(Q(users__contains=[user1.id]) & Q(users__contains=[user2.id]))
+#     if room.exists():
+#         serializer = RoomSerializer(room)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#     else:
+#         room = Room.objects.create(users=[user1.id, user2.id])
+#         serializer = RoomSerializer(room)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
@@ -75,12 +75,22 @@ def SendItemLink(request, receiver_id, item_id):
         room = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
     except Room.DoesNotExist:
         room = Room.objects.create(users=[request.user.id, receiver_id])
+    
     message = Message.objects.create(
         room=room,
         sender=request.user,
         data=ItemSerializer(item).data,
         content='Hi, I\'m interested in this item.'
     )
+
+    try:
+        notification = Notification.objects.get(user__id=receiver_id, room=room)
+    except Notification.DoesNotExist:
+        notification = Notification.objects.create(user_id=receiver_id, room=room)
+    if notification.active:
+        notification.count += 1
+        notification.save()
+    
     room_group_name = 'chat_%s' % room.id
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
@@ -96,3 +106,49 @@ def SendItemLink(request, receiver_id, item_id):
     )
     print("auto send link")
     return Response({'message': 'item link sent'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def NewMessageNotification(request):
+    room_id = request.data['room_id']
+    receiver_id = request.data['receiver_id']
+    notification = Notification.objects.get(user__id=receiver_id, room__id=room_id)
+    if notification.active:
+        notification.count += 1
+        notification.save()
+    return Response({'message': 'notification sent', 'count': notification.count}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def ReadMessageNotification(request):
+    room_id = request.data['room_id']
+    notification = Notification.objects.get(user=request.user, room__id=room_id)
+    notification.count = 0
+    notification.active = False
+    notification.save()
+    return Response({'message': 'notification read', 'count': 0}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def GetOneNotificationCount(request, room_id):
+    notification = Notification.objects.get(user=request.user, room__id=room_id)
+    return Response({'count': notification.count}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def GetTotalNotificationCount(request):
+    notifications = Notification.objects.filter(user=request.user)
+    # print("total notifications", notifications)
+    count = sum([notification.count for notification in notifications]) if notifications else 0
+    return Response({'count': count}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def ActivateNotification(request):
+    room_id = request.data['room_id']
+    notification = Notification.objects.get(user=request.user, room__id=room_id)
+    notification.active=True
+    notification.save()
+    return Response({'message': 'notification activated'}, status=status.HTTP_200_OK)
+
+    

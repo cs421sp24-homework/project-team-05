@@ -18,7 +18,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         for room in self.rooms:
             room_group_name = 'chat_%s' % room.id
             print("connect room id, ", room.id)
-            print("connect group name, ", room_group_name)
+            # print("connect group name, ", room_group_name)
 
             # Join room group
             await self.channel_layer.group_add(
@@ -50,7 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message = await self.SaveMessage(room_id, sender_web, message, item)
         else:
             message = await self.SaveMessage(room_id, sender_web, message)
-        print("receive ", message)
+        # print("receive ", message)
         
         # Send message to room group
         await self.channel_layer.group_send(
@@ -67,13 +67,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def SaveMessage(self, room_id, sender_id, message_text, item_data=None):
         # This helper method saves the message to the database
-        from .models import Message, Room
+        from .models import Message, Room, Notification
         from .serializers import MessageSerializer
         from django.contrib.auth import get_user_model
         UserModel = get_user_model()
         try:
             room = await sync_to_async(Room.objects.get)(id=room_id)
             user = await sync_to_async(UserModel.objects.get)(id=sender_id)
+
             message = await sync_to_async(Message.objects.create)(
                 room=room,
                 sender=user,
@@ -81,6 +82,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 data=item_data
             )
             print(f"Message saved successfully: {message_text}")
+            receiver_id = room.users[0] if str(sender_id) == str(room.users[1]) else room.users[1]
+            try:
+                notification = await sync_to_async(Notification.objects.get)(user__id=receiver_id, room=room)
+            except Notification.DoesNotExist:
+                notification = await sync_to_async(Notification.objects.create)(user_id=receiver_id, room=room)
+            if notification.active:
+                notification.count += 1
+                await sync_to_async(notification.save)()
             # Serialize the message
             serialized_message = await sync_to_async(MessageSerializer)(message)
             return serialized_message.data
@@ -94,7 +103,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender = event['sender']
         timestamp = event['timestamp']
         room_id = event['room_id']
-        print(f"Broadcasting message: {message} from sender: {sender}")
+        # print(f"Broadcasting message: {message} from sender: {sender}")
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
