@@ -78,4 +78,5 @@ class Transaction(models.Model):
     seller_id = models.BigIntegerField()
     buyer_id = models.BigIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-
+    review = models.TextField(null=True, blank=True, default=None)
+    rating = models.DecimalField(max_digits=2, decimal_places=1, default=5.0) 
