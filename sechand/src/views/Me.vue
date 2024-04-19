@@ -4,7 +4,11 @@
     <div class="contain">
       <div class="left">
         <div class="row">
+          <Button v-if="unreviewedItems != 0" :text="'You have ' + unreviewedItems.length + ' item waiting for review'"
+            color="transparent" @click="reviewItem">
+          </Button>
           <div class="row">
+
             <div class="col-6">
               <h2>My Items</h2>
             </div>
@@ -76,6 +80,7 @@
         <!-- Increase font size -->
         <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile" id="profile">
         </Button>
+        <Star :rating=reviews.overallrating :selectable=selectable />
       </div>
 
     </div>
@@ -87,7 +92,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import Cards from "@/components/Cards.vue";
 import Button from "@/components/Button.vue";
 import axios from "axios";
-
+import Star from "@/components/Star.vue";
 export default {
   name: "Me",
   props: {
@@ -97,9 +102,13 @@ export default {
     UserNavbar,
     Cards,
     Button,
+    Star
   },
   data() {
     return {
+      selectable: false,
+      unreviewedItems: {},
+      reviews: {},
       postCardsData: [],
       historyCardsData: [],
       collectionCardsData: [],
@@ -107,6 +116,36 @@ export default {
   },
   async created() {
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + "api/v1/post/Order/Transaction/Review/UnReviewedOrder",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      this.unreviewedItems = response.data;
+      console.log("unreviewedItems", response.data);
+    } catch (error) {
+      console.error(error);
+    }
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + `api/v1/post/Order/Transaction/Review/${this.currentUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      this.reviews = response.data;
+      console.log("reviews", response.data);
+    } catch (error) {
+      console.error(error);
+    }
     try {
       const accessToken = localStorage.getItem("access_token");
       const response = await axios.get(
@@ -153,6 +192,9 @@ export default {
     }
   },
   methods: {
+    reviewItem() {
+      this.$router.push({ name: "Review" });
+    },
     myitems() {
       this.$router.push({ name: 'ShowAll', params: { data: "myItems" } });
     },

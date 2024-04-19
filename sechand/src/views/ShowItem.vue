@@ -41,6 +41,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 import Button from "@/components/Button.vue";
 import Navbar from "@/components/Navbar.vue";
+import Star from "@/components/Star.vue";
 export default {
 
     name: "ShowItem",
@@ -54,13 +55,16 @@ export default {
             isLoading: false,
             item: {},
             id: null,
+            reviews: {},
+            rating: 0,
             // currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     components: {
         UserNavbar,
         Button,
-        Navbar
+        Navbar,
+        Star
     },
     methods: {
         chat() {
@@ -115,8 +119,16 @@ export default {
         // console.log("collect", this.isitemCollected);
         try {
             const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${this.id}`);
-            console.log(response.data);
+            // console.log(response.data);
             this.item = response.data;
+        } catch (error) {
+            console.error(error);
+        }
+        try {
+            const response = await axios.get(HTTP_PREFIX + `api/v1/post/Order/Transaction/Review/${this.item.seller}`);
+            console.log(response.data);
+            this.reviews, this.rating = response.data;
+            console.log("review", this.reviews, "rating", this.rating);
         } catch (error) {
             console.error(error);
         }

@@ -113,7 +113,7 @@ class TransactionReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ['id', 'review', 'rating', 'buyer_displayname', 'buyer_avatar']
+        fields = ['id', 'item_id','review', 'rating', 'buyer_displayname', 'buyer_avatar']
 
     def get_buyer_avatar(self, obj):
         user = CustomUser.objects.get(id=obj.buyer_id)
