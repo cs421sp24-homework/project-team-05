@@ -388,6 +388,19 @@ export default {
     },
     beforeDestroy() {
         // this.shouldReconnect = false;
+        if (this.active_roomId) {
+            
+            const accessToken = localStorage.getItem("access_token");
+            axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
+                {
+                    "room_id": this.active_roomId,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+        }
         if (this.ws) {
             this.ws.close();
         }
