@@ -40,7 +40,6 @@ export default {
             rating: 5,
             isSelectable: true,
             unreviewedItems: {},
-            // items: {},
         };
     },
     async created() {
@@ -56,7 +55,10 @@ export default {
                 }
             );
             this.unreviewedItems = response.data;
-            console.log("unreviewedItems", response.data);
+            if (this.unreviewedItems.length === 0) {
+              this.$router.push("/me");
+            }
+            console.log("unreviewedItems", response.data); 
         } catch (error) {
             console.error(error);
         }
@@ -106,29 +108,29 @@ export default {
 }
 .item-container {
   display: flex;
-  margin-bottom: 20px; /* Adjust as needed */
+  margin-bottom: 20px; 
 }
 
 .item-info {
-  flex: 0 0 200px; /* Fixed width for item info */
+  flex: 0 0 200px; 
 }
 
 .item-review {
-  margin-left: 20px; /* Add space between image and form */
-  flex: 1; /* Allow the form to grow to fill remaining space */
+  margin-left: 20px; 
+  flex: 1; 
 }
 
 .item-image {
-  width: 100%; /* Ensure image fills container */
-  height: auto; /* Maintain aspect ratio */
+  width: 100%; 
+  height: auto; 
 }
 
 .review-form {
-  width: 100%; /* Make form fill container */
+  width: 100%; 
 }
 
 .review-text {
-  margin-top: 10px; /* Add space below form */
+  margin-top: 10px; 
 }
 textarea {
   width: 80%;

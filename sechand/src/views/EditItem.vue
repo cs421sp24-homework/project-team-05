@@ -78,9 +78,6 @@
       </div>
     </div>
   </div>
-
-  <!-- </div>
-  </div> -->
 </template>
 
 <script>
@@ -189,7 +186,6 @@ export default {
     deleteItem() {
       try {
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
-        console.log("2222", HTTP_PREFIX);
         const response = axios.delete(
           HTTP_PREFIX + `api/v1/post/Item/${this.id}`,
           {
@@ -214,12 +210,7 @@ export default {
         const formData = new FormData();
         formData.append("name", this.item.name);
         formData.append("description", this.item.description);
-        formData.append("tag", ["ABC"]);
         formData.append("price", this.item.price);
-        // formData.append('user_id', this.user.id);
-        // if (this.picture) {
-        //   formData.append("image", this.picture);
-        // }
         console.log(formData);
         const response = await axios.patch(
           HTTP_PREFIX + `api/v1/post/Item/${this.id}`,
@@ -232,8 +223,6 @@ export default {
         );
         console.log("Form submitted successfully:", response.data);
         this.$router.go(-1);
-        // Optionally, you can navigate to another page after successful form submission
-        // this.$router.go(-1);
       } catch (error) {
         console.error("Error submitting form:", error);
       }
