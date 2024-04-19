@@ -315,6 +315,7 @@ def GetUserReviews(request, user_id):
         overall_rating = 0
 
     response_data = {
+
         'reviews': serializer.data,
         'overall_rating': overall_rating
     }
@@ -341,6 +342,7 @@ def WriteReview(request, order_id):
     
 @api_view(['GET'])
 @permission_classes([AllowAny])
+
 def GetUnReviewedOrder(request):
     # user_id = request.data['id']
     user_id = request.user.id
