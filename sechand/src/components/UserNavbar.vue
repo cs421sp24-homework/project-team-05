@@ -67,16 +67,22 @@ export default {
       this.$emit("userLogout", {});
       console.log("logout", this.currentUser);
     },
-    async getNotification() {
+    getNotification() {
       const accessToken = localStorage.getItem("access_token");
-      const notification_count = await axios.get(HTTP_PREFIX + "api/v1/chat/Conversation/notification/total-count",{
+      axios.get(HTTP_PREFIX + "api/v1/chat/Conversation/notification/total-count",{
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+      }).then((notification_count) => {
+        this.notification_count = notification_count.data.count;
+        console.log("Noti-Count:" + this.notification_count);
       });
-      this.notification_count = notification_count.data.count;
+    },
+    offsetNotification() {
+      this.notification_count = 0;
       console.log("Noti-Count:" + this.notification_count);
-    }
+
+    },
   }
 };
 </script>

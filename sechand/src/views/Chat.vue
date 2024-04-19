@@ -156,7 +156,7 @@ export default {
                     },
                 });
             console.log("here");
-            this.$refs.navbar.getNotification();
+            // this.$refs.navbar.getNotification();
         },
         connect() {
             const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
@@ -201,7 +201,6 @@ export default {
             this.scrollToBottom();
             if (this.active_roomId != message.room_id) {
                 // room.notification++;
-                
                 const accessToken = localStorage.getItem("access_token");
                 axios.get(HTTP_PREFIX + `api/v1/chat/Conversation/notification/one-count/${room.id}`,
                     {
@@ -385,6 +384,7 @@ export default {
             console.error(error);
         }
         this.connect();
+        this.$refs.navbar.offsetNotification();
     },
     beforeDestroy() {
         // this.shouldReconnect = false;
