@@ -6,7 +6,7 @@
             <!-- Left side: Image -->
             <div class="left-side">
                 <img :src="item.image" alt="Item Image" id="item-img" />
-                <div style="font-size: 20px; padding: 10px;">Seller Reviews:</div>
+                <div v-if="reviews.reviews.length != 0" style="font-size: 20px; padding: 10px;">Seller Reviews:</div>
                 <div v-for="review in reviews.reviews" :key="review.id" class="review-container">
                     <div class="avatar-info">
                         <img :src="review.buyer_avatar" class="review-image" />
