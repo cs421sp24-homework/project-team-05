@@ -256,7 +256,7 @@ def BrowseOneKindItems(request):
 @api_view(['POST'])
 # @permission_classes([AllowAny])
 def SaveTransaction(request):
-    # print("transaction data", request.data)
+    print("transaction data", request.data)
     saved = False
     while not saved:
         serializer = TransactionSerializer(data=request.data)
@@ -315,7 +315,7 @@ def GetUserReviews(request, user_id):
         overall_rating = 0
 
     response_data = {
-        #'id', 'review', 'rating', 'buyer_displayname', 'buyer_avatar'
+
         'reviews': serializer.data,
         'overall_rating': overall_rating
     }
@@ -342,7 +342,7 @@ def WriteReview(request, order_id):
     
 @api_view(['GET'])
 @permission_classes([AllowAny])
-#自己算多少条
+
 def GetUnReviewedOrder(request):
     # user_id = request.data['id']
     user_id = request.user.id

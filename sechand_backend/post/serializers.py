@@ -121,6 +121,7 @@ class TransactionReviewSerializer(serializers.ModelSerializer):
             return item.name
         return "Item Deleted"
     
+
     def get_buyer_avatar(self, obj):
         user = CustomUser.objects.get(id=obj.buyer_id)
         if user.image:
