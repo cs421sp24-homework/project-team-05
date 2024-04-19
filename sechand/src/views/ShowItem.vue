@@ -6,6 +6,19 @@
             <!-- Left side: Image -->
             <div class="left-side">
                 <img :src="item.image" alt="Item Image" id="item-img" />
+                <div style="font-size: 20px; padding: 10px;">Seller Reviews:</div>
+                <div v-for="review in reviews.reviews" :key="review.id" class="review-container">
+                    <div class="avatar-info">
+                        <img :src="review.buyer_avatar" class="review-image" />
+                        <p class="buyer-name">{{ review.buyer_displayname }}</p>
+                        <Star :rating="review.rating" :selectable="false" />
+                    </div>
+                    <p>
+                        Bought this item: <i>{{ review.item_name }}</i></p>
+                    <div>
+                        <p class="review-text">{{ review.review }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Right side: Details -->
@@ -16,6 +29,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
+                    <Star :rating="reviews.overall_rating" :selectable="false" />
                     <Button id="chat" v-if="currentUser && !isCurrentUserSeller" @click="chat" text="Chat with Seller"
                         color="lightBlue"></Button>
                 </p>
@@ -56,7 +70,6 @@ export default {
             item: {},
             id: null,
             reviews: {},
-            rating: 0,
             // currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
@@ -127,8 +140,8 @@ export default {
         try {
             const response = await axios.get(HTTP_PREFIX + `api/v1/post/Order/Transaction/Review/${this.item.seller}`);
             console.log(response.data);
-            this.reviews, this.rating = response.data;
-            console.log("review", this.reviews, "rating", this.rating);
+            this.reviews = response.data;
+            // console.log("reviews", this.reviews.overallrating);
         } catch (error) {
             console.error(error);
         }
@@ -229,5 +242,36 @@ export default {
     font-size: 15px;
     font-style: italic;
     color: #555353;
+}
+
+.review-container {
+    margin-left: 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.review-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
+.buyer-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin: 5px;
+}
+
+.avatar-info {
+    display: flex;
+    align-items: center;
+}
+
+.review-text {
+    margin-top: 5px;
 }
 </style>

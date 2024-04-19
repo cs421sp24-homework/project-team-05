@@ -4,7 +4,7 @@
         <div class="contain">
             <div v-for="item in unreviewedItems" :key="item.id" class="item-container">
       <div class="item-info">
-        <p>{{ item.itemdetail.name }}</p>
+        <h4>{{ item.itemdetail.name }}</h4>
         <img :src="item.itemdetail.image" class="item-image">
       </div>
       <div class="item-review">
@@ -80,9 +80,8 @@ export default {
             const formData = new FormData();
             formData.append("rating", item.rating);
             formData.append("review", item.review);
-            console.log(item.rating);
             const response = await axios.patch(
-                HTTP_PREFIX + `Order/Transaction/Review/add/${item.id}`,formData,
+                HTTP_PREFIX + `api/v1/post/Order/Transaction/Review/add/${item.id}`,formData,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,

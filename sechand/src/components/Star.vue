@@ -4,7 +4,7 @@
             :class="{ 'filled': starIndex <= displayRating }">&#9733;</span>
     </div>
     <div class="star-rating" v-else>
-        <span v-for="starIndex in 5" :key="starIndex" :class="{ 'filled': starIndex <= displayRating }">&#9733;</span>
+        <span v-for="starIndex in 5" :key="starIndex" :class="{ 'filled': starIndex <= rating }">&#9733;</span>
     </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
     methods: {
         setRating(rating) {
             this.displayRating = rating;
-            this.$emit('update:rating', rating); // Emit an event to update the parent's rating
+            this.$emit('update:rating', rating);
         }
     }
 }
@@ -41,7 +41,7 @@ export default {
 }
 
 .star-rating span {
-    color: gold;
+    color: rgb(149, 148, 146);
     cursor: pointer;
 }
 
