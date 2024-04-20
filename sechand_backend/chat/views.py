@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Room, Message, Notification
 from post.models import Item
 from post.serializers import ItemSerializer
-from .serializers import RoomSerializer, RoomSerializerWithMessages
+from .serializers import MessageSerializer, RoomSerializer, RoomSerializerWithMessages
 from django.db.models import Q, Exists, OuterRef
 
 from channels.layers import get_channel_layer
@@ -75,6 +75,7 @@ def SendItemLink(request, receiver_id, item_id):
         room = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
     except Room.DoesNotExist:
         room = Room.objects.create(users=[request.user.id, receiver_id])
+    serialized_room = RoomSerializer(room).data
     
     message = Message.objects.create(
         room=room,
@@ -82,6 +83,7 @@ def SendItemLink(request, receiver_id, item_id):
         data=ItemSerializer(item).data,
         content='Hi, I\'m interested in this item.'
     )
+    serialized_message = MessageSerializer(message).data
 
     try:
         notification = Notification.objects.get(user__id=receiver_id, room=room)
@@ -97,11 +99,11 @@ def SendItemLink(request, receiver_id, item_id):
         room_group_name,
         {
             'type': 'chat_message',
-            'content': message.content,
-            'data': message.data,
-            'sender': message.sender,
-            'timestamp': message.timestamp,
-            'room_id': room.id,
+            'content': serialized_message['content'],
+            'data': serialized_message['data'],
+            'sender': serialized_message['sender'],
+            'timestamp': serialized_message['timestamp'],
+            'room_id': serialized_room['id'],
         }
     )
     print("auto send link")

@@ -27,7 +27,7 @@
 
 <script>
 import Button from "./Button.vue";
-import { getWebSocketInstance } from "@/services/WebSocketManager";
+import { getWebSocketInstance, closeWebSocketInstance } from "@/services/WebSocketManager";
 import axios from "axios";
 const HTTP_PREFIX = import.meta.env.VITE_HOST;
 const accessToken = localStorage.getItem("access_token");
@@ -61,9 +61,8 @@ export default {
     logout() {
       this.$router.replace("/");
       localStorage.clear(); // Clear all storage
-      const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
-      const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.currentUser.id}/`;
-      getWebSocketInstance(wsPath).close();
+      sessionStorage.clear(); // Clear all session storage
+      closeWebSocketInstance(this.currentUser.id);
       this.$emit("userLogout", {});
       console.log("logout", this.currentUser);
     },

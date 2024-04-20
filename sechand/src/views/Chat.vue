@@ -101,7 +101,7 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import Message from "@/components/Message.vue";
-import { getWebSocketInstance } from "@/services/WebSocketManager";
+import { getWebSocketInstance, closeWebSocketInstance } from "@/services/WebSocketManager";
 import axios from "axios";
 const HTTP_PREFIX = import.meta.env.VITE_HOST;
 export default {
@@ -155,28 +155,25 @@ export default {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
-            console.log("here");
             // this.$refs.navbar.getNotification();
         },
         connect() {
-            const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
-
-            const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.home_user.id}/`; // Use roomId in the path
-            console.log("using wsPath ", wsPath);
+            // const wsPath = `ws/chat/${this.home_user.id}/`; // Use userId in the path
+            // console.log("using wsPath ", wsPath);
             // if (this.ws) {
             //     console.log("ws instance exist, close the current one, open a new one.");
             //     this.shouldReconnect = false;
             //     this.ws.close(); // Close the existing connection if it exists
             // }
-            this.ws = getWebSocketInstance(wsPath);
+            this.ws = getWebSocketInstance(this.home_user.id);
             this.ws.onmessage = this.receiveMessage;
-            this.ws.onclose = () => {
-                console.log("WebSocket closed.");
-                // if (this.shouldReconnect) {
-                //     console.log("Attempting to reconnect...")
-                //     setTimeout(this.connect, 1000);
-                // }
-            };
+            // this.ws.onclose = () => {
+            //     console.log("WebSocket closed.");
+            //     // if (this.shouldReconnect) {
+            //     //     console.log("Attempting to reconnect...")
+            //     //     setTimeout(this.connect, 1000);
+            //     // }
+            // };
         },
         receiveMessage(e) {
             const message = JSON.parse(e.data);
@@ -199,7 +196,7 @@ export default {
             room.messages.push(message);
             room.last_message = message;
             this.scrollToBottom();
-            if (this.active_roomId != message.room_id) {
+            if (this.active_roomId !== message.room_id) {
                 // room.notification++;
                 const accessToken = localStorage.getItem("access_token");
                 axios.get(HTTP_PREFIX + `api/v1/chat/Conversation/notification/one-count/${room.id}`,
@@ -324,6 +321,22 @@ export default {
             if (this.guest_item_idx==-1) this.guest_item_price = null;
             else this.guest_item_price = this.chat_list[this.active_chat].items[this.guest_item_idx].price;
         },
+        beforePageUnload(event) {
+            // console.log("before page unload", this.active_roomId);
+            localStorage.setItem("before unload test", this.chat_list[this.active_chat].user.displayname);
+            if (this.active_roomId) {
+                const accessToken = localStorage.getItem("access_token");
+                axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
+                    {
+                        "room_id": this.active_roomId,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    });
+            }
+        },
     },
     components: {
         UserNavbar,
@@ -386,28 +399,15 @@ export default {
         this.connect();
         this.$refs.navbar.offsetNotification();
     },
+    mounted() {
+        window.addEventListener("beforeunload", this.beforePageUnload);
+    },
     beforeDestroy() {
-        // this.shouldReconnect = false;
-        if (this.active_roomId) {
-            
-            const accessToken = localStorage.getItem("access_token");
-            axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
-                {
-                    "room_id": this.active_roomId,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
-        }
-        if (this.ws) {
-            this.ws.close();
-        }
+        window.removeEventListener("beforeunload", this.beforePageUnload);
+        closeWebSocketInstance(this.home_user.id);
     },
     beforeRouteLeave(to, from, next) {
         if (this.active_roomId) {
-            
             const accessToken = localStorage.getItem("access_token");
             axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
                 {
@@ -419,6 +419,7 @@ export default {
                     },
                 });
         }
+        // window.removeEventListener("beforeunload", this.beforePageUnload);
         next();
     },
 };

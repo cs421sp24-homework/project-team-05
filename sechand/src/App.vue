@@ -5,7 +5,7 @@
 
 <script>
 import axios from "axios";
-import { getWebSocketInstance } from '@/services/WebSocketManager';
+import { getWebSocketInstance, closeWebSocketInstance } from '@/services/WebSocketManager';
 
 export default {
   data() {
@@ -43,9 +43,7 @@ export default {
       this.currentUser = JSON.parse(localStorage.getItem("user"));
       console.log("APP", this.currentUser);
       if (this.currentUser) {
-        const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
-        const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.currentUser.id}/`;
-        getWebSocketInstance(wsPath);
+        getWebSocketInstance(this.currentUser.id);
       }
     },
   },
@@ -67,10 +65,14 @@ export default {
       });
     
       if (this.currentUser) {
-        const WBSOCKET_PREFIX = import.meta.env.VITE_SOCKET_HOST ? import.meta.env.VITE_SOCKET_HOST : "ws://127.0.0.1:8000/";
-        const wsPath = WBSOCKET_PREFIX + `ws/chat/${this.currentUser.id}/`;
-        getWebSocketInstance(wsPath);
+        getWebSocketInstance(this.currentUser.id);
       }
+  },
+  
+  beforeDestroy() {
+    if (this.currentUser) {
+      closeWebSocketInstance(this.currentUser.id);
+    }
   },
 };
 
