@@ -74,12 +74,12 @@ export default {
         },
       }).then((notification_count) => {
         this.notification_count = notification_count.data.count;
-        console.log("Noti-Count:" + this.notification_count);
+        console.log("total notifications:" + this.notification_count);
       });
     },
     offsetNotification() {
       this.notification_count = 0;
-      console.log("Noti-Count:" + this.notification_count);
+      console.log("offset notification");
 
     },
   }

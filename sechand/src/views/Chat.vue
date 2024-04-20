@@ -321,22 +321,6 @@ export default {
             if (this.guest_item_idx==-1) this.guest_item_price = null;
             else this.guest_item_price = this.chat_list[this.active_chat].items[this.guest_item_idx].price;
         },
-        beforePageUnload(event) {
-            // console.log("before page unload", this.active_roomId);
-            localStorage.setItem("before unload test", this.chat_list[this.active_chat].user.displayname);
-            if (this.active_roomId) {
-                const accessToken = localStorage.getItem("access_token");
-                axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
-                    {
-                        "room_id": this.active_roomId,
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    });
-            }
-        },
     },
     components: {
         UserNavbar,
@@ -392,18 +376,38 @@ export default {
 				// this.chat_list[4].notification = 10;
 				// this.chat_list[5].notification = 10;
             }
-            console.log("items", this.chat_list[0].items);
+            this.chat_list.forEach(async (room) => {
+                if (room.id !== this.active_roomId) {
+                    await axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
+                        {
+                            "room_id": room.id,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                        });
+                }
+            });
         } catch (error) {
             console.error(error);
         }
         this.connect();
         this.$refs.navbar.offsetNotification();
     },
-    mounted() {
-        window.addEventListener("beforeunload", this.beforePageUnload);
-    },
     beforeDestroy() {
-        window.removeEventListener("beforeunload", this.beforePageUnload);
+        if (this.active_roomId) {
+            const accessToken = localStorage.getItem("access_token");
+            axios.post(HTTP_PREFIX + `api/v1/chat/Conversation/notification/activate`, 
+                {
+                    "room_id": this.active_roomId,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+        }
         closeWebSocketInstance(this.home_user.id);
     },
     beforeRouteLeave(to, from, next) {
