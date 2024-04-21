@@ -4,12 +4,14 @@
     <div class="contain">
       <div class="left">
         <div class="row">
+          <Button v-if="unreviewedItems != 0" :text="'You have ' + unreviewedItems.length + ' item waiting for review'"
+            color="lightyellow" @click="reviewItem">
+          </Button>
           <div class="row">
             <div class="col-6">
               <h2>My Items</h2>
             </div>
             <div class="col-6 text-end">
-
               <Button class="new-post-btn" text="New Post" color="green" @click="newPost" id="toPost"></Button>
               <Button class="showall" text="All Posts" color="transparent" @click="myitems"></Button>
             </div>
@@ -63,19 +65,36 @@
       </div>
       <div class="line"></div>
       <div class="right">
-        <!-- User profile information -->
-        <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
-          style="width: 150px; height: 150px; border-radius: 50%" />
-        <p class="mb-1 font-large-vh font-large-vw profile-name">
-          {{ this.currentUser.displayname }}
-        </p>
-        <!-- Increase font size -->
-        <p class="mb-0 font-large-vh font-large-vw profile-address">
-          {{ this.currentUser.address.name }}
-        </p>
-        <!-- Increase font size -->
-        <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile" id="profile">
-        </Button>
+        <div class="rightupper">
+          <!-- User profile information -->
+          <img :src="this.currentUser.image" alt="User Icon" class="me-3 profile-image"
+            style="width: 150px; height: 150px; border-radius: 50%" />
+          <p class="mb-1 font-large-vh font-large-vw profile-name">
+            {{ this.currentUser.displayname }}
+          </p>
+          <!-- Increase font size -->
+          <p class="mb-0 font-large-vh font-large-vw profile-address">
+            {{ this.currentUser.address.name }}
+          </p>
+          <!-- Increase font size -->
+          <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile" id="profile">
+          </Button>
+          <Star :rating="reviews.overall_rating" :selectable="false" />
+          <p style="font-size: 20px; padding: 10px"> Reviews </p>
+        </div>
+        <div v-for="review in reviews.reviews" :key="review.id" class="review-container">
+          <div class="avatar-info">
+            <img :src="review.buyer_avatar" class="review-image" />
+            <p class="buyer-name">{{ review.buyer_displayname }}</p>
+            <i>{{ review.item_name }}</i>
+          </div>
+          <div>
+            <Star :rating="review.rating" :selectable="false" />
+          </div>
+          <div>
+            <p class="review-text">{{ review.review }}</p>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -87,7 +106,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import Cards from "@/components/Cards.vue";
 import Button from "@/components/Button.vue";
 import axios from "axios";
-
+import Star from "@/components/Star.vue";
 export default {
   name: "Me",
   props: {
@@ -97,9 +116,12 @@ export default {
     UserNavbar,
     Cards,
     Button,
+    Star
   },
   data() {
     return {
+      unreviewedItems: {},
+      reviews: {},
       postCardsData: [],
       historyCardsData: [],
       collectionCardsData: [],
@@ -107,6 +129,36 @@ export default {
   },
   async created() {
     const HTTP_PREFIX = import.meta.env.VITE_HOST;
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + "api/v1/post/Order/Transaction/Review/UnReviewedOrder",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      this.unreviewedItems = response.data;
+      console.log("unreviewedItems", response.data);
+    } catch (error) {
+      console.error(error);
+    }
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.get(
+        HTTP_PREFIX + `api/v1/post/Order/Transaction/Review/${this.currentUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      this.reviews = response.data;
+      console.log("reviews", this.reviews.overall_rating);
+    } catch (error) {
+      console.error(error);
+    }
     try {
       const accessToken = localStorage.getItem("access_token");
       const response = await axios.get(
@@ -153,6 +205,9 @@ export default {
     }
   },
   methods: {
+    reviewItem() {
+      this.$router.push({ name: "Review" });
+    },
     myitems() {
       this.$router.push({ name: 'ShowAll', params: { data: "myItems" } });
     },
@@ -193,9 +248,13 @@ export default {
   height: 100vh;
   float: right;
   /* justify-content: center; */
+
+}
+
+.rightupper {
   flex-direction: column;
-  align-items: center;
   display: flex;
+  align-items: center;
 }
 
 .profile-image {
@@ -272,5 +331,37 @@ export default {
 
 .showall {
   text-decoration: underline grey;
+}
+
+.review-container {
+  /* margin-left: 1vw; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.review-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+
+.buyer-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.avatar-info {
+  display: flex;
+  align-items: center;
+
+}
+
+.review-text {
+  margin-top: 5px;
 }
 </style>

@@ -35,4 +35,10 @@ urlpatterns = [
 
     path("Order/Transaction/new", views.SaveTransaction, name="SaveTransaction"),
 
+    path("Order/Transaction/Review/<int:user_id>", views.GetUserReviews, name="GetUserReviews"),
+
+    path("Order/Transaction/Review/add/<uuid:order_id>", views.WriteReview, name="WriteReview"),
+
+    path("Order/Transaction/Review/UnReviewedOrder", views.GetUnReviewedOrder, name="GetUnReviewedOrder"),
+
 ]
