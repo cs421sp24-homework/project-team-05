@@ -200,6 +200,7 @@ def SearchItems(request):
     # print("Search items based on desc: ", desc_text, ",low price: ", lowest_price, ", high price: ", highest_price, ", catgory: ", category)
     # print("location: ", location, ", distance: ", distance)
     query = Q()
+    query &=Q(is_sold=False)
     items = Item.objects.annotate(
         search=SearchVector('name', 'description')
     )
@@ -249,7 +250,7 @@ def BrowseOneKindItems(request):
         all_items = Item.objects.filter(is_sold=False)
         serializer = ItemSerializerWithSellerName(all_items, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
-    items = Item.objects.filter(category=category_value)
+    items = Item.objects.filter(category=category_value, is_sold=False)
     serializer = ItemSerializerWithSellerName(items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
