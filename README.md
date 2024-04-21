@@ -27,17 +27,17 @@ SecHand is build based on the following technology:
 ## Use SecHand
 ### Access website
 - Use the following link to access SecHand: https://sechand.vercel.app/
-- Or you can run it on your own machine
+- Or you can run it on your own machine (see [**Run Sechand**](https://github.com/cs421sp24-homework/project-team-05?tab=readme-ov-file#run-sechand))
 
 ### Register your account
 - Start using SecHand by registering your account. At the homepage of our website, click the Sign up button at the top right corner.
-- Double check it when you input your message, we will require you to input the verification code we send you.
+- Double check when you input your info, we will send you a verification code by email.
 - Check the phone number privacy settings. Display your phone number to others? it's up to you.
-- After click "Verify JHED by E-mail", wait for a bit to let the system send your code. If the page does not automatically pop up a window asking for your code, please click the button again.
+- After clicking "Verify JHED by E-mail", wait for a bit to let the system send your code. If the page does not automatically pop up a window asking for your code, please click the button again.
 
 ### Log in to your account
 - Enter your JHED and password to log in.
-- Anytime if you changed your mind and not wish to log in, click the orange title we have at top left, and you will be redirected to home page.
+- Anytime you changed your mind and do not wish to log in, click the title at the top left, and you will be redirected to home page.
 
 ### Post your item out
 - Click your name at the navigation bar to enter your personal homepage, where you can manage the item you posted, your personal information, etc.
@@ -54,10 +54,15 @@ SecHand is build based on the following technology:
 ### Chat
 - You can enter your chatbox or directly chat with a seller when you are interested in their item.
 - To enter the general chatbox, click the message icon at the navigation bar.
-- To chat with the seller of an item, go to the item details page and click on the message icon on the right of the seller name.
-- **Note**: If you are running Sechand on your local machine, to test the chat, you would need to open two accounts in two separate browsers (e.g. Chrome and Firefox), not just two web pages.
+- To chat with the seller of an item, go to the item details page and click on the message icon on the right of the seller name, this will automatically send a message to the seller with the item details.
+- **Note**: To test the chat, you should open two accounts in two separate browsers (e.g. Chrome and Firefox), not just two web pages.
 
-### Collect items to wishlist (Not for this iteration, still under construction)
+### Make transaction
+- If you are a buyer, the automated message contains a "buy" button, click on it to send a confirmation to the seller, once the seller confirms, this transaction is complete.
+- If you are a seller, once the buyer requests a transaction, click "confirm" in the automated message to secure the transaction.
+- You can view the order history in the second section of your personal page, this order history is currently visible to buyers, we will add a sold items section for sellers in the next iteration.
+
+### Collect items to wishlist
 - You can collect items to wishlist from the item details page.
 - You can view your wishlist in the bottom section of your personal page.
 

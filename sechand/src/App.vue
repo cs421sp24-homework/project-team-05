@@ -5,6 +5,7 @@
 
 <script>
 import axios from "axios";
+import { getWebSocketInstance, closeWebSocketInstance } from '@/services/WebSocketManager';
 
 export default {
   data() {
@@ -41,6 +42,9 @@ export default {
     userStateChange() {
       this.currentUser = JSON.parse(localStorage.getItem("user"));
       console.log("APP", this.currentUser);
+      if (this.currentUser) {
+        getWebSocketInstance(this.currentUser.id);
+      }
     },
   },
 
@@ -59,6 +63,16 @@ export default {
         // console.error('Error fetching data:', error);
         window.alert("Failed to fetch address.");
       });
+    
+      if (this.currentUser) {
+        getWebSocketInstance(this.currentUser.id);
+      }
+  },
+  
+  beforeDestroy() {
+    if (this.currentUser) {
+      closeWebSocketInstance(this.currentUser.id);
+    }
   },
 };
 

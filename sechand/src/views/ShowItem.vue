@@ -6,6 +6,19 @@
             <!-- Left side: Image -->
             <div class="left-side">
                 <img :src="item.image" alt="Item Image" id="item-img" />
+                <div v-if="reviews.reviews.length != 0" style="font-size: 20px; padding: 10px;">Seller Reviews:</div>
+                <div v-for="review in reviews.reviews" :key="review.id" class="review-container">
+                    <div class="avatar-info">
+                        <img :src="review.buyer_avatar" class="review-image" />
+                        <p class="buyer-name">{{ review.buyer_displayname }}</p>
+                        <Star :rating="review.rating" :selectable="false" />
+                    </div>
+                    <p>
+                        Bought this item: <i>{{ review.item_name }}</i></p>
+                    <div>
+                        <p class="review-text">{{ review.review }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Right side: Details -->
@@ -16,6 +29,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
+                    <Star :rating="reviews.overall_rating" :selectable="false" />
                     <Button id="chat" v-if="currentUser && !isCurrentUserSeller" @click="chat" text="Chat with Seller"
                         color="lightBlue"></Button>
                 </p>
@@ -41,6 +55,7 @@ import UserNavbar from "@/components/UserNavbar.vue";
 import axios from "axios";
 import Button from "@/components/Button.vue";
 import Navbar from "@/components/Navbar.vue";
+import Star from "@/components/Star.vue";
 export default {
 
     name: "ShowItem",
@@ -54,13 +69,15 @@ export default {
             isLoading: false,
             item: {},
             id: null,
+            reviews: {},
             // currentUser: JSON.parse(localStorage.getItem('user'))
         };
     },
     components: {
         UserNavbar,
         Button,
-        Navbar
+        Navbar,
+        Star
     },
     methods: {
         chat() {
@@ -115,8 +132,16 @@ export default {
         // console.log("collect", this.isitemCollected);
         try {
             const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${this.id}`);
-            console.log(response.data);
+            // console.log(response.data);
             this.item = response.data;
+        } catch (error) {
+            console.error(error);
+        }
+        try {
+            const response = await axios.get(HTTP_PREFIX + `api/v1/post/Order/Transaction/Review/${this.item.seller}`);
+            console.log(response.data);
+            this.reviews = response.data;
+            // console.log("reviews", this.reviews.overallrating);
         } catch (error) {
             console.error(error);
         }
@@ -217,5 +242,36 @@ export default {
     font-size: 15px;
     font-style: italic;
     color: #555353;
+}
+
+.review-container {
+    margin-left: 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.review-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
+.buyer-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin: 5px;
+}
+
+.avatar-info {
+    display: flex;
+    align-items: center;
+}
+
+.review-text {
+    margin-top: 5px;
 }
 </style>

@@ -106,3 +106,28 @@ class TransactionDeserializer(serializers.ModelSerializer):
     def get_is_sold(self, obj):
         item = Item.objects.get(id = obj.item_id)
         return item.is_sold
+    
+class TransactionReviewSerializer(serializers.ModelSerializer):
+    buyer_displayname = serializers.SerializerMethodField()
+    buyer_avatar = serializers.SerializerMethodField()
+    item_name = serializers.SerializerMethodField()
+    class Meta:
+        model = Transaction
+        fields = ['id', 'item_id','item_name','review', 'rating', 'buyer_displayname', 'buyer_avatar']
+
+    def get_item_name(self, obj):
+        item = Item.objects.get(id=obj.item_id)
+        if item:
+            return item.name
+        return "Item Deleted"
+    
+
+    def get_buyer_avatar(self, obj):
+        user = CustomUser.objects.get(id=obj.buyer_id)
+        if user.image:
+            return user.image.url
+        return None
+
+    def get_buyer_displayname(self, obj):
+        user = CustomUser.objects.get(id=obj.buyer_id)
+        return user.displayname
