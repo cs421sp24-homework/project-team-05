@@ -78,13 +78,13 @@ erDiagram
     }
 
     VerifyEmailCode {
-        uuid user PK FK
+        uuid user PK "Also a FK of CustomUser"
         string code
         datetime created_at
     }
 
     ResetPasswordCode {
-        uuid user PK FK
+        uuid user PK "Also a FK of CustomUser"
         string code
         uuid token
         datetime created_at
