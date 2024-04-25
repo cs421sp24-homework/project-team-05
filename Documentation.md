@@ -121,7 +121,7 @@ erDiagram
         decimal rating
     }
 
-    CustomUser ||--||{ Address : "resides at"
+    CustomUser ||--|| Address : "resides at"
     CustomUser ||--o{ VerifyEmailCode : "verifies with"
     CustomUser ||--o{ ResetPasswordCode : "resets with"
     CustomUser ||--o{ Item : "sells"
