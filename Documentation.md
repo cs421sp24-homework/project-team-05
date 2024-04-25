@@ -56,6 +56,45 @@
 
 ```mermaid 
 erDiagram
+    CustomUser {
+        uuid id PK
+        string username
+        string email
+        string phone
+        uuid address FK
+        string displayname
+        image image
+        boolean is_visible
+        boolean is_verified
+    }
+
+    Address {
+        uuid id PK
+        string name
+        string street
+        string zipcode
+        decimal latitude
+        decimal longitude
+    }
+
+    VerifyEmailCode {
+        uuid user PK FK
+        string code
+        datetime created_at
+    }
+
+    ResetPasswordCode {
+        uuid user PK FK
+        string code
+        uuid token
+        datetime created_at
+    }
+
+    UserPurchase {
+        uuid user FK
+        uuid item FK
+    }
+
     Item {
         uuid id PK
         string name
@@ -66,28 +105,27 @@ erDiagram
         uuid seller FK
         boolean is_sold
     }
-    
-    UserCollection {
-        uuid user FK
-        uuid item FK
-    }
-    
+
     Transaction {
         uuid id PK
-        uuid item_id
-        bigint seller_id
-        bigint buyer_id
+        uuid item_id FK
+        uuid seller_id FK
+        uuid buyer_id FK
         decimal price
         text review
         decimal rating
     }
 
-    Item ||--o{ UserCollection : contains
-    Item ||--o{ Transaction : transacts
-    UserCollection ||--|| Item : collects
-    UserCollection }|--|| settings.AUTH_USER_MODEL : belongs_to
-    Transaction }|--|| settings.AUTH_USER_MODEL : seller
-    Transaction }|--|| settings.AUTH_USER_MODEL : buyer
+    CustomUser ||--o{ Address : "resides at"
+    CustomUser ||--o{ VerifyEmailCode : "verifies with"
+    CustomUser ||--o{ ResetPasswordCode : "resets with"
+    CustomUser ||--o{ UserPurchase : "purchases"
+    CustomUser ||--o{ Item : "sells"
+    CustomUser ||--o{ Transaction : "sells in"
+    CustomUser ||--o{ Transaction : "buys in"
+    Item ||--o{ UserPurchase : "purchased in"
+    Item ||--o{ Transaction : "transacted in"
+
 
 ```
 ### 7.2 Table Definitions
