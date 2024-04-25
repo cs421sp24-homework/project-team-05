@@ -90,6 +90,11 @@ erDiagram
         datetime created_at
     }
 
+    UserCollection {
+        uuid user FK
+        uuid item FK
+    }
+
     UserPurchase {
         uuid user FK
         uuid item FK
@@ -116,14 +121,12 @@ erDiagram
         decimal rating
     }
 
-    CustomUser ||--o{ Address : "resides at"
+    CustomUser ||--{ Address : "resides at"
     CustomUser ||--o{ VerifyEmailCode : "verifies with"
     CustomUser ||--o{ ResetPasswordCode : "resets with"
-    CustomUser ||--o{ UserPurchase : "purchases"
     CustomUser ||--o{ Item : "sells"
-    CustomUser ||--o{ Transaction : "sells in"
-    CustomUser ||--o{ Transaction : "buys in"
-    Item ||--o{ UserPurchase : "purchased in"
+    CustomUser ||--o{ Transaction : "generate after bought"
+    Item ||--o{ UserCollection : "collected by"
     Item ||--o{ Transaction : "transacted in"
 
 
