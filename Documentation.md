@@ -56,18 +56,6 @@
 
 ```mermaid 
 erDiagram
-    CustomUser {
-        uuid id PK
-        string username
-        string email
-        string phone
-        uuid address FK
-        string displayname
-        image image
-        boolean is_visible
-        boolean is_verified
-    }
-
     Address {
         uuid id PK
         string name
@@ -88,6 +76,18 @@ erDiagram
         string code
         uuid token
         datetime created_at
+    }
+
+    CustomUser {
+        uuid id PK
+        string username
+        string email
+        string phone
+        uuid address FK
+        string displayname
+        image image
+        boolean is_visible
+        boolean is_verified
     }
 
     UserCollection {
@@ -125,8 +125,10 @@ erDiagram
     CustomUser ||--o{ VerifyEmailCode : "verifies with"
     CustomUser ||--o{ ResetPasswordCode : "resets with"
     CustomUser ||--o{ Item : "sells"
-    CustomUser ||--o{ Transaction : "generate after bought"
-    Item ||--o{ UserCollection : "collected by"
+    CustomUser ||--o{ Transaction : "has"
+    CustomUser ||--o{ UserPurchase : "has"
+    CustomUser ||--o{ UserCollection : "has"
+    Item ||--o{ UserCollection : "collected in"
     Item ||--o{ Transaction : "transacted in"
 
 
