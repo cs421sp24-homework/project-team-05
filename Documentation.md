@@ -54,6 +54,42 @@
 
 ### 7.1 Entity-Relationship Diagram
 
+```mermaid 
+erDiagram
+    Item {
+        uuid id PK
+        string name
+        text description
+        image image
+        string category
+        decimal price
+        uuid seller FK
+        boolean is_sold
+    }
+    
+    UserCollection {
+        uuid user FK
+        uuid item FK
+    }
+    
+    Transaction {
+        uuid id PK
+        uuid item_id
+        bigint seller_id
+        bigint buyer_id
+        decimal price
+        text review
+        decimal rating
+    }
+
+    Item ||--o{ UserCollection : contains
+    Item ||--o{ Transaction : transacts
+    UserCollection ||--|| Item : collects
+    UserCollection }|--|| settings.AUTH_USER_MODEL : belongs_to
+    Transaction }|--|| settings.AUTH_USER_MODEL : seller
+    Transaction }|--|| settings.AUTH_USER_MODEL : buyer
+
+```
 ### 7.2 Table Definitions
 
 ### 7.3 Relationships and Constraints
