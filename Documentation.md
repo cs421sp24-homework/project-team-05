@@ -269,6 +269,7 @@ Running SecHand locally requires following version of technologies:
 
 ### 7.1 Entity-Relationship Diagram
 
+- User Models
 ```mermaid 
 erDiagram
     Address {
@@ -293,6 +294,26 @@ erDiagram
         datetime created_at
     }
 
+    CustomUser {
+        uuid id PK
+        string username
+        string email
+        string phone
+        uuid address FK
+        string displayname
+        image image
+        boolean is_visible
+        boolean is_verified
+    }
+
+    CustomUser ||--|| Address : "resides at"
+    CustomUser ||--o{ VerifyEmailCode : "verifies with"
+    CustomUser ||--o{ ResetPasswordCode : "resets with"
+    
+```
+
+```mermaid
+erDiagram
     CustomUser {
         uuid id PK
         string username
@@ -336,18 +357,14 @@ erDiagram
         decimal rating
     }
 
-    CustomUser ||--|| Address : "resides at"
-    CustomUser ||--o{ VerifyEmailCode : "verifies with"
-    CustomUser ||--o{ ResetPasswordCode : "resets with"
     CustomUser ||--o{ Item : "sells"
     CustomUser ||--o{ Transaction : "has"
     CustomUser ||--o{ UserPurchase : "has"
     CustomUser ||--o{ UserCollection : "has"
     Item ||--o{ UserCollection : "collected in"
     Item ||--o{ Transaction : "transacted in"
-
-
 ```
+
 ### 7.2 Table Definitions
 
 ### 7.3 Relationships and Constraints
