@@ -19,16 +19,14 @@ The application should have the following functional requirements:
 * As a seller, I want to identify the buyer if we meet in person so that I know I am talking to the right person.
 * As a buyer, I want to buy items I see on the webpage that I am interested in.
 * As a buyer, I want to be able to search for items, so I don't need to waste time on goods I'm not interested in.
-* As a buyer, I want to send a post when there are items that I want to buy but have not yet found online.
 * As a buyer, I want to filter what's for sale in my apartment by different categories, so I can get it safe and easy.
 * As a buyer, I want to collect potential items I may buy in the future and organize them in a wishlist.
-* As a buyer, I want to be able to search for items, so I don't need to waste time on goods I'm not interested in.
 * As a seller, I want to make the communication in real time, so the trade can be more efficient.
 * As a buyer, I want to rate and write reviews for the seller each time I make a purchase so other buyers can decide the credibility of the seller based on the rating.
 ### Nice to Have
 * As a buyer, I want to see items near my address on my homepage, so I can browse items convenient for pick up.
-* As a seller, I want the platform to send me a notification by text or email when buyers reach out to me, so I know someone is interested in my item.
-* As a buyer, I want to make payments on the platform so I can purchase for items safely and efficiently.
+* As a seller, I want the platform to notify me when buyers reach out to me, so I know someone is interested in my item.
+* As a user, I want to make a transaction process through chat so I can buy/sell items via the webpage.
 
 ## Software Architecture & Technology Stack
 ### Web Application Version
