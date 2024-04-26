@@ -311,7 +311,8 @@ erDiagram
     CustomUser ||--o{ ResetPasswordCode : "resets with"
     
 ```
-
+---
+- User Models
 ```mermaid
 erDiagram
     CustomUser {
