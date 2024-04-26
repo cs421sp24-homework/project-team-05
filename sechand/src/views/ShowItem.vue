@@ -6,7 +6,9 @@
             <!-- Left side: Image -->
             <div class="left-side">
                 <img :src="item.image" alt="Item Image" id="item-img" />
-                <div v-if="reviews.reviews.length != 0" style="font-size: 20px; padding: 10px;">Seller Reviews:</div>
+                <div v-if="reviews.reviews.length != 0" style="font-size: 20px; font-weight: bold; padding: 10px;">
+                    Seller Reviews:
+                </div>
                 <div v-for="review in reviews.reviews" :key="review.id" class="review-container">
                     <div class="avatar-info">
                         <img :src="review.buyer_avatar" class="review-image" />
@@ -17,6 +19,9 @@
                         Bought this item: <i>{{ review.item_name }}</i></p>
                     <div>
                         <p class="review-text">{{ review.review }}</p>
+                    </div>
+                    <div class="row">
+                        <hr class="segment" />
                     </div>
                 </div>
             </div>
@@ -218,6 +223,10 @@ export default {
 
 .loc_label {
     font-weight: bold;
+}
+
+.segment {
+    width: 100vw;
 }
 
 #item-img {
