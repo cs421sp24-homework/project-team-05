@@ -34,7 +34,8 @@ const accessToken = localStorage.getItem("access_token");
 export default {
   data(){
     return{
-        notification_count: 0,
+      ws: null,
+      notification_count: 0,
     }
   },
   name: "UserNavbar",
@@ -45,7 +46,11 @@ export default {
     Button,
   },
   mounted() {
-    this.getNotification();
+    this.ws = getWebSocketInstance(this.currentUser.id);
+    this.ws.onmessage = (event) => {
+      console.log("new notification");
+      this.getNotification();
+    };
   },
   methods: {
     chat() {
