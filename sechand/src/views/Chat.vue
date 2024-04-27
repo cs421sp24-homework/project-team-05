@@ -192,9 +192,10 @@ export default {
                     this.active_chat++;
                     this.active_roomId = this.chat_list[this.active_chat].id;
                 }
+            } else {
+                room.messages.push(message);
+                room.last_message = message;
             }
-            room.messages.push(message);
-            room.last_message = message;
             this.scrollToBottom();
             if (this.active_roomId !== message.room_id) {
                 // room.notification++;

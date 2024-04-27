@@ -22,20 +22,20 @@ def custom_login(request):
     # print(username, password)
     try:
         user = UserModel.objects.get(username=username)
-        if user.check_password(password):
-            if user.is_verified:
+        if user.is_verified:
+            if user.check_password(password):
                 login(request, user)
                 serializer = CustomUserSerializer(user)
                 # registered, correct password
                 return JsonResponse({'registered': True, 'success': True, 'userInfo': serializer.data})
             else:
-                # User is not active, prompt for email verification
-                user.delete()
-                # registered, not verified
+                # registered, incorrect password
                 return JsonResponse({'registered': True, 'success': False, 'userInfo': None})
         else:
-            # registered, incorrect password
-            return JsonResponse({'registered': True, 'success': False, 'userInfo': None})
+            # User is not active, prompt for email verification
+            # user.delete()
+            # registered, not verified
+            return JsonResponse({'registered': False, 'success': False, 'userInfo': None})
     except UserModel.DoesNotExist:
         # 3.2. not registered
         return JsonResponse({'registered': False, 'success': False, 'userInfo': None})

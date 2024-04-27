@@ -34,7 +34,6 @@ const accessToken = localStorage.getItem("access_token");
 export default {
   data(){
     return{
-      ws: null,
       notification_count: 0,
     }
   },
@@ -46,15 +45,12 @@ export default {
     Button,
   },
   mounted() {
-    this.ws = getWebSocketInstance(this.currentUser.id);
-    this.ws.onmessage = (event) => {
-      console.log("new notification");
-      this.getNotification();
-    };
+    // this.getNotification();
+    window.addEventListener("getNotification", this.getNotification);
   },
   methods: {
     chat() {
-      this.getNotification();
+      // this.getNotification();
       this.$router.push("/chat");
     },
     profile() {
@@ -87,7 +83,10 @@ export default {
       console.log("offset notification");
 
     },
-  }
+  },
+  beforeDestroy() {
+    window.removeEventListener("getNotification", this.getNotification);
+  },
 };
 </script>
 
