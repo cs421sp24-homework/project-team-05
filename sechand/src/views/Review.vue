@@ -11,7 +11,7 @@
           <Star :rating.sync="item.rating" :selectable="isSelectable" />
           <form @submit.prevent="submitReview(item)" class="review-form">
             <textarea v-model="item.review" placeholder="Write your review"></textarea>
-            <Button type="submit" text="Submit Review" color="lightBlue"></Button>
+            <Button text="Submit Review" color="lightBlue"></Button>
           </form>
         </div>
       </div>
