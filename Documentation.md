@@ -363,18 +363,32 @@ erDiagram
     CustomUser ||--o{ UserPurchase : "has"
     CustomUser ||--o{ UserCollection : "has"
     Item ||--o{ UserCollection : "collected in"
+    Item ||--|| UserPurchase : "collected in"
     Item ||--o{ Transaction : "transacted in"
 ```
 
 ### 7.2 Table Definitions
 
+
+
 ### 7.3 Relationships and Constraints
+
+
 
 ## Testing
 
 ### 8.1 Test Plan
 
+- The software will be automatically tested via Github CI/CD pipeline each time there is a push or PR update.
+- The sofware is also tested by developers mannually using test commands.
+- For backend testing, run `python manage.py test --settings=sechand_backend.settings_test`
+    - Test framework: Django Unitest
+- For frontend testing, run `npm test`
+    - Test framework: Vitest
+
 ### 8.2 Test Results
+
+
 
 ### 8.3 Known Issues and Limitations
 
