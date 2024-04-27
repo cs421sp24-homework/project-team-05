@@ -247,10 +247,18 @@ def BrowseOneKindItems(request):
     
     if(category_value == 'all'):
         # Return all items
-        all_items = Item.objects.filter(is_sold=False)
+        if(request.user):
+            print("inside")
+            all_items = Item.objects.filter(is_sold=False).exclude(seller=request.user)
+        else:
+            print("not login")
+            all_items = Item.objects.filter(is_sold=False)
         serializer = ItemSerializerWithSellerName(all_items, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
-    items = Item.objects.filter(category=category_value, is_sold=False)
+    if(request.user):
+        items = Item.objects.filter(category=category_value, is_sold=False).exclude(seller=request.user)
+    else:
+        items = Item.objects.filter(category=category_value, is_sold=False)
     serializer = ItemSerializerWithSellerName(items, many=True)
     return JsonResponse(serializer.data, safe=False, status=200)
 
