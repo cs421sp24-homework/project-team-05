@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from post.models import Item, UserCollection
+from post.models import Item, UserCollection, Transaction
 from user.models import Address, CustomUser
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -24,6 +24,54 @@ class GetAllUserItemsTest(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+class GetUserItemsByDistanceTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.address1 = Address.objects.create(name='Test Address1', street='123 Main St', zipcode='12345', latitude=Decimal('40.0000'), longitude=Decimal('-74.0060'))
+        self.address2 = Address.objects.create(name='Test Address2', street='223 Main St', zipcode='12345', latitude=Decimal('40.7128'), longitude=Decimal('-74.0060'))
+
+        self.seller = CustomUser.objects.create_user(
+            username='testseller',
+            email='testseller@test.com',
+            phone='1234567890',
+            address=self.address1,
+            displayname='testseller',
+            is_visible=False,
+            is_verified=True
+        )
+        self.buyer = CustomUser.objects.create_user(
+            username='testbuyer',
+            email='testbuyer@test.com',
+            phone='1234567890',
+            address=self.address2,
+            displayname='testseller',
+            is_visible=False,
+            is_verified=True
+        )
+
+        self.url = reverse('GetAllItemsByDistance')
+
+        self.item1 = Item.objects.create(
+            name='Distance Test Item',
+            description='Description for Item 1',
+            category='Books',
+            price=Decimal('20.00'),
+            seller=self.seller,
+            is_sold=False
+        )
+
+    def test_get_items_by_distance(self):
+        self.client.force_authenticate(user=self.buyer)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_get_items_by_distance_too_large(self):
+        self.client.force_authenticate(user=self.buyer)
+        param = {'count' : 50}
+        response = self.client.get(self.url, param)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
 class GetAllItemsTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -35,15 +83,24 @@ class GetAllItemsTest(TestCase):
 
 class CreateNewItemsTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.address1 = Address.objects.create(name='Test Address1', street='123 Main St', zipcode='12345', latitude=Decimal('40.0000'), longitude=Decimal('-74.0060'))
+        self.user = CustomUser.objects.create_user(
+            username='testseller',
+            email='testseller@test.com',
+            phone='1234567890',
+            address=self.address1,
+            displayname='testseller',
+            is_visible=False,
+            is_verified=True
+        )
         self.client = APIClient()
         self.url = reverse('CreateNewItem')
 
-    # def test_create_new_item(self):
-    #     self.client.force_authenticate(user=self.user)
-    #     item_data = {'name': 'Test Item2', 'description':'A description', 'category':'Test category', 'price':11.01, 'seller': '1'}
-    #     response = self.client.post(self.url, item_data)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_create_new_item(self):
+        self.client.force_authenticate(user=self.user)
+        item_data = {'name': 'View Test Item', 'description':'A description', 'category':'Test category', 'price':11.01, 'seller': self.user.id}
+        response = self.client.post(self.url, item_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 class ProcessSingleItemTest(TestCase):
     def setUp(self):
@@ -135,11 +192,62 @@ class SearchItemsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 1)
         
-        
     def test_search_items_by_category(self):
         params = {'desc_text': '', 'category': 'Books', 'location': [], 'distance': '-1'}
         response = self.client.post(self.url, data=params)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_search_items_by_distance(self):
+        self.client.force_authenticate(user=self.user)
+        params = {'desc_text': '', 'category': '', 'location': [], 'distance': '3'}
+        response = self.client.post(self.url, data=params)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+class QuickAccessTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.url = reverse('BrowseOneKindItems')
+        # Set up user and address
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.address = Address.objects.create(name='Test Address', street='123 Main St', zipcode='12345', latitude=Decimal('40.7128'), longitude=Decimal('-74.0060'))
+        self.user.address = self.address
+        self.user.save()
+
+        self.item1 = Item.objects.create(
+            name='QuickAccessTest Item1',
+            description='Description for Item 1',
+            category='Books',
+            price=Decimal('20.00'),
+            seller=self.user,
+            is_sold=False
+        )
+        self.item2 = Item.objects.create(
+            name='QuickAccessTest Item2',
+            description='Description for Item 2',
+            category='Sporting Goods',
+            price=Decimal('50.00'),
+            seller=self.user,
+            is_sold=False
+        )
+
+    def test_quick_access_one_kind(self):
+        params = {'category': 'Books'}
+        response = self.client.post(self.url, data=params)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 1)
+    
+    def test_quick_access_one_kind_all_category(self):
+        params = {'category': 'all'}
+        response = self.client.post(self.url, data=params)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_data = response.json()
+        self.assertEqual(len(response_data), 2)
+
+    def test_quick_access_one_kind_no_category(self):
+        params = {'category': ''}
+        response = self.client.post(self.url, data=params)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('error', response.json())
 
 class AddNewCollectionTest(TestCase):
     def setUp(self):
@@ -308,3 +416,111 @@ class TransactionTest(TestCase):
         self.assertEqual(len(response.json()), 1)
         self.assertEqual(response.json()[0]['name'], 'Math Textbook')
 
+class ReviewTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        # Set up user and address
+        self.address1 = Address.objects.create(name='Test Address1', street='123 Main St', zipcode='12345', latitude=Decimal('40.0000'), longitude=Decimal('-74.0060'))
+        self.address2 = Address.objects.create(name='Test Address2', street='223 Main St', zipcode='12345', latitude=Decimal('40.7128'), longitude=Decimal('-74.0060'))
+
+        self.seller = CustomUser.objects.create_user(
+            username='testseller',
+            email='testseller@test.com',
+            phone='1234567890',
+            address=self.address1,
+            displayname='testseller',
+            is_visible=False,
+            is_verified=True
+        )
+        self.buyer = CustomUser.objects.create_user(
+            username='testbuyer',
+            email='testbuyer@test.com',
+            phone='1234567890',
+            address=self.address2,
+            displayname='testseller',
+            is_visible=False,
+            is_verified=True
+        )
+        self.item = Item.objects.create(
+            name='Math Textbook',
+            description='Description for Item 1',
+            category='Books',
+            price=Decimal('20.00'),
+            seller=self.seller,
+            is_sold=False
+        )
+
+        # self.url = reverse('GetUserReviews')
+        self.url1 = reverse('GetUnReviewedOrder')
+        self.client.force_authenticate(user=self.buyer)
+
+        self.transactionUrl = reverse('SaveTransaction')
+        params = {'item_id': self.item.id, 'seller_id': self.seller.id, 'buyer_id': self.buyer.id, 'price': self.item.price}
+        self.client.post(self.transactionUrl, data=params)
+    
+    def test_get_unreview_item(self):
+        response = self.client.get(self.url1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 1)
+    
+
+class AddReviewTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        # Set up user and address
+        self.address1 = Address.objects.create(name='Test Address1', street='123 Main St', zipcode='12345', latitude=Decimal('40.0000'), longitude=Decimal('-74.0060'))
+        self.address2 = Address.objects.create(name='Test Address2', street='223 Main St', zipcode='12345', latitude=Decimal('40.7128'), longitude=Decimal('-74.0060'))
+
+        self.seller = CustomUser.objects.create_user(
+            username='testseller',
+            email='testseller@test.com',
+            phone='1234567890',
+            address=self.address1,
+            displayname='testseller',
+            is_visible=False,
+            is_verified=True
+        )
+        self.buyer = CustomUser.objects.create_user(
+            username='testbuyer',
+            email='testbuyer@test.com',
+            phone='1234567890',
+            address=self.address2,
+            displayname='testseller',
+            is_visible=False,
+            is_verified=True
+        )
+        self.item = Item.objects.create(
+            name='Math Textbook',
+            description='Description for Item 1',
+            category='Books',
+            price=Decimal('20.00'),
+            seller=self.seller,
+            is_sold=False
+        )
+        self.transaction = Transaction.objects.create(
+            item_id = self.item.id, 
+            seller_id = self.seller.id, 
+            buyer_id = self.buyer.id, 
+            price= self.item.price
+        )
+
+        self.client.force_authenticate(user=self.buyer)
+
+        self.postUrl = reverse('WriteReview', kwargs={'order_id': str(self.transaction.id)})
+
+    def test_add_review(self):
+        data = {'review': 'Good Item'}
+        response = self.client.patch(self.postUrl, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['review'], 'Good Item')
+    
+    def test_add_none_review(self):
+        data = {'review': 'Good Item'}
+        noneUrl = reverse('WriteReview', kwargs={'order_id': '03d9f92f-5f63-4f42-a4fe-f7c06693f5ff'})
+        response = self.client.patch(noneUrl, data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_user_reviews(self):
+        GetUrl = reverse('GetUserReviews', kwargs={'user_id': str(self.seller.id)})
+        response = self.client.get(GetUrl)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

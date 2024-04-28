@@ -35,7 +35,6 @@ def GetAllItems(request):
     try:
         count = int(count)
     except ValueError:
-        print("Invalid count parameter, must be an integer")
         return JsonResponse({'error': 'Invalid count parameter, must be an integer'}, status=status.HTTP_400_BAD_REQUEST)
     
     if count < 1 or count > 30:
@@ -53,7 +52,6 @@ def GetAllItemsByDistance(request):
     try:
         count = int(count)
     except ValueError:
-        print("Invalid count parameter, must be an integer")
         return JsonResponse({'error': 'Invalid count parameter, must be an integer'}, status=status.HTTP_400_BAD_REQUEST)
     
     if count < 1 or count > 30:
@@ -98,7 +96,6 @@ def GetUserCollection(request):
             serializer = ItemSerializerWithSellerName(items, many=True)
             return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
             return JsonResponse({},status=status.HTTP_200_OK)
     else:
        return JsonResponse({'error': 'User need to login to browse their collection'}, status.HTTP_401_UNAUTHORIZED) 
@@ -248,15 +245,13 @@ def BrowseOneKindItems(request):
     if(category_value == 'all'):
         # Return all items
         if(request.user):
-            print("inside")
-            all_items = Item.objects.filter(is_sold=False).exclude(seller=request.user)
+            all_items = Item.objects.filter(is_sold=False).exclude(seller=request.user.id)
         else:
-            print("not login")
             all_items = Item.objects.filter(is_sold=False)
         serializer = ItemSerializerWithSellerName(all_items, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
     if(request.user):
-        items = Item.objects.filter(category=category_value, is_sold=False).exclude(seller=request.user)
+        items = Item.objects.filter(category=category_value, is_sold=False).exclude(seller=request.user.id)
     else:
         items = Item.objects.filter(category=category_value, is_sold=False)
     serializer = ItemSerializerWithSellerName(items, many=True)
@@ -300,7 +295,6 @@ def GetAllTransactions(request):
         # print("Ops")
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     except Exception as e:
-        print(f"Error saving message: {e}")
         return JsonResponse({"error": e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 @api_view(['GET'])
@@ -334,10 +328,8 @@ def GetUserReviews(request, user_id):
 @api_view(['PATCH'])
 @permission_classes([AllowAny])
 def WriteReview(request, order_id):
-
-    order = Transaction.objects.get(id=order_id)
-    # if(request.user and order and request.user == order.buyer_id):
     try:
+        order = Transaction.objects.get(id=order_id)
         serializer = TransactionReviewSerializer(order, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
