@@ -33,6 +33,18 @@ class GetAllItemsTest(TestCase):
         response = self.client.get(self.url, {'count': 5})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+class CreateNewItemsTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client = APIClient()
+        self.url = reverse('CreateNewItem')
+
+    # def test_create_new_item(self):
+    #     self.client.force_authenticate(user=self.user)
+    #     item_data = {'name': 'Test Item2', 'description':'A description', 'category':'Test category', 'price':11.01, 'seller': '1'}
+    #     response = self.client.post(self.url, item_data)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
 class ProcessSingleItemTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -41,15 +53,42 @@ class ProcessSingleItemTest(TestCase):
         self.user.address = self.address
         self.item = Item.objects.create(name='Test Item', description='Test Desc', category='Test Category', price=10.01, seller=self.user)
         self.url = reverse('ProcessSingleItem', kwargs={'item_id': self.item.id})
+        self.update_url = reverse('ProcessSingleItem', kwargs={'item_id': self.item.id})
+        self.non_url = reverse('ProcessSingleItem', kwargs={'item_id': '12345678-1234-5678-1234-567812345678'})
+
 
     def test_get_single_item(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_get_not_exist_item(self):
+        response = self.client.get(self.non_url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    # def test_patch_non_exist_with_no_auth(self):
+    #     response = self.client.patch(self.url, {'price': 25.00})
+    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_patch_single_item_with_auth(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.url, {'price': 25.00})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_patch_non_exist_with_auth(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.non_url, {'price': 25.00})
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    # def test_patch_bad_data_with_auth(self):
+    #     self.client.force_authenticate(user=self.user)
+    #     response = self.client.patch(self.url, {'gate': 25.00})
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_single_item_with_auth(self):
         self.client.force_authenticate(user=self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 class SearchItemsTest(TestCase):
     def setUp(self):

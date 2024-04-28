@@ -8,10 +8,10 @@ from django.utils.timezone import now
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-def validate_image_size(image):
-    max_size = 5 * 1024 * 1024
-    if image.size > max_size:
-        raise ValidationError("Image file too large ( > 5MB )")
+# def validate_image_size(image):
+#     max_size = 5 * 1024 * 1024
+#     if image.size > max_size:
+#         raise ValidationError("Image file too large ( > 5MB )")
 
 def gen_unique_filename(instance, filename):
 
@@ -27,7 +27,7 @@ def gen_unique_filename(instance, filename):
     name = normalize_name(name)
     name = sanitize_name(name)
     timestamp = now().strftime('%Y%m%d_%H%M%S')
-    unique_filename = f"{timestamp}_{uuid.uuid4()}.{ext}"
+    unique_filename = f"{timestamp}_{uuid.uuid4()}{ext}"
     return f'media/itemImage/{unique_filename}'
 
 class Item(models.Model):

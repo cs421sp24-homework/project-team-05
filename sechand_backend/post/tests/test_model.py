@@ -1,8 +1,11 @@
 from django.test import TestCase
 from post.models import Item, UserCollection, Transaction
+from post.models import gen_unique_filename
 from decimal import Decimal
+from datetime import datetime
 from django.contrib.auth import get_user_model
-import uuid
+from unittest.mock import patch
+import uuid 
 
 User = get_user_model()
 
@@ -32,6 +35,51 @@ class ItemModelTest(TestCase):
         item = Item.objects.get(name='Test Item')
         self.assertIsInstance(item.id, uuid.UUID)
 
+    def test_item_deletion(self):
+        item = Item.objects.get(name='Test Item')
+        item.delete()
+        with self.assertRaises(Item.DoesNotExist):
+            Item.objects.get(name='Test Item')
+
+    @patch('post.models.Item.delete_s3_image')
+    def test_custom_save_logic(self, mock_delete_s3_image):
+        item = Item.objects.create(name='Test Item2', description='A description', category='Test category', price=11.01, seller=self.user, image='./testImg/dog-avatar.PNG')
+        
+        item.image = './testImg/cat-avatar.png'
+        item.save()
+        
+        mock_delete_s3_image.assert_called_once_with('./testImg/dog-avatar.PNG')
+
+    @patch('post.models.Item.delete_s3_image')
+    def test_image_deletion_on_item_deletion(self, mock_delete_s3_image):
+        item = Item.objects.create(name='Test Item2', description='A description', category='Test category', price=11.01, seller=self.user, image='./testImg/dog-avatar.PNG')
+
+        item.delete()
+        
+        self.assertTrue(mock_delete_s3_image.called)
+        self.assertEqual(mock_delete_s3_image.call_args[0][0].name, './testImg/dog-avatar.PNG')
+
+    def test_is_sold_default(self):
+        item = Item.objects.create(name='Test Item2', description='A description', category='Test category', price=11.01, seller=self.user, image='./testImg/dog-avatar.PNG')
+
+        self.assertFalse(item.is_sold)
+
+    @patch('post.models.uuid.uuid4')
+    @patch('post.models.now')
+    def test_gen_unique_filename(self, mock_now, mock_uuid):
+
+        mock_now.return_value = datetime(2023, 1, 1, 12, 0)
+        mock_uuid.return_value = uuid.UUID('12345678123456781234567812345678')
+
+        expected_timestamp = '20230101_120000'
+        expected_uuid = '12345678-1234-5678-1234-567812345678'
+
+        filename = gen_unique_filename(None, 'test@file!.jpg')
+
+        expected_filename = f"media/itemImage/{expected_timestamp}_{expected_uuid}.jpg"
+
+        self.assertEqual(filename, expected_filename)
+        
 
 class CollectionModelTest(TestCase):
     def setUp(self):

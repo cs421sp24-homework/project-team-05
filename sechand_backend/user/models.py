@@ -50,7 +50,7 @@ class CustomUser(AbstractUser):
     def delete(self, *args, **kwargs):
         if self.image:
             self.delete_s3_image(self.image)
-        super(Item, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def delete_s3_image(self, image):
         s3_resource = boto3.resource(
