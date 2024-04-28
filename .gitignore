@@ -43,3 +43,5 @@ coverage
 .vscode
 .env
 /sechand_backend/venv
+.coverage
+*/htmlcov/

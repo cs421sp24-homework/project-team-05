@@ -40,6 +40,11 @@ function createWebSocket(userId) {
     const wsPath = WBSOCKET_PREFIX + `ws/chat/${userId}/`;
     const ws = new WebSocket(wsPath);
     ws.onopen = () => console.log(`WebSocket connected for user ${userId}`);
+    ws.onmessage = (event) => {
+        console.log("websocket manager triggers new notification");
+        const e = new CustomEvent("getNotification");
+        window.dispatchEvent(e);
+    }
     ws.onclose = () => console.log(`WebSocket disconnected for user ${userId}`);
     ws.onerror = (error) => console.error(`WebSocket error for user ${userId}:`, error);
     // Setup other event handlers as needed

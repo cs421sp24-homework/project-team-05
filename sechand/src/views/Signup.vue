@@ -302,7 +302,7 @@ export default {
 #title {
     font-size: 4vh;
     text-align: center;
-    margin-top: 4vh;
+    margin-top: 12vh;
     margin-bottom: 5vh;
 }
 
@@ -312,14 +312,14 @@ export default {
 
 #left {
     float: left;
-    height: 60vh;
+    height: 50vh;
     width: 50%;
     border-right: 1px black solid;
 }
 
 #right {
     float: right;
-    height: 60vh;
+    height: 50vh;
     width: 50%;
 }
 

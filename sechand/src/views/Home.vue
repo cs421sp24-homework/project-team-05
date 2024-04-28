@@ -116,6 +116,8 @@ export default {
         formData.append("highest_price", this.filters.max);
         formData.append("distance", this.filters.distance);
         console.log("search", this.filters.distance)
+        console.log("lowest_price", this.filters.min)
+        console.log("highest_price", this.filters.max)
         const loc_array = this.filters.locations
         loc_array.forEach((item, index) => {
           formData.append("location", item);
@@ -161,8 +163,14 @@ export default {
       console.log("update location", locations);
     },
     UpdateMinMax({ min, max }) {
-      this.filters.min = min.toString();
-      this.filters.max = max.toString();
+      if(min !== null && min !== undefined && min !== '')
+        this.filters.min = min.toString();
+      else
+        this.filters.min = "-1";
+      if(max !== null && max !== undefined && max !== '')
+        this.filters.max = max.toString();
+      else
+        this.filters.max = "-1";
     },
   },
 };

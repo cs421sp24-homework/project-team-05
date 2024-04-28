@@ -34,7 +34,7 @@ const accessToken = localStorage.getItem("access_token");
 export default {
   data(){
     return{
-        notification_count: 0,
+      notification_count: 0,
     }
   },
   name: "UserNavbar",
@@ -45,11 +45,12 @@ export default {
     Button,
   },
   mounted() {
-    this.getNotification();
+    // this.getNotification();
+    window.addEventListener("getNotification", this.getNotification);
   },
   methods: {
     chat() {
-      this.getNotification();
+      // this.getNotification();
       this.$router.push("/chat");
     },
     profile() {
@@ -82,7 +83,10 @@ export default {
       console.log("offset notification");
 
     },
-  }
+  },
+  beforeDestroy() {
+    window.removeEventListener("getNotification", this.getNotification);
+  },
 };
 </script>
 
