@@ -387,8 +387,9 @@ erDiagram
     - Test framework: Vitest
 
 ### 8.2 Test Results
+The coverage of the test are as follows
 
-
+![testcover](./doc-img/test-cover.png)
 
 ### 8.3 Known Issues and Limitations
 
