@@ -3,10 +3,12 @@
 ## Introduction
 
 ### 1.1 Purpose
+This application is a web service that aims to promote the circulation of second-hand trading information among the local community. It provides a platform for students and faculty to post their pre-owned items online anytime when they have a product that is idled. For people who want to register an account, they have to pass the identity verification with a valid JHED, which reduces the risk associated with transactions.
 
 ### 1.2 Scope
 
 ### 1.3 Audience
+The JHU community, including students, faculty, and staff with valid JHED.
 
 ## System Overview
 
@@ -228,10 +230,46 @@ Running SecHand locally requires following version of technologies:
 ### 5.1 User Interface Overview
 
 ### 5.2 User Authentication
+To sign up:
+- Start using SecHand by registering your account. At the homepage of our website, click the Sign up button at the top right corner.
+- Fill in your info, we will send you a verification code by the jhu email you provided.
+- After clicking "Verify JHED by E-mail", wait for a bit to let the system send your code. If the page does not automatically pop up a window asking for your code, please click the button again.
+
+To login:
+- Enter your JHED and password to log in.
+- Anytime you changed your mind and do not wish to log in, click the title at the top left, and you will be redirected to home page.
 
 ### 5.3 Core Functionality
+Post your item out
+- Click your name at the navigation bar to enter your personal homepage, where you can manage the item you posted, your personal information, etc.
+- Now click new post to post your item.
+
+Edit or Delete your item
+- Sometimes you may find out you want something to be different, like description. So you need to edit some information.
+- Click the item you want to edit inside your personal homepage, then edit or delete the item as you wish.
+
+Search and Filter
+- You can search objects by name or description and apply filters based on category, location, or price.
+- Click the search button to apply both search queries and filters.
+
+Chat
+- You can enter your chatbox or directly chat with a seller when you are interested in their item.
+- To enter the general chatbox, click the message icon at the navigation bar.
+- To chat with the seller of an item, go to the item details page and click on the message icon on the right of the seller name, this will automatically send a message to the seller with the item details.
+
+Make transaction
+- If you are a buyer, the automated message contains a "buy" button, click on it to send a confirmation to the seller, once the seller confirms, this transaction is complete.
+- If you are a seller, once the buyer requests a transaction, click "confirm" in the automated message to secure the transaction.
+- You can view the order history in the second section of your personal page, this order history is currently visible to buyers, we will add a sold items section for sellers in the next iteration.
 
 ### 5.4 Advanced Features
+Collect items to wishlist
+- You can collect items to wishlist from the item details page.
+- You can view your wishlist in the bottom section of your personal page.
+
+Forget password
+- If you forget your password, you can reset it anytime.
+- On the login page, first enter your JHED then click the "Forget Password" button, you will receive a reset code in your email.
 
 ## API Documentation (if applicable)
 
