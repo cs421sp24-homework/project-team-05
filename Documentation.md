@@ -3,9 +3,10 @@
 ## Introduction
 
 ### 1.1 Purpose
-This application is a web service that aims to promote the circulation of second-hand trading information among the local community. It provides a platform for students and faculty to post their pre-owned items online anytime when they have a product that is idled. For people who want to register an account, they have to pass the identity verification with a valid JHED, which reduces the risk associated with transactions.
+This application is a web service that aims to promote the circulation of second-hand trading information among the local community. It provides a platform for students and faculty to post their pre-owned items online anytime when they have a product that is idled.
 
 ### 1.2 Scope
+For people who want to register an account, they have to pass the identity verification. Users can create a post that contains all necessary information about the product they want to sell, and share it with their friends or social media. They can also browse what other people are selling, and see if there is anything they need. Before a user decides to buy an item from another person, they can arrange all the transaction details within their private chat, like making a bargain. The buyer can prioritize deals within their immediate community. reduces the risk associated with transactions.
 
 ### 1.3 Audience
 The JHU community, including students, faculty, and staff with valid JHED.
@@ -228,6 +229,11 @@ Running SecHand locally requires following version of technologies:
 ## Usage Guide
 
 ### 5.1 User Interface Overview
+![signup](./doc-img/signup.png)
+![login](./doc-img/login.png)
+![home](./doc-img/home.png)
+![me](./doc-img/me.png)
+![chat](./doc-img/chat.png)
 
 ### 5.2 User Authentication
 To sign up:
@@ -279,29 +285,33 @@ Forget password
 
 #### Endpoints for item functionalities
 - Get all items posted by user: `api/v1/post/UserItems/all` 
-- Get all items across sechand: `Items/all`
-- Get all items by distance: `Items/user/all`
-- Add collections to user: `Items/Collection/new/<uuid:item_id>`
-- Get user's collection: `Items/Collection`
-- Delete User's collection: `Items/Collection/delete/<uuid:item_id>`
-- Get item collection status related to current user: `Items/Collection/item/<uuid:item_id>`
-- Post a new item: `Item/new`
-- Get/update/dete a item: `Item/<uuid:item_id>`
-- Search items: `Items/Search`
-- Quick browsing items by category: `Items/Browse`
-- Get all transactions of current user: `Order/Transactions/all`
-- Add a new transaction: `Order/Transaction/new`
-- Get a user's review and rating: `Order/Transaction/Review/<int:user_id>`
-- Write a review to a user: `Order/Transaction/Review/add/<uuid:order_id>`
-- Get current user's unreviewed order: `Order/Transaction/Review/UnReviewedOrder`
+- Get all items across sechand: `api/v1/post/Items/all`
+- Get all items by distance: `api/v1/post/Items/user/all`
+- Add collections to user: `api/v1/post/Items/Collection/new/<uuid:item_id>`
+- Get user's collection: `api/v1/post/Items/Collection`
+- Delete User's collection: `api/v1/post/Items/Collection/delete/<uuid:item_id>`
+- Get item collection status related to current user: `api/v1/post/Items/Collection/item/<uuid:item_id>`
+- Post a new item: `api/v1/post/Item/new`
+- Get/update/dete a item: `api/v1/post/Item/<uuid:item_id>`
+- Search items: `api/v1/post/Items/Search`
+- Quick browsing items by category: `api/v1/post/Items/Browse`
+- Get all transactions of current user: `api/v1/post/Order/Transactions/all`
+- Add a new transaction: `api/v1/post/Order/Transaction/new`
+- Get a user's review and rating: `api/v1/post/Order/Transaction/Review/<int:user_id>`
+- Write a review to a user: `api/v1/post/Order/Transaction/Review/add/<uuid:order_id>`
+- Get current user's unreviewed order: `api/v1/post/Order/Transaction/Review/UnReviewedOrder`
 
 #### Endpoints for user functionalities
-- New user registration: `register/`
+- New user registration: `user/register/`
+- User login: `user/login/`
 
 
 ### 6.2 Request and Response Formats
 
 ### 6.3 Authentication and Authorization
+User authentication is required for most endpoints.
+- Retrieve JWT token: `api/token/`
+- Refresh JWT token: `api/token/refresh/`
 
 ## Database Schema (if applicable)
 
