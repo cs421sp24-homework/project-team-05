@@ -439,6 +439,10 @@ The coverage of the test are as follows
 
 ![testcover](./doc-img/test-cover.png)
 
+Results of the test are as follows:
+
+![testresult](./doc-img/test-result.png)
+
 ### 8.3 Known Issues and Limitations
 
 ## Deployment
