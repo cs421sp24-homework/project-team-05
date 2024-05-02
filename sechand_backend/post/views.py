@@ -244,13 +244,15 @@ def BrowseOneKindItems(request):
     
     if(category_value == 'all'):
         # Return all items
-        if(request.user):
+        print("post user authed? ", request.user.is_authenticated)
+        if(request.user.is_authenticated):
+            print("user loged in")
             all_items = Item.objects.filter(is_sold=False).exclude(seller=request.user.id)
         else:
             all_items = Item.objects.filter(is_sold=False)
         serializer = ItemSerializerWithSellerName(all_items, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
-    if(request.user):
+    if(request.user.is_authenticated):
         items = Item.objects.filter(category=category_value, is_sold=False).exclude(seller=request.user.id)
     else:
         items = Item.objects.filter(category=category_value, is_sold=False)

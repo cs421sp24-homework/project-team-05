@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.http import JsonResponse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_str
@@ -40,6 +40,13 @@ def custom_login(request):
         # 3.2. not registered
         return JsonResponse({'registered': False, 'success': False, 'userInfo': None})
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def custom_logout(request):
+    print("Before logout: ", request.user.is_authenticated)
+    logout(request)
+    print("After logout: ", request.user.is_authenticated)
+    return JsonResponse({'status': 'logged out'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

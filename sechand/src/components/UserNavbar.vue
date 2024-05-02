@@ -60,12 +60,25 @@ export default {
       this.$router.push("/");
     },
     logout() {
-      this.$router.replace("/");
-      localStorage.clear(); // Clear all storage
-      sessionStorage.clear(); // Clear all session storage
-      closeWebSocketInstance(this.currentUser.id);
-      this.$emit("userLogout", {});
-      console.log("logout", this.currentUser);
+      axios.post(HTTP_PREFIX + "user/logout/",{
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then(()=> {
+        
+        localStorage.clear(); // Clear all storage
+        sessionStorage.clear(); // Clear all session storage
+        closeWebSocketInstance(this.currentUser.id);
+        
+        this.$router.replace("/").then(() => {
+          // Once the router has finished the redirection, refresh the page
+          window.location.reload(true);  // true forces the page to reload from the server
+          this.$emit("userLogout", {});   // Emit the logout event after everything is completed
+          console.log("logout successful", this.currentUser);
+        });
+      }).catch(error => {
+        console.error("Logout failed:", error);
+      });
     },
     getNotification() {
       const accessToken = localStorage.getItem("access_token");
