@@ -202,6 +202,10 @@ def SearchItems(request):
         search=SearchVector('name', 'description')
     )
 
+    if request.user and request.user.is_authenticated:
+        print("adding not user")
+        query &= ~Q(seller=request.user.id)
+
     if desc_text:
         # query &= (Q(name__icontains=desc_text) | Q(description__icontains=desc_text))
         items = items.filter(search=desc_text)
