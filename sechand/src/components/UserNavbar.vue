@@ -45,7 +45,7 @@ export default {
     Button,
   },
   mounted() {
-    // this.getNotification();
+    this.getNotification();
     window.addEventListener("getNotification", this.getNotification);
   },
   methods: {

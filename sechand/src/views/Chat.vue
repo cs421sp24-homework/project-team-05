@@ -86,7 +86,7 @@
                         
                         <div id="text-input">
                             <input id="input-box" type="text" v-model="newMessage" class="form-control" :placeholder="'Send a message to ' +
-                                chat_list[active_chat].user.displayname +'...'"/>
+                                chat_list[active_chat].user.displayname +'...'" @keyup.enter="sendMessage"/>
                             <button id="sendBtn" @click="sendMessage" class="btn btn-primary">
                                 Send
                             </button>
@@ -181,6 +181,7 @@ export default {
             const room = this.chat_list.find((room) => room.id === message.room_id);
             // console.log("room", room);
             if (room == undefined) {
+                console.log("room undefined")
                 this.chat_list.unshift({
                     id: message.room_id,
                     user: message.sender,
@@ -409,7 +410,7 @@ export default {
                     },
                 });
         }
-        closeWebSocketInstance(this.home_user.id);
+        // closeWebSocketInstance(this.home_user.id);
     },
     beforeRouteLeave(to, from, next) {
         if (this.active_roomId) {
@@ -424,7 +425,11 @@ export default {
                     },
                 });
         }
-        // window.removeEventListener("beforeunload", this.beforePageUnload);
+        this.ws.onmessage = (event) => {
+            console.log("websocket manager triggers new notification");
+            const e = new CustomEvent("getNotification");
+            window.dispatchEvent(e);
+        }
         next();
     },
 };
@@ -568,5 +573,6 @@ export default {
     font-size: 1.5vh;
     border-radius: 1.5vh;
     width: 4vw;
+    padding: 4px;
 }
 </style>

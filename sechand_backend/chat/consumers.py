@@ -103,7 +103,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender = event['sender']
         timestamp = event['timestamp']
         room_id = event['room_id']
-        # print(f"Broadcasting message: {message} from sender: {sender}")
+        print(f"Broadcasting message: {message} from sender: {sender}")
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
