@@ -1,5 +1,5 @@
 <template>
-  <div class="card" @click="cardDetail(card)" :id="card.name.length>3? 'card' + card.name.slice(0,3):'card'+card.name">
+  <div class="card" @click="cardDetail(card)" :id="card.name.length > 3 ? 'card' + card.name.slice(0, 3) : 'card' + card.name">
     <img :src="card.image" class="card-img-top" :alt="card.name" />
     <div class="card-body">
       <h5 class="card-name ellipsis">{{ card.name }}</h5>
@@ -19,8 +19,10 @@ export default {
   },
   methods: {
     cardDetail(card) {
-      this.$router.push({ name: "ShowItem", params: { id: card.id } });
-      console.log("Detail");
+      // this.$router.push({ name: "ShowItem", params: { id: card.id } });
+      // console.log("Detail");
+      const routeUrl = this.$router.resolve({ name: "ShowItem", params: { id: card.id } }).href;
+      const newTab = window.open(routeUrl, '_blank');
     },
   },
 };
