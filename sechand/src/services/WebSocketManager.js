@@ -29,3 +29,8 @@ export function closeWebSocketInstance(userId) {
         delete webSockets[userId];
     }
 }
+
+export function reconnectWebSocketInstance(userId) {
+    closeWebSocketInstance(userId);
+    return getWebSocketInstance(userId);
+}

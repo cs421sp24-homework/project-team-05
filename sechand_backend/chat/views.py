@@ -45,13 +45,20 @@ def GetChatListWithReceiver(request, receiver_id):
     return Response({'chat_list': serializer_prior.data + sorted_data, 'active_chat': 0}, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def GetRoom(request, receiver_id):
+    try:
+        Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
+        is_new = False
+    except Room.DoesNotExist:
+        Room.objects.create(users=[request.user.id, receiver_id])
+        is_new = True
+    return Response(is_new, status=status.HTTP_200_OK)
+
 @api_view(['POST'])
 def SendItemLink(request, receiver_id, item_id):
     item = Item.objects.get(id=item_id)
-    try:
-        room = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
-    except Room.DoesNotExist:
-        room = Room.objects.create(users=[request.user.id, receiver_id])
+    room = Room.objects.get(Q(users__contains=[request.user.id]) & Q(users__contains=[receiver_id]))
     serialized_room = RoomSerializer(room).data
     
     message = Message.objects.create(

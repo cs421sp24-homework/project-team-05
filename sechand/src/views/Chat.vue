@@ -101,7 +101,7 @@
 <script>
 import UserNavbar from "@/components/UserNavbar.vue";
 import Message from "@/components/Message.vue";
-import { getWebSocketInstance, closeWebSocketInstance } from "@/services/WebSocketManager";
+import { getWebSocketInstance, reconnectWebSocketInstance } from "@/services/WebSocketManager";
 import axios from "axios";
 const HTTP_PREFIX = import.meta.env.VITE_HOST;
 export default {
@@ -158,22 +158,12 @@ export default {
             // this.$refs.navbar.getNotification();
         },
         connect() {
-            // const wsPath = `ws/chat/${this.home_user.id}/`; // Use userId in the path
-            // console.log("using wsPath ", wsPath);
-            // if (this.ws) {
-            //     console.log("ws instance exist, close the current one, open a new one.");
-            //     this.shouldReconnect = false;
-            //     this.ws.close(); // Close the existing connection if it exists
-            // }
             this.ws = getWebSocketInstance(this.home_user.id);
             this.ws.onmessage = this.receiveMessage;
-            // this.ws.onclose = () => {
-            //     console.log("WebSocket closed.");
-            //     // if (this.shouldReconnect) {
-            //     //     console.log("Attempting to reconnect...")
-            //     //     setTimeout(this.connect, 1000);
-            //     // }
-            // };
+        },
+        reconnect() {
+            this.ws = reconnectWebSocketInstance(this.home_user.id);
+            this.ws.onmessage = this.receiveMessage;
         },
         receiveMessage(e) {
             const message = JSON.parse(e.data);
@@ -228,6 +218,17 @@ export default {
                 console.log(message);
                 this.newMessage = "";
             }
+        },
+        async sendItemLink(item_id) {
+            const response = await axios.get(HTTP_PREFIX + `api/v1/post/Item/${item_id}`);
+
+            const message = {
+                message: 'Hi, I\'m interested in this item.',
+                sender: this.home_user.id,
+                room_id: this.active_roomId,
+                item: response.data,
+            };
+            this.ws.send(JSON.stringify(message));
         },
         async sendOrder(data) {
             
@@ -341,14 +342,17 @@ export default {
 
         try {
             if (receiver) {
-                await axios.post(
-                    HTTP_PREFIX + `api/v1/chat/Conversation/auto-send/${receiver}/${item}`,
+                const is_new_room = await axios.get(
+                    HTTP_PREFIX + `api/v1/chat/Conversation/get/${receiver}`,
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
                         },
                     }
-                )
+                );
+                if (is_new_room.data) {
+                    this.reconnect();
+                }
 
                 const response = await axios.get(
                     HTTP_PREFIX + `api/v1/chat/Conversation/list/${receiver}`,
@@ -361,6 +365,8 @@ export default {
                 this.chat_list = response.data.chat_list;
                 this.active_chat = response.data.active_chat;
                 this.active_roomId = this.chat_list[this.active_chat].id;
+
+                this.sendItemLink(item);
 
                 this.scrollToBottom();
             } else {
