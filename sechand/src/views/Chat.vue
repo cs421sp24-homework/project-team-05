@@ -391,11 +391,11 @@ export default {
                         });
                 }
             });
+            this.connect();
+            this.$refs.navbar.offsetNotification();
         } catch (error) {
             console.error(error);
         }
-        this.connect();
-        this.$refs.navbar.offsetNotification();
     },
     beforeDestroy() {
         if (this.active_roomId) {
