@@ -41,7 +41,8 @@
             <div class="mb-3">
               <label for="price" class="form-label">Price</label>
               <div class="price-container">
-                <input type="number" step="0.01" class="form-control" id="price" v-model="price" placeholder="0.00" required />
+                <input type="number" step="0.01" class="form-control" id="price" v-model="price" placeholder="0.00"
+                  required />
               </div>
             </div>
 
@@ -130,6 +131,11 @@ export default {
         formData.append("name", this.itemName);
         formData.append("description", this.description);
         formData.append("category", this.category);
+        if (this.price <= 0) {
+          alert("Price must be greater than 0");
+          this.price = "";
+          return;
+        }
         formData.append("price", this.price);
         formData.append("seller", this.currentUser.id);
         if (this.currentUser.username != 'mxia8' || this.picture) {
