@@ -2,13 +2,13 @@
   <div>
     <UserNavbar :currentUser="currentUser" @userLogout="userStateChange" />
     <div class="contain">
-      <div v-for="item in unreviewedItems" :key="item.id" class="item-container">
-        <div class="item-info">
+      <div v-for=" (item, index) of unreviewedItems" :key="item.id" class="item-container">
+        <div v-if="item.itemdetail" class="item-info">
           <h4>{{ item.itemdetail.name }}</h4>
           <img :src="item.itemdetail.image" class="item-image">
         </div>
         <div class="item-review">
-          <Star :rating.sync="item.rating" :selectable="isSelectable" />
+          <Star v-model="item.rating" :selectable="isSelectable" @input="updaterating(item, $event)" />
           <form @submit.prevent="submitReview(item)" class="review-form">
             <textarea v-model="item.review" placeholder="Write your review"></textarea>
             <Button type="submit" text="Submit Review" color="lightBlue"></Button>
@@ -55,6 +55,9 @@ export default {
         }
       );
       this.unreviewedItems = response.data;
+      this.unreviewedItems.forEach(item => {
+        item.rating = Number(item.rating);
+      });
       if (this.unreviewedItems.length === 0) {
         this.$router.push("/me");
       }
@@ -72,6 +75,9 @@ export default {
     }
   },
   methods: {
+    updaterating(item, rating) {
+      item.rating = rating;
+    },
     userStateChange() {
       this.$emit("userStateChange", {});
     },
@@ -90,7 +96,7 @@ export default {
             },
           }
         );
-        this.$router.push({ name: "Me" });
+        window.location.reload();
       } catch (error) {
         console.error(error);
       }

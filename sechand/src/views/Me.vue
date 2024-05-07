@@ -79,7 +79,7 @@
           <!-- Increase font size -->
           <Button class="edit-profile-btn" text="My Profile" color="transparent" @click="editProfile" id="profile">
           </Button>
-          <Star :rating="reviews.overall_rating" :selectable="false" />
+          <Star :value="reviews.overall_rating" :selectable="false" />
           <p style="font-size: 20px; padding: 10px"> Reviews </p>
         </div>
         <div v-for="review in reviews.reviews" :key="review.id" class="review-container">
@@ -89,7 +89,7 @@
             <i>{{ review.item_name }}</i>
           </div>
           <div>
-            <Star :rating="review.rating" :selectable="false" />
+            <Star :value="review.rating" :selectable="false" />
           </div>
           <div>
             <p class="review-text">{{ review.review }}</p>

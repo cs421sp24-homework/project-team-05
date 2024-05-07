@@ -13,7 +13,7 @@
                     <div class="avatar-info">
                         <img :src="review.buyer_avatar" class="review-image" />
                         <p class="buyer-name">{{ review.buyer_displayname }}</p>
-                        <Star :rating="review.rating" :selectable="false" />
+                        <Star :value="review.rating" :selectable="false" />
                     </div>
                     <p>
                         Bought this item: <i>{{ review.item_name }}</i></p>
@@ -34,7 +34,7 @@
 
                 <p>
                     <img :src="item.sellerIcon" class="user-icon" />{{ item.displayname }}
-                    <Star :rating="reviews.overall_rating" :selectable="false" />
+                    <Star :value="reviews.overall_rating" :selectable="false" />
                     <Button id="chat" v-if="currentUser && !isCurrentUserSeller" @click="chat" text="Chat with Seller"
                         color="lightBlue"></Button>
                 </p>

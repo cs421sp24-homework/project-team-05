@@ -4,7 +4,7 @@
             :class="{ 'filled': starIndex <= displayRating }">&#9733;</span>
     </div>
     <div class="star-rating" v-else>
-        <span v-for="starIndex in 5" :key="starIndex" :class="{ 'filled': starIndex <= rating }">&#9733;</span>
+        <span v-for="starIndex in 5" :key="starIndex" :class="{ 'filled': starIndex <= this.value }">&#9733;</span>
     </div>
 </template>
 
@@ -12,9 +12,9 @@
 export default {
     name: 'Star',
     props: {
-        rating: {
+        value: {
             type: Number,
-            required: true
+            required: true,
         },
         selectable: {
             type: Boolean,
@@ -23,13 +23,19 @@ export default {
     },
     data() {
         return {
-            displayRating: this.rating
+            displayRating: this.value,
         };
     },
     methods: {
         setRating(rating) {
             this.displayRating = rating;
-            this.$emit('update:rating', rating);
+            this.$emit('input', rating);
+            console.log('Rating:', this.displayRating);
+        }
+    },
+    watch: {
+        rating(newValue) {
+            this.displayRating = newValue;
         }
     }
 }
