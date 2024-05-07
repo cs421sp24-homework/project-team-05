@@ -17,8 +17,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         for room in self.rooms:
             room_group_name = 'chat_%s' % room.id
-            print("connect room id, ", room.id)
-            # print("connect group name, ", room_group_name)
 
             # Join room group
             await self.channel_layer.group_add(

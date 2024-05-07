@@ -410,7 +410,11 @@ export default {
                     },
                 });
         }
-        // closeWebSocketInstance(this.home_user.id);
+        this.ws.onmessage = (event) => {
+            console.log("websocket manager triggers new notification");
+            const e = new CustomEvent("getNotification");
+            window.dispatchEvent(e);
+        }
     },
     beforeRouteLeave(to, from, next) {
         if (this.active_roomId) {
