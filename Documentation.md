@@ -222,9 +222,13 @@ Running SecHand locally requires following version of technologies:
 
 ### 4.1 Configuration Parameters
 
+There is no specific configuration needed
+
 ### 4.2 Environment Setup
 
 ### 4.3 External Services Integration
+
+There is no intergration for external services
 
 ## Usage Guide
 
@@ -444,6 +448,11 @@ Results of the test are as follows:
 ![testresult](./doc-img/test-result.png)
 
 ### 8.3 Known Issues and Limitations
+
+- Review system is still buggy;
+- No E-commerce payment system;
+- Web pages are not adaptable to different screens resolutions.
+- Notifications are not real-time for users establishing communication for the first time
 
 ## Deployment
 
