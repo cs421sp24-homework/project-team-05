@@ -121,63 +121,10 @@ export default {
     userStateChange() {
       this.$emit("userStateChange", {});
     },
-    methods: {
-      userStateChange() {
-        this.$emit("userStateChange", {});
-      },
-      handleFileUpload(event) {
-        this.picture = event.target.files[0];
-        this.pictureUrl = URL.createObjectURL(this.picture);
-      },
-      cancel() {
-        this.$router.go(-1);
-        console.log("Cancelled");
-      },
-      deleteItem() {
-        try {
-          const HTTP_PREFIX = import.meta.env.VITE_HOST;
-          console.log("2222", HTTP_PREFIX)
-          const response = axios.delete(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-            data: {
-              id: this.currentUser.id
-            }
-
-          });
-          console.log("Form submitted successfully:", response.data);
-          this.$router.push("/me");
-
-        } catch (error) {
-          console.error("Error submitting form:", error);
-        }
-      },
-      async submitForm() {
-        console.log("summitted");
-        const HTTP_PREFIX = import.meta.env.VITE_HOST;
-        try {
-          const formData = new FormData();
-          formData.append('name', this.item.name);
-          formData.append('description', this.item.description);
-          formData.append('category', this.item.category);
-          formData.append('price', this.item.price);
-          if (this.picture) {
-            formData.append('image', this.picture);
-          }
-          console.log(formData);
-          const response = await axios.patch(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          console.log("Form submitted successfully:", response.data);
-          this.$router.go(-1);
-        } catch (error) {
-          console.error("Error submitting form:", response.data);
-          console.error("Error submitting form:", error);
-        }
-      },
+    handleFileUpload(event) {
+      this.picture = event.target.files[0];
+      this.pictureUrl = URL.createObjectURL(this.picture);
+      this.item.image = this.pictureUrl;
     },
     cancel() {
       this.$router.go(-1);
@@ -186,19 +133,19 @@ export default {
     deleteItem() {
       try {
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
-        const response = axios.delete(
-          HTTP_PREFIX + `api/v1/post/Item/${this.id}`,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            data: {
-              id: this.currentUser.id,
-            },
+        console.log("2222", HTTP_PREFIX)
+        const response = axios.delete(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          data: {
+            id: this.currentUser.id
           }
-        );
+
+        });
         console.log("Form submitted successfully:", response.data);
         this.$router.push("/me");
+
       } catch (error) {
         console.error("Error submitting form:", error);
       }
@@ -208,22 +155,23 @@ export default {
       const HTTP_PREFIX = import.meta.env.VITE_HOST;
       try {
         const formData = new FormData();
-        formData.append("name", this.item.name);
-        formData.append("description", this.item.description);
-        formData.append("price", this.item.price);
+        formData.append('name', this.item.name);
+        formData.append('description', this.item.description);
+        formData.append('category', this.item.category);
+        formData.append('price', this.item.price);
+        if (this.picture) {
+          formData.append('image', this.picture);
+        }
         console.log(formData);
-        const response = await axios.patch(
-          HTTP_PREFIX + `api/v1/post/Item/${this.id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+        const response = await axios.patch(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
           }
-        );
+        });
         console.log("Form submitted successfully:", response.data);
         this.$router.go(-1);
       } catch (error) {
+        console.error("Error submitting form:", response.data);
         console.error("Error submitting form:", error);
       }
     },
