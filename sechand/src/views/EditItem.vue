@@ -133,7 +133,6 @@ export default {
     deleteItem() {
       try {
         const HTTP_PREFIX = import.meta.env.VITE_HOST;
-        console.log("2222", HTTP_PREFIX)
         const response = axios.delete(HTTP_PREFIX + `api/v1/post/Item/${this.id}`, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -159,6 +158,11 @@ export default {
         formData.append('description', this.item.description);
         formData.append('category', this.item.category);
         formData.append('price', this.item.price);
+        if (this.item.price <= 0) {
+          alert("Price must be greater than 0");
+          this.item.price = "";
+          return;
+        }
         if (this.picture) {
           formData.append('image', this.picture);
         }
